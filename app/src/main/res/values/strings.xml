@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TryToMeet</string>
+    <string name="profile">Profile</string>
+    <string name="history">History</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
 </resources>
