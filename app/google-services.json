@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "726050688926",
+    "firebase_url": "https://trytomeet-3540b.firebaseio.com",
+    "project_id": "trytomeet-3540b",
+    "storage_bucket": "trytomeet-3540b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726050688926:android:74b44b3e71af5ad3",
+        "android_client_info": {
+          "package_name": "com.ttm.sdm.trytomeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726050688926-d1catrla8qjvbj1nsqm8k65tbfegsb59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy5_OwCox4bAJQ7aFxD719aeKkGof3rsQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
