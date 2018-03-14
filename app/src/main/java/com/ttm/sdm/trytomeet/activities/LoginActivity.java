@@ -1,4 +1,4 @@
-package com.ttm.sdm.trytomeet;
+package com.ttm.sdm.trytomeet.activities;
 
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
@@ -20,11 +20,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.ttm.sdm.trytomeet.R;
+
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     private int GOOGLE_SIGN_IN_RESULT_CODE = 1;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         //Configuramos como sera el login de Google
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -65,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
     private void go_to_main_screen(){
         Log.e("GOOGLE", "cargar la pantalla principal");
         //destruir y eliminar de la pila esta actividad
+
+        finish();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     //Gestionamos los resultados de la actividad
@@ -86,63 +93,5 @@ public class MainActivity extends AppCompatActivity {
                 //GESTIONAR ERRORES
             }
         }
-    }
-
-// Mio
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // As we're using a Toolbar, we should retrieve it and set it
-        // to be our ActionBar
-        Toolbar toolbar = findViewById(R.id.my_awesome_toolbar);
-        setSupportActionBar(toolbar);
-
-        // Shows the home button in the action bar.
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        // Creates the toggle associated to the drawer.
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-
-        NavigationView navigationView =
-                (NavigationView) findViewById(R.id.navView);
-
-        // Associates the toogle to receive events from the drawer.
-        navigationView.setNavigationItemSelectedListener(this);
-        drawerLayout.openDrawer(GravityCompat.START);
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Synchronize the toggle with the drawer state.
-        toggle.syncState();
-    }
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Synchronize the toggle with the drawer state.
-        toggle.syncState();
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            // TODO: Review if here must be added more code.
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawerLayout.closeDrawers();
-        return true;
     }
 }
