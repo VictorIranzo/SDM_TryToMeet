@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.ttm.sdm.trytomeet"
+        applicationId "com.sdm.trytomeet"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1

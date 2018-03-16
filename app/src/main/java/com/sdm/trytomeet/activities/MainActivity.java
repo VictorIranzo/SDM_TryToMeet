@@ -1,5 +1,6 @@
-package com.ttm.sdm.trytomeet.activities;
+package com.sdm.trytomeet.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,13 +13,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.ttm.sdm.trytomeet.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.sdm.trytomeet.R;
 
 public class MainActivity
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
 
+    public static GoogleSignInClient mGoogleSignInClient;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
 
@@ -75,6 +78,15 @@ public class MainActivity
     }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.log_out:
+                // Log out and return to the login activity
+                mGoogleSignInClient.signOut();
+                finish();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                break;
+        }
         drawerLayout.closeDrawers();
         return true;
     }

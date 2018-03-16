@@ -1,4 +1,4 @@
-package com.ttm.sdm.trytomeet;
+package com.sdm.trytomeet;
 
 import org.junit.Test;
 

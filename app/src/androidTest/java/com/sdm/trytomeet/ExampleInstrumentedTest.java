@@ -1,4 +1,4 @@
-package com.ttm.sdm.trytomeet;
+package com.sdm.trytomeet;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

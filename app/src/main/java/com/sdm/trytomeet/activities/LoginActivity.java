@@ -1,6 +1,7 @@
-package com.ttm.sdm.trytomeet.activities;
+package com.sdm.trytomeet.activities;
 
 import android.content.res.Configuration;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,7 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.ttm.sdm.trytomeet.R;
+import com.sdm.trytomeet.R;
 
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -28,7 +29,6 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private GoogleSignInClient mGoogleSignInClient;
     private int GOOGLE_SIGN_IN_RESULT_CODE = 1;
 
     @Override
@@ -36,18 +36,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Configuramos como sera el login de Google
+        //Configuration of how to log with Google
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        MainActivity.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        //El callback del boton se tiene que añadir mediante un listener
+        //Adding the callback fot the Google Sign_in
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                Intent signInIntent = MainActivity.mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, GOOGLE_SIGN_IN_RESULT_CODE);
             }
         });
@@ -57,35 +57,34 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        //Vemos si el usuario ya ha iniciado sesion en la app
+        //Checking if the user has already started session with our app
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){//Lo ha hecho
+        if(account != null){//He/she did it
             go_to_main_screen();
         }
     }
 
     private void go_to_main_screen(){
-        Log.e("GOOGLE", "cargar la pantalla principal");
-        //destruir y eliminar de la pila esta actividad
-
+        //We detroy the current activity and launch the main one
         finish();
 
         Intent intent = new Intent(this, MainActivity.class);
+        Bundle b = new Bundle();
         startActivity(intent);
     }
 
-    //Gestionamos los resultados de la actividad
+    //Manage the results of an activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Resultado de la actividad de login con Google
+        // The result is from the google sign in activity
         if (requestCode == GOOGLE_SIGN_IN_RESULT_CODE) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             GoogleSignInAccount account = null;
             try {
                 account = task.getResult(ApiException.class);
-                //Nos hemos logeado correctmente con Google
+                //User has properly logged in with google
                 go_to_main_screen();
             } catch (ApiException e) {
                 e.printStackTrace();
