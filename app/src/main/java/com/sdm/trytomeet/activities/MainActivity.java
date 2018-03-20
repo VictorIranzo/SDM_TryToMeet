@@ -11,10 +11,28 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import POJO.Event;
+import POJO.Friends;
+import POJO.Group;
+import POJO.Groups;
+import POJO.User;
 
 public class MainActivity
         extends AppCompatActivity
@@ -22,8 +40,10 @@ public class MainActivity
 {
 
     public static GoogleSignInClient mGoogleSignInClient;
+    public static GoogleSignInAccount account;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +71,18 @@ public class MainActivity
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.openDrawer(GravityCompat.START);
+
+        // Getting access to DB
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        String key = mDatabase.child("events").push().getKey();
+        Event event = new Event("Playa");
+        mDatabase.child("events").child(key).setValue(event);
     }
 
     @Override

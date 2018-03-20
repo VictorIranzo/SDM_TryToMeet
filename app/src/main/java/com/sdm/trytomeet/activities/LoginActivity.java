@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         MainActivity.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        //Adding the callback fot the Google Sign_in
+        //Adding the callback for the Google Sign_in
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         //Checking if the user has already started session with our app
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){//He/she did it
+        MainActivity.account = GoogleSignIn.getLastSignedInAccount(this);
+        if(MainActivity.account != null){//He/she did it
             go_to_main_screen();
         }
     }
@@ -81,15 +81,13 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == GOOGLE_SIGN_IN_RESULT_CODE) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            GoogleSignInAccount account = null;
             try {
-                account = task.getResult(ApiException.class);
+                MainActivity.account = task.getResult(ApiException.class);
                 //User has properly logged in with google
                 go_to_main_screen();
             } catch (ApiException e) {
                 e.printStackTrace();
-                //VER CUANDO PUEDE FALLAR
-                //GESTIONAR ERRORES
+                //TODO: VER CUANDO PUEDE FALLAR y GESTIONAR ERRORES
             }
         }
     }
