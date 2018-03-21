@@ -25,6 +25,7 @@ import com.sdm.trytomeet.R;
 
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         MainActivity.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //Adding the callback for the Google Sign_in
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        Button signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
