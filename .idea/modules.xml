@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SDM_TryToMeet.iml" filepath="$PROJECT_DIR$/SDM_TryToMeet.iml" />
+      <module fileurl="file://C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet2\SDM_TryToMeet.iml" filepath="C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet2\SDM_TryToMeet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SDM_TryToMeet2.iml" filepath="$PROJECT_DIR$/.idea/SDM_TryToMeet2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
