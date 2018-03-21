@@ -4,6 +4,8 @@ import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.ttm.sdm.trytomeet.R;
+import com.ttm.sdm.trytomeet.fragments.CreateEventFragment;
 
 public class MainActivity
         extends AppCompatActivity
@@ -47,7 +50,6 @@ public class MainActivity
 
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
-        drawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
-            // TODO: Review if here must be added more code.
+            // TODO: Review if here must be added more code, for example, the notifications.
             return true;
         }
 
@@ -76,6 +78,16 @@ public class MainActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawers();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch(item.getItemId()){
+            case R.id.drawer_create:
+                fragmentTransaction.add(R.id.frameLayout, new CreateEventFragment());
+            case R.id.drawer_settings:
+        }
+
+        fragmentTransaction.commit();
         return true;
     }
 }

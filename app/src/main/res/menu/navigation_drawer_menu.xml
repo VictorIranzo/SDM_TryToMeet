@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/profile"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/profile"
+        android:id="@+id/drawer_create"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/create_event"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/mSettings"
+        android:id="@+id/drawer_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/history"
+        android:title="@string/settings"
         app:showAsAction="ifRoom" />
 </menu>
