@@ -5,4 +5,15 @@
     <string name="log_out">Log out</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
+
+    <string name="create_event_title">Title</string>
+    <string name="create_event_title_hint">Insert the title of your event</string>
+    <string name="create_event_description_hint">Insert the description of your event</string>
+    <string name="create_event_find_place_button">Find a place</string>
+    <string name="create_event_change_place_button">Change your place</string>
+    <string name="create_event_possible_dates_title">Possible dates</string>
+    <string name="create_event_add_a_date_button">Add a date</string>
+    <string name="create_event_participants_title">Participants</string>
+    <string name="create_event_add_a_participant_button">Add a participant</string>
+
 </resources>
