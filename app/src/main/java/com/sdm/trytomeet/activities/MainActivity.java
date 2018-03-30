@@ -80,9 +80,28 @@ public class MainActivity
     protected void onStart() {
         super.onStart();
 
-        String key = mDatabase.child("events").push().getKey();
-        Event event = new Event("Playa");
-        mDatabase.child("events").child(key).setValue(event);
+        /* TODO: PONERLO EN LA VENTANA DE LOGIN
+        * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
+        * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
+        */
+        // We store the current user in our DB (if they do not exist)
+        mDatabase.child("users").child(account.getId()).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                User me = mutableData.getValue(User.class);
+                if(me == null) {
+                    me = new User();
+                    me.username = account.getDisplayName();
+                    mutableData.setValue(me);
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                // Do nothing
+            }
+        });
     }
 
     @Override
