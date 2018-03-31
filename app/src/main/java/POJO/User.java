@@ -8,17 +8,18 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class User {
+    public String id;
     public String username;
     public String url;
 
     public User(){}
 
-    public User(String username, String url){
-        this.username = username;
-        this.url = url;
-    }
-
     public String toString(){
         return "Username: " + username + ", url: " + url;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return id.equals(((User) obj).id);
     }
 }

@@ -24,6 +24,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.fragments.Fragment_create_event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +93,7 @@ public class MainActivity
                 if(me == null) {
                     me = new User();
                     me.username = account.getDisplayName();
+                    me.id = account.getId();
                     mutableData.setValue(me);
                 }
                 return Transaction.success(mutableData);
@@ -124,7 +126,6 @@ public class MainActivity
             // TODO: Review if here must be added more code.
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -136,6 +137,16 @@ public class MainActivity
                 finish();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.drawer_menu_create_event:
+                Fragment_create_event fragment = new Fragment_create_event();
+                // Insert the arguments
+                Bundle args = new Bundle();
+                args.putString("user_id", account.getId());
+                fragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.frameLayout, fragment).commit();
                 break;
         }
         drawerLayout.closeDrawers();

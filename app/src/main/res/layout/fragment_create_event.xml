@@ -1,11 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_create_event"
     tools:context="com.sdm.trytomeet.fragments.Fragment_create_event">
-
-    <!-- TODO: Update blank fragment layout -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,20 +23,20 @@
                 android:text="@string/create_event_title" />
 
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/create_event_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="@string/create_event_title_hint" />
+                android:hint="@string/create_event_title_hint"
+                android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/create_event_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine"
-                android:text="@string/create_event_description_hint" />
+                android:hint="@string/create_event_description_hint"
+                android:inputType="textMultiLine" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +53,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,11 +98,12 @@
                 android:text="@string/create_event_possible_dates_title" />
 
             <ListView
+                android:id="@+id/date_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/button_add_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_event_add_a_date_button" />
@@ -122,15 +123,16 @@
                 android:text="@string/create_event_participants_title" />
 
             <ListView
+                android:id="@+id/participant_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/button9"
+                android:id="@+id/button_add_participant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_event_add_a_participant_button" />
 
         </LinearLayout>
     </ScrollView>
-</FrameLayout>
+</LinearLayout>

@@ -23,16 +23,19 @@
 
     </LinearLayout>
 
+    <!-- The paddingTop is used to show the content just below the Toolbar -->
     <FrameLayout
         android:id="@+id/frameLayout"
+        android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-<android.support.design.widget.NavigationView
-android:id="@+id/navView"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/header_navigation_drawer"
-    app:menu="@menu/navigation_drawer_menu" />
+
+    <android.support.design.widget.NavigationView
+    android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/header_navigation_drawer"
+        app:menu="@menu/navigation_drawer_menu" />
 </android.support.v4.widget.DrawerLayout>
