@@ -118,24 +118,10 @@ public class Fragment_create_event extends Fragment {
                 List<String> to_invite = new ArrayList<>(participants_id);
                 to_invite.add(user_id);
                 for(String id : to_invite){
-                    FirebaseDatabase.getInstance().getReference().child("taking_part").child(id).runTransaction(new Transaction.Handler() {
-                        @Override
-                        public Transaction.Result doTransaction(MutableData mutableData) {
-                            TakingPart takingPart = mutableData.getValue(TakingPart.class);
-                            if(takingPart == null){
-                                takingPart = new TakingPart();
-                                takingPart.invitedTo = new ArrayList<>();
-                            }
-                            takingPart.invitedTo.add(new InvitedTo(key));
-                            mutableData.setValue(takingPart);
-                            return Transaction.success(mutableData);
-                        }
-
-                        @Override
-                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                            // Do nothing
-                        }
-                    });
+                    InvitedTo inv = new InvitedTo();
+                    inv.state = "PENDING";
+                    FirebaseDatabase.getInstance().getReference().child("taking_part")
+                            .child(id).child("invitedTo").child(key).setValue(inv);
                 }
 
                 break;

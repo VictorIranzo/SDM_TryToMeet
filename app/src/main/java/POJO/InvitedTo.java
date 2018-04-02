@@ -8,11 +8,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class InvitedTo {
-    public String event_id;
+    public String state;
+    // TODO: RELLENAR CON LOS ATRIBUTOS QUE HAGAN FALTA
 
     public InvitedTo() {}
-
-    public InvitedTo(String event_id){
-        this.event_id = event_id;
-    }
 }
