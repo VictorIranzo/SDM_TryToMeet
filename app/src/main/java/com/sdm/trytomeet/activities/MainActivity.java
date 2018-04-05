@@ -71,7 +71,6 @@ public class MainActivity
 
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
-        drawerLayout.openDrawer(GravityCompat.START);
 
         // Getting access to DB
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -123,7 +122,7 @@ public class MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
-            // TODO: Review if here must be added more code.
+            // TODO: Review if here must be added more code, for example, the notifications.
             return true;
         }
         return super.onOptionsItemSelected(item);
