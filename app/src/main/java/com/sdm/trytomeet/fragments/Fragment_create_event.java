@@ -52,7 +52,6 @@ public class Fragment_create_event extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -61,6 +60,8 @@ public class Fragment_create_event extends Fragment {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_create_event, container, false);
         user_id = getArguments().getString("user_id");
+
+        // TODO: Move to the layout XML the definition of the onClick listener.
         Button add_partcipant = parent.findViewById(R.id.button_add_participant);
         add_partcipant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,11 +69,20 @@ public class Fragment_create_event extends Fragment {
                 add_participant(v);
             }
         });
+
         Button add_date = parent.findViewById(R.id.button_add_date);
         add_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_date(v);
+            }
+        });
+
+        final Button find_place = parent.findViewById(R.id.button_find_place);
+        find_place.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                find_place(v);
             }
         });
 
@@ -129,7 +139,7 @@ public class Fragment_create_event extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void add_participant(View view){
+    private void add_participant(View view){
         // Show a pop-up to select among your friends
         ArrayList<String> current_id_participants = new ArrayList<>();
         for(User participant : participants) current_id_participants.add(participant.id);
@@ -140,13 +150,21 @@ public class Fragment_create_event extends Fragment {
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
-    public void add_date(View view){
+    private void add_date(View view){
         // Show a pop-up to select a date
         Fragment_add_date_dialog fragment = Fragment_add_date_dialog.newInstance();
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
+
+    private void find_place(View v) {
+        Fragment_find_place fragment = Fragment_find_place.newInstance();
+
+        fragment.setTargetFragment(this,0);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.frameLayout, fragment).commit();
     }
 
     // Method to be called from the Fragment_add_participant_dialog
@@ -160,6 +178,4 @@ public class Fragment_create_event extends Fragment {
         if(!dates.contains(date)) dates.add(date);
         date_adapter.notifyDataSetChanged();
     }
-
-
 }

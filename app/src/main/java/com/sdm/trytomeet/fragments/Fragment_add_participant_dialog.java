@@ -42,7 +42,7 @@ public class Fragment_add_participant_dialog extends DialogFragment {
         // Required empty public constructor
     }
 
-    static Fragment_add_participant_dialog newInstance(String user_id, ArrayList<String> current_participants){
+    public static Fragment_add_participant_dialog newInstance(String user_id, ArrayList<String> current_participants){
         Fragment_add_participant_dialog res = new Fragment_add_participant_dialog();
 
         // Insert the argument
