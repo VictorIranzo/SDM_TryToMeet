@@ -19,13 +19,13 @@ import POJO.User;
  * Created by adrymc96 on 30/03/18.
  */
 
-public class create_event_date_list_adapter extends ArrayAdapter<Date>{
+public class CreateEventDateListAdapter extends ArrayAdapter<Date>{
 
     Context context;
     int resource;
     ArrayList<Date> data;
 
-    public create_event_date_list_adapter(Context context, int resource, ArrayList<Date> data){
+    public CreateEventDateListAdapter(Context context, int resource, ArrayList<Date> data){
         super(context, resource, data);
         this.context = context;
         this.resource = resource;

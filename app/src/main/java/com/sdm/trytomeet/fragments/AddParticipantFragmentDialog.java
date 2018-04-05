@@ -5,15 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,15 +15,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.add_participant_list_adapter;
+import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import POJO.Friends;
 import POJO.User;
 
-public class Fragment_add_participant_dialog extends DialogFragment {
+public class AddParticipantFragmentDialog extends DialogFragment {
 
     private View parent;
     private String user_id;
@@ -38,12 +31,12 @@ public class Fragment_add_participant_dialog extends DialogFragment {
     private ListView list_view;
 
 
-    public Fragment_add_participant_dialog() {
+    public AddParticipantFragmentDialog() {
         // Required empty public constructor
     }
 
-    public static Fragment_add_participant_dialog newInstance(String user_id, ArrayList<String> current_participants){
-        Fragment_add_participant_dialog res = new Fragment_add_participant_dialog();
+    public static AddParticipantFragmentDialog newInstance(String user_id, ArrayList<String> current_participants){
+        AddParticipantFragmentDialog res = new AddParticipantFragmentDialog();
 
         // Insert the argument
         Bundle args = new Bundle();
@@ -81,7 +74,7 @@ public class Fragment_add_participant_dialog extends DialogFragment {
         // We configure the list view
         my_friends = new ArrayList<>();
         list_view = parent.findViewById(R.id.list_view);
-        final add_participant_list_adapter adapter = new add_participant_list_adapter(getContext(), R.id.list_view, my_friends);
+        final AddParticipantListAdapter adapter = new AddParticipantListAdapter(getContext(), R.id.list_view, my_friends);
         list_view.setAdapter(adapter);
 
         // TODO: FILTER BY FRIENDS NAME
@@ -124,7 +117,7 @@ public class Fragment_add_participant_dialog extends DialogFragment {
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((Fragment_create_event)getTargetFragment()).add_participants(adapter.getToAdd());
+                ((CreateEventFragment)getTargetFragment()).add_participants(adapter.getToAdd());
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){

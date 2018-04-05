@@ -2,8 +2,6 @@ package com.sdm.trytomeet.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,15 +12,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.add_participant_list_adapter;
-import com.sdm.trytomeet.adapters.create_event_date_list_adapter;
-import com.sdm.trytomeet.adapters.create_event_participant_list_adapter;
+import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
+import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +23,20 @@ import java.util.List;
 import POJO.Date;
 import POJO.Event;
 import POJO.InvitedTo;
-import POJO.TakingPart;
 import POJO.User;
 
-public class Fragment_create_event extends Fragment {
+public class CreateEventFragment extends Fragment {
 
     private View parent;
     private String user_id;
 
     private ArrayList<User> participants;
-    private create_event_participant_list_adapter participant_adapter;
+    private CreateEventParticipantListAdapter participant_adapter;
 
     private ArrayList<Date> dates;
-    private create_event_date_list_adapter date_adapter;
+    private CreateEventDateListAdapter date_adapter;
 
-    public Fragment_create_event() {
+    public CreateEventFragment() {
         // Required empty public constructor
     }
 
@@ -89,13 +81,13 @@ public class Fragment_create_event extends Fragment {
         // We configure the list view for dates
         dates = new ArrayList<>();
         final ListView list_view_date = parent.findViewById(R.id.date_list);
-        date_adapter = new create_event_date_list_adapter(getContext(), R.id.date_list, dates);
+        date_adapter = new CreateEventDateListAdapter(getContext(), R.id.date_list, dates);
         list_view_date.setAdapter(date_adapter);
 
         // We configure the list view for participants
         participants = new ArrayList<>();
         final ListView list_view_participant = parent.findViewById(R.id.participant_list);
-        participant_adapter = new create_event_participant_list_adapter(getContext(), R.id.participant_list, participants);
+        participant_adapter = new CreateEventParticipantListAdapter(getContext(), R.id.participant_list, participants);
         list_view_participant.setAdapter(participant_adapter);
 
         return parent;
@@ -143,7 +135,7 @@ public class Fragment_create_event extends Fragment {
         // Show a pop-up to select among your friends
         ArrayList<String> current_id_participants = new ArrayList<>();
         for(User participant : participants) current_id_participants.add(participant.id);
-        Fragment_add_participant_dialog fragment = Fragment_add_participant_dialog.newInstance(user_id, current_id_participants);
+        AddParticipantFragmentDialog fragment = AddParticipantFragmentDialog.newInstance(user_id, current_id_participants);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);
@@ -152,7 +144,7 @@ public class Fragment_create_event extends Fragment {
 
     private void add_date(View view){
         // Show a pop-up to select a date
-        Fragment_add_date_dialog fragment = Fragment_add_date_dialog.newInstance();
+        AddDateFragmentDialog fragment = AddDateFragmentDialog.newInstance();
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);
@@ -160,20 +152,20 @@ public class Fragment_create_event extends Fragment {
     }
 
     private void find_place(View v) {
-        Fragment_find_place fragment = Fragment_find_place.newInstance();
+        FindPlaceFragment fragment = FindPlaceFragment.newInstance();
 
         fragment.setTargetFragment(this,0);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.frameLayout, fragment).commit();
     }
 
-    // Method to be called from the Fragment_add_participant_dialog
+    // Method to be called from the AddParticipantFragmentDialog
     public void add_participants(ArrayList<User> to_add){
         participants.addAll(to_add);
         participant_adapter.notifyDataSetChanged();
     }
 
-    // Method to be called from Fragment_add_date_dialog
+    // Method to be called from AddDateFragmentDialog
     public void add_date(Date date){
         if(!dates.contains(date)) dates.add(date);
         date_adapter.notifyDataSetChanged();

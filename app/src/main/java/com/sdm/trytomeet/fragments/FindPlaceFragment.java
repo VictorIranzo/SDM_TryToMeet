@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 
 import com.sdm.trytomeet.R;
 
-import java.util.ArrayList;
-
-public class Fragment_find_place extends Fragment{
+public class FindPlaceFragment extends Fragment{
     private View parent;
 
     @Override
@@ -19,12 +17,12 @@ public class Fragment_find_place extends Fragment{
         setHasOptionsMenu(true);
     }
 
-    public Fragment_find_place() {
+    public FindPlaceFragment() {
         // Required empty public constructor
     }
 
-    public static Fragment_find_place newInstance(){
-        return new Fragment_find_place();
+    public static FindPlaceFragment newInstance(){
+        return new FindPlaceFragment();
     }
 
     @Override

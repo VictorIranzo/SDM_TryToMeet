@@ -5,13 +5,11 @@ import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,17 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.fragments.Fragment_create_event;
+import com.sdm.trytomeet.fragments.CreateEventFragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import POJO.Event;
-import POJO.Friends;
-import POJO.Group;
-import POJO.Groups;
 import POJO.User;
 
 public class MainActivity
@@ -139,7 +129,7 @@ public class MainActivity
                 break;
 
             case R.id.drawer_menu_create_event:
-                Fragment_create_event fragment = new Fragment_create_event();
+                CreateEventFragment fragment = new CreateEventFragment();
                 // Insert the arguments
                 Bundle args = new Bundle();
                 args.putString("user_id", account.getId());

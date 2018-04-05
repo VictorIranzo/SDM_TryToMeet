@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_create_event"
-    tools:context="com.sdm.trytomeet.fragments.Fragment_create_event">
+    tools:context="com.sdm.trytomeet.fragments.CreateEventFragment">
 
     <ScrollView
         android:layout_width="match_parent"

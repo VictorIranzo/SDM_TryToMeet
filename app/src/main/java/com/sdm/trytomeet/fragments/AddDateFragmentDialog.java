@@ -6,37 +6,26 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.TimePicker;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.add_participant_list_adapter;
-
-import java.util.ArrayList;
 
 import POJO.Date;
-import POJO.Friends;
-import POJO.User;
 
-public class Fragment_add_date_dialog extends DialogFragment {
+public class AddDateFragmentDialog extends DialogFragment {
 
     private View parent;
 
 
-    public Fragment_add_date_dialog() {
+    public AddDateFragmentDialog() {
         // Required empty public constructor
     }
 
-    static Fragment_add_date_dialog newInstance(){
-        Fragment_add_date_dialog res = new Fragment_add_date_dialog();
+    static AddDateFragmentDialog newInstance(){
+        AddDateFragmentDialog res = new AddDateFragmentDialog();
 
         return res;
     }
@@ -72,7 +61,7 @@ public class Fragment_add_date_dialog extends DialogFragment {
                 TimePicker time = parent.findViewById(R.id.timePicker);
                 Date date_to_add = new Date(date.getYear(), date.getMonth(), date.getDayOfMonth(),
                         time.getCurrentHour(), time.getCurrentMinute());
-                ((Fragment_create_event)getTargetFragment()).add_date(date_to_add);
+                ((CreateEventFragment)getTargetFragment()).add_date(date_to_add);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
