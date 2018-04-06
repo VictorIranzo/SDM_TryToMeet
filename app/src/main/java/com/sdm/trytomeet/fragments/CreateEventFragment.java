@@ -1,5 +1,6 @@
 package com.sdm.trytomeet.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.FindPlaceActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
 
@@ -152,11 +154,8 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void find_place(View v) {
-        FindPlaceFragment fragment = FindPlaceFragment.newInstance();
-
-        fragment.setTargetFragment(this,0);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.frameLayout, fragment).commit();
+        Intent intent = new Intent(getActivity(), FindPlaceActivity.class);
+        getActivity().startActivity(intent);
     }
 
     // Method to be called from the AddParticipantFragmentDialog

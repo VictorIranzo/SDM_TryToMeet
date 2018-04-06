@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         finish();
 
         Intent intent = new Intent(this, MainActivity.class);
-        Bundle b = new Bundle();
         startActivity(intent);
     }
 
