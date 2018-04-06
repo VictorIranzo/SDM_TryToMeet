@@ -9,21 +9,26 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,8 +40,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.fragments.CreateEventFragment;
 
-public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCallback {
+import POJO.Site;
+
+// TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
+
+public class FindPlaceActivity extends AppCompatActivity
+        implements OnMapReadyCallback {
 
     private static final String TAG = FindPlaceActivity.class.getSimpleName();
     private GoogleMap mMap;
@@ -66,10 +77,22 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
 
     // Used for selecting the current place.
     private static final int M_MAX_ENTRIES = 10;
+    
     private String[] mLikelyPlaceNames;
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
+
+    // Used for selecting the searched place.
+    private String[] mSearchedPlaceNames;
+    private String[] mSearchedPlaceAddresses;
+    private String[] mSearchedPlaceAttributions;
+    private LatLng[] mSearchedPlaceLatLngs;
+
+    private Marker selectedPlace;
+
+    private Button continueButton;
+    private EditText namePlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -97,11 +120,53 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+/*
         // As we're using a Toolbar, we should retrieve it and set it
         // to be our ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        */
+
+        // TODO: Use the SupportPlaceAutoCompleteFragment.
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+
+                mMap.clear();
+
+                selectedPlace = mMap.addMarker(new MarkerOptions()
+                .title(place.getName().toString())
+                .position(place.getLatLng())
+                .snippet(place.getAddress() + "\n" + place.getAttributions()));
+
+                selectedPlace.showInfoWindow();
+
+                // Position the map's camera at the location of the marker.
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),
+                        DEFAULT_ZOOM));
+
+                continueButton.setEnabled(true);
+                namePlace.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        namePlace = (EditText) findViewById(R.id.namePlace);
+        continueButton = (Button) findViewById(R.id.continue_button);
+
+        continueButton.setEnabled(false);
+        namePlace.setVisibility(View.GONE);
+        namePlace.addTextChangedListener(textWatcher);
     }
 
     /**
@@ -117,30 +182,6 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     /**
-     * Sets up the options menu.
-     * @param menu The options menu.
-     * @return Boolean.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.current_place_menu, menu);
-        return true;
-    }
-
-    /**
-     * Handles a click on the menu option to get a place.
-     * @param item The menu item to handle.
-     * @return Boolean.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.option_get_place) {
-            showCurrentPlace();
-        }
-        return true;
-    }
-
-    /**
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
      */
@@ -153,13 +194,15 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
-            // Return null here, so that getInfoContents() is called next.
             public View getInfoWindow(Marker arg0) {
+                // Return null here, so that getInfoContents() is called next.
                 return null;
             }
 
             @Override
             public View getInfoContents(Marker marker) {
+                if(marker.getTitle() == null) return null;
+
                 // Inflate the layouts for the info window, title and snippet.
                 View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
                         (FrameLayout) findViewById(R.id.map), false);
@@ -171,6 +214,19 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
                 snippet.setText(marker.getSnippet());
 
                 return infoWindow;
+            }
+        });
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mMap.clear();
+                selectedPlace = mMap.addMarker(new MarkerOptions().position(latLng));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                continueButton.setEnabled(false);
+                namePlace.setText("");
+                namePlace.setVisibility(View.VISIBLE);
             }
         });
 
@@ -346,6 +402,8 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mMap.clear();
+
                 // The "which" argument contains the position of the selected item.
                 LatLng markerLatLng = mLikelyPlaceLatLngs[which];
                 String markerSnippet = mLikelyPlaceAddresses[which];
@@ -355,8 +413,97 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
 
                 // Add a marker for the selected place, with an info window
                 // showing information about that place.
-                mMap.addMarker(new MarkerOptions()
+                selectedPlace = mMap.addMarker(new MarkerOptions()
                         .title(mLikelyPlaceNames[which])
+                        .position(markerLatLng)
+                        .snippet(markerSnippet));
+
+                selectedPlace.showInfoWindow();
+
+                // Position the map's camera at the location of the marker.
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
+                        DEFAULT_ZOOM));
+
+                continueButton.setEnabled(true);
+                namePlace.setVisibility(View.GONE);
+            }
+        };
+
+        // Display the dialog.
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.pick_place)
+                .setItems(mLikelyPlaceNames, listener)
+                .show();
+    }
+
+    /*
+    public void searchPlace(View v){
+        final String place = placeSearched.getText().toString();
+        Task<PlaceBufferResponse> taskPlaceSearch = mGeoDataClient.getPlaceById(place);
+        
+        taskPlaceSearch.addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    PlaceBufferResponse places = task.getResult();
+                    
+                    // Set the count, handling cases where less than 5 entries are returned.
+                    int count;
+                    if (places.getCount() < M_MAX_ENTRIES) {
+                        count = places.getCount();
+                    } else {
+                        count = M_MAX_ENTRIES;
+                    }
+
+                    int i = 0;
+                    mSearchedPlaceNames = new String[count];
+                    mSearchedPlaceAddresses = new String[count];
+                    mSearchedPlaceAttributions = new String[count];
+                    mSearchedPlaceLatLngs = new LatLng[count];
+
+                    for (Place place : places) {
+                        // Build a list of Searched places to show the user.
+                        mSearchedPlaceNames[i] = (String) place.getName();
+                        mSearchedPlaceAddresses[i] = (String) place.getAddress();
+                        mSearchedPlaceAttributions[i] = (String) place.getAttributions();
+                        mSearchedPlaceLatLngs[i] = place.getLatLng();
+
+                        i++;
+                        if (i > (count - 1)) {
+                            break;
+                        }
+                    }
+
+                    // Release the place likelihood buffer, to avoid memory leaks.
+                    places.release();
+
+                    // Show a dialog offering the user the list of likely places, and add a
+                    // marker at the selected place.
+                    openSearchedPlacesDialog();
+                    
+                } else {
+                    Log.e(TAG, "Exception: %s", task.getException());
+                }
+            }
+        });
+    }
+
+    private void openSearchedPlacesDialog() {
+        // Ask the user to choose the place where they are now.
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // The "which" argument contains the position of the selected item.
+                LatLng markerLatLng = mSearchedPlaceLatLngs[which];
+                String markerSnippet = mSearchedPlaceAddresses[which];
+                if (mSearchedPlaceAttributions[which] != null) {
+                    markerSnippet = markerSnippet + "\n" + mSearchedPlaceAttributions[which];
+                }
+
+                // Add a marker for the selected place, with an info window
+                // showing information about that place.
+                mMap.addMarker(new MarkerOptions()
+                        .title(mSearchedPlaceNames[which])
                         .position(markerLatLng)
                         .snippet(markerSnippet));
 
@@ -369,13 +516,10 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
         // Display the dialog.
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.pick_place)
-                .setItems(mLikelyPlaceNames, listener)
+                .setItems(mSearchedPlaceNames, listener)
                 .show();
     }
-
-    public void openPlacesDialog(View v){
-        openPlacesDialog();
-    }
+    */
 
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
@@ -398,4 +542,43 @@ public class FindPlaceActivity extends AppCompatActivity implements OnMapReadyCa
             Log.e("Exception: %s", e.getMessage());
         }
     }
+
+    public void openNearToMeDialog(View v){
+        showCurrentPlace();
+    }
+
+    public void cancelClick(View v){
+        finish();
+    }
+
+    public void continueClick(View v)
+    {
+        Site site;
+        if(selectedPlace.getTitle() == null){
+            site = new Site(namePlace.getText().toString(),"",
+                    selectedPlace.getPosition().latitude, selectedPlace.getPosition().longitude);
+        } else {
+            site = new Site(selectedPlace.getTitle(),selectedPlace.getSnippet(),
+                    selectedPlace.getPosition().latitude, selectedPlace.getPosition().longitude);
+        }
+        CreateEventFragment fragment = (CreateEventFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_create_event);
+
+        fragment.add_site(site);
+        finish();
+    }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        public void afterTextChanged(Editable s) {
+            if(namePlace.getVisibility() != View.GONE) {
+                if (s.length() == 0) {
+                    continueButton.setEnabled(false);
+                } else {
+                    continueButton.setEnabled(true);
+                }
+            }
+        }
+    };
 }

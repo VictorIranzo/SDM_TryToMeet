@@ -25,6 +25,7 @@ import java.util.List;
 import POJO.Date;
 import POJO.Event;
 import POJO.InvitedTo;
+import POJO.Site;
 import POJO.User;
 
 public class CreateEventFragment extends Fragment {
@@ -37,6 +38,8 @@ public class CreateEventFragment extends Fragment {
 
     private ArrayList<Date> dates;
     private CreateEventDateListAdapter date_adapter;
+
+    private Site site;
 
     public CreateEventFragment() {
         // Required empty public constructor
@@ -112,7 +115,7 @@ public class CreateEventFragment extends Fragment {
                 List<String> participants_id = new ArrayList<>(); for(User user : participants) participants_id.add(user.id);
                 String creator_id = user_id;
                 String state = "PENDING";
-                Event event = new Event(name, description, possible_dates, participants_id, creator_id, state);
+                Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
 
                 // We store the event in the DB
                 final String key = FirebaseDatabase.getInstance().getReference().child("events").push().getKey();
@@ -168,5 +171,11 @@ public class CreateEventFragment extends Fragment {
     public void add_date(Date date){
         if(!dates.contains(date)) dates.add(date);
         date_adapter.notifyDataSetChanged();
+    }
+
+    public void add_site(Site site){
+        this.site = site;
+        //TODO: Change UI when the site is selected.
+        ((TextView) getActivity().findViewById(R.id.selectedPlace)).setText(site.name);
     }
 }

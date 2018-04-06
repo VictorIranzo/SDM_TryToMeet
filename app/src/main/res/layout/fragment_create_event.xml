@@ -69,7 +69,7 @@
                         android:src="@android:drawable/btn_star_big_on" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/selectedPlace"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
