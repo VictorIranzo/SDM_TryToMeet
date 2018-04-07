@@ -15,8 +15,10 @@ import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
+import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.POJO.Notification;
 
 public class CreateEventFragment extends Fragment {
 
@@ -128,6 +131,20 @@ public class CreateEventFragment extends Fragment {
                     inv.state = "PENDING";
                     FirebaseDatabase.getInstance().getReference().child("taking_part")
                             .child(id).child("invitedTo").child(key).setValue(inv);
+                }
+
+                // We notify each user
+                to_invite.remove(user_id); // Not me
+                for(String id : to_invite){
+                    Notification not = new Notification();
+                    not.purpose = NotificactionListener.ADDED_TO_AN_EVENT;
+                    not.event_id = key;
+                    not.title = getResources().getString(R.string.create_event_notification_title);
+                    not.text = getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name);
+                    String not_key = FirebaseDatabase.getInstance().getReference().child("notifications")
+                            .child(id).push().getKey();
+                    FirebaseDatabase.getInstance().getReference().child("notifications")
+                            .child(id).child(not_key).setValue(not);
                 }
 
                 break;

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -20,9 +21,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
+import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import com.sdm.trytomeet.POJO.User;
 
@@ -70,6 +73,10 @@ public class MainActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        // TODO: HACER QUE ESTE HILO DE EJECUCION SE EJECUTE EN SEGUNDO PLANO
+        // We listen for the notifications
+        mDatabase.child("notifications").child(account.getId()).addValueEventListener(new NotificactionListener(this));
 
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre

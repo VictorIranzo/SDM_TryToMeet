@@ -20,6 +20,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCHpYt-Y6j0ZDOuthIA9b71Mw6yOEJcbM0"/>
+
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
