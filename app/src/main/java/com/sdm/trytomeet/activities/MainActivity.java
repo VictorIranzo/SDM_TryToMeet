@@ -24,7 +24,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
 
-import POJO.User;
+import com.sdm.trytomeet.POJO.User;
 
 public class MainActivity
         extends AppCompatActivity

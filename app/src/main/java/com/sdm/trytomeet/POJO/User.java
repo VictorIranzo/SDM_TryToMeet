@@ -1,4 +1,4 @@
-package POJO;
+package com.sdm.trytomeet.POJO;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
