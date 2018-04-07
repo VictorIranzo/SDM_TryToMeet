@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
 
-import POJO.User;
+import com.sdm.trytomeet.POJO.User;
 
 /**
  * Created by adrymc96 on 30/03/18.

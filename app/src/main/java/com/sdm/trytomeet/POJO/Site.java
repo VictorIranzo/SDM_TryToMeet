@@ -1,6 +1,4 @@
-package POJO;
-
-import com.google.android.gms.maps.model.Marker;
+package com.sdm.trytomeet.POJO;
 
 public class Site {
     public String name;

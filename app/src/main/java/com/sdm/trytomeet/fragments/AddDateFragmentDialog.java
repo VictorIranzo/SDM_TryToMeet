@@ -13,7 +13,7 @@ import android.widget.TimePicker;
 
 import com.sdm.trytomeet.R;
 
-import POJO.Date;
+import com.sdm.trytomeet.POJO.Date;
 
 public class AddDateFragmentDialog extends DialogFragment {
 

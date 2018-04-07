@@ -21,11 +21,11 @@ import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import POJO.Date;
-import POJO.Event;
-import POJO.InvitedTo;
-import POJO.Site;
-import POJO.User;
+import com.sdm.trytomeet.POJO.Date;
+import com.sdm.trytomeet.POJO.Event;
+import com.sdm.trytomeet.POJO.InvitedTo;
+import com.sdm.trytomeet.POJO.Site;
+import com.sdm.trytomeet.POJO.User;
 
 public class CreateEventFragment extends Fragment {
 
@@ -159,6 +159,8 @@ public class CreateEventFragment extends Fragment {
         FindPlaceFragment fragment = new FindPlaceFragment();
         fragment.setTargetFragment(this,0);
 
+        // TODO: Revisar esta solución. Ahora, cuando se abre el fragment de elegir sitio, este se oculta. Una vez elegido,
+        // el mapa se elimina desde el gestor de fragments de create event y se vuelve a mostrar este.
         getView().setVisibility(View.GONE);
         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }

@@ -32,4 +32,18 @@
     <string name="default_info_snippet">No places found, because location permission is disabled.</string>
     <string name="option_get_place">Get place</string>
     <string name="pick_place">Choose a place</string>
+
+    <!-- Errors -->
+    <string name="error_occured">An error occured</string>
+    <string name="error_network">Cannot connect to Internet...Please check your connection!</string>
+    <string name="error_server">The server could not be found. Please try again after some time!!</string>
+    <string name="error_authorization">Cannot connect to Internet...Please check your authorization permissions!</string>
+    <string name="error_parsing">Parsing error! Please contact with your system provider</string>
+    <string name="error_noconnection">Cannot connect to Internet...Please establish a connection!</string>
+    <string name="error_timeot">Connection TimeOut! Please check your internet connection.</string>
+
+    <!--Filter dialog-->
+    <string name="bar">Bar</string>
+    <string name="park">Park</string>
+    <string name="shops">Shopping Mall</string>
 </resources>

@@ -43,7 +43,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.sdm.trytomeet.R;
 
-import POJO.Site;
+import com.sdm.trytomeet.POJO.Site;
+import com.sdm.trytomeet.services.FilterPlacesService;
 
 // TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
 
@@ -85,12 +86,6 @@ public class FindPlaceFragment extends Fragment
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
-
-    // Used for selecting the searched place.
-    private String[] mSearchedPlaceNames;
-    private String[] mSearchedPlaceAddresses;
-    private String[] mSearchedPlaceAttributions;
-    private LatLng[] mSearchedPlaceLatLngs;
 
     private Marker selectedPlace;
 
@@ -151,9 +146,6 @@ public class FindPlaceFragment extends Fragment
                 // Position the map's camera at the location of the marker.
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),
                         DEFAULT_ZOOM));
-
-                continueButton.setEnabled(true);
-                namePlace.setVisibility(View.GONE);
             }
 
             @Override
@@ -193,6 +185,14 @@ public class FindPlaceFragment extends Fragment
             }
         });
 
+        Button filter = (Button) parent.findViewById(R.id.filter_button);
+        filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filter_click(view);
+            }
+        });
+
         return parent;
     }
 
@@ -227,6 +227,10 @@ public class FindPlaceFragment extends Fragment
 
                 TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
                 snippet.setText(marker.getSnippet());
+
+                selectedPlace = marker;
+                continueButton.setEnabled(true);
+                namePlace.setVisibility(View.GONE);
 
                 return infoWindow;
             }
@@ -438,9 +442,6 @@ public class FindPlaceFragment extends Fragment
                 // Position the map's camera at the location of the marker.
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
                         DEFAULT_ZOOM));
-
-                continueButton.setEnabled(true);
-                namePlace.setVisibility(View.GONE);
             }
         };
 
@@ -450,91 +451,6 @@ public class FindPlaceFragment extends Fragment
                 .setItems(mLikelyPlaceNames, listener)
                 .show();
     }
-
-    /*
-    public void searchPlace(View v){
-        final String place = placeSearched.getText().toString();
-        Task<PlaceBufferResponse> taskPlaceSearch = mGeoDataClient.getPlaceById(place);
-        
-        taskPlaceSearch.addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    PlaceBufferResponse places = task.getResult();
-                    
-                    // Set the count, handling cases where less than 5 entries are returned.
-                    int count;
-                    if (places.getCount() < M_MAX_ENTRIES) {
-                        count = places.getCount();
-                    } else {
-                        count = M_MAX_ENTRIES;
-                    }
-
-                    int i = 0;
-                    mSearchedPlaceNames = new String[count];
-                    mSearchedPlaceAddresses = new String[count];
-                    mSearchedPlaceAttributions = new String[count];
-                    mSearchedPlaceLatLngs = new LatLng[count];
-
-                    for (Place place : places) {
-                        // Build a list of Searched places to show the user.
-                        mSearchedPlaceNames[i] = (String) place.getName();
-                        mSearchedPlaceAddresses[i] = (String) place.getAddress();
-                        mSearchedPlaceAttributions[i] = (String) place.getAttributions();
-                        mSearchedPlaceLatLngs[i] = place.getLatLng();
-
-                        i++;
-                        if (i > (count - 1)) {
-                            break;
-                        }
-                    }
-
-                    // Release the place likelihood buffer, to avoid memory leaks.
-                    places.release();
-
-                    // Show a dialog offering the user the list of likely places, and add a
-                    // marker at the selected place.
-                    openSearchedPlacesDialog();
-                    
-                } else {
-                    Log.e(TAG, "Exception: %s", task.getException());
-                }
-            }
-        });
-    }
-
-    private void openSearchedPlacesDialog() {
-        // Ask the user to choose the place where they are now.
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // The "which" argument contains the position of the selected item.
-                LatLng markerLatLng = mSearchedPlaceLatLngs[which];
-                String markerSnippet = mSearchedPlaceAddresses[which];
-                if (mSearchedPlaceAttributions[which] != null) {
-                    markerSnippet = markerSnippet + "\n" + mSearchedPlaceAttributions[which];
-                }
-
-                // Add a marker for the selected place, with an info window
-                // showing information about that place.
-                mMap.addMarker(new MarkerOptions()
-                        .title(mSearchedPlaceNames[which])
-                        .position(markerLatLng)
-                        .snippet(markerSnippet));
-
-                // Position the map's camera at the location of the marker.
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
-                        DEFAULT_ZOOM));
-            }
-        };
-
-        // Display the dialog.
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.pick_place)
-                .setItems(mSearchedPlaceNames, listener)
-                .show();
-    }
-    */
 
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
@@ -576,12 +492,10 @@ public class FindPlaceFragment extends Fragment
             site = new Site(selectedPlace.getTitle(),selectedPlace.getSnippet(),
                     selectedPlace.getPosition().latitude, selectedPlace.getPosition().longitude);
         }
-        //CreateEventFragment fragment = (CreateEventFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_create_event);
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         fragment.add_site(site);
 
         getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
-        //getTargetFragment().getFragmentManager().popBackStack();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -598,4 +512,21 @@ public class FindPlaceFragment extends Fragment
             }
         }
     };
+
+    public void addMarkerPlace(Site site){
+        mMap.addMarker(new MarkerOptions()
+                .title(site.name)
+                .position(new LatLng(site.latitude,site.longitude))
+                .snippet(site.description));
+    }
+
+    public void filter_click(View view){
+        mMap.clear();
+
+        FilterSitesFragmentDialog fragment = FilterSitesFragmentDialog.newInstance(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
 }

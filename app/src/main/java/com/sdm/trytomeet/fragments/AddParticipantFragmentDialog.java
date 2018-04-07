@@ -19,8 +19,8 @@ import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
 
 import java.util.ArrayList;
 
-import POJO.Friends;
-import POJO.User;
+import com.sdm.trytomeet.POJO.Friends;
+import com.sdm.trytomeet.POJO.User;
 
 public class AddParticipantFragmentDialog extends DialogFragment {
 
@@ -45,7 +45,7 @@ public class AddParticipantFragmentDialog extends DialogFragment {
         res.setArguments(args);
 
         return res;
-    }
+}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

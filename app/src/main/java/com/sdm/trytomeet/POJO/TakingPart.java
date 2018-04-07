@@ -1,8 +1,7 @@
-package POJO;
+package com.sdm.trytomeet.POJO;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.List;
 import java.util.Map;
 
 /**
