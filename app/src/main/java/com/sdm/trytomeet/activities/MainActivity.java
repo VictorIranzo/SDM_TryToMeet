@@ -1,7 +1,9 @@
 package com.sdm.trytomeet.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -28,6 +30,7 @@ import com.sdm.trytomeet.fragments.FindPlaceFragment;
 import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.notifications.NotificationService;
 
 public class MainActivity
         extends AppCompatActivity
@@ -39,6 +42,7 @@ public class MainActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private DatabaseReference mDatabase;
+    private Intent service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +78,8 @@ public class MainActivity
     protected void onStart() {
         super.onStart();
 
-        // TODO: HACER QUE ESTE HILO DE EJECUCION SE EJECUTE EN SEGUNDO PLANO
-        // We listen for the notifications
-        mDatabase.child("notifications").child(account.getId()).addValueEventListener(new NotificactionListener(this));
+        service = new Intent(this, NotificationService.class);
+        this.startService(service);
 
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
@@ -130,6 +133,11 @@ public class MainActivity
         switch (item.getItemId()){
             case R.id.log_out:
                 // Log out and return to the login activity
+                this.stopService(service); // stop listenint notifications for the current account
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("account_id", "");
+                editor.apply();
                 mGoogleSignInClient.signOut();
                 finish();
                 Intent intent = new Intent(this, LoginActivity.class);

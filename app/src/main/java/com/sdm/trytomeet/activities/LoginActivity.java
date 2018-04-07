@@ -1,7 +1,9 @@
 package com.sdm.trytomeet.activities;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -83,6 +85,10 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 MainActivity.account = task.getResult(ApiException.class);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("account_id", MainActivity.account.getId());
+                editor.apply();
                 //User has properly logged in with google
                 go_to_main_screen();
             } catch (ApiException e) {

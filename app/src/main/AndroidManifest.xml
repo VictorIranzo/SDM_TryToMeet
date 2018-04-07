@@ -20,7 +20,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCHpYt-Y6j0ZDOuthIA9b71Mw6yOEJcbM0"/>
-
+        <service android:name=".notifications.NotificationService"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
