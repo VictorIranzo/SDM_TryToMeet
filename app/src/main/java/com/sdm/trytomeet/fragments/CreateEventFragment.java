@@ -172,6 +172,7 @@ public class CreateEventFragment extends Fragment {
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
+    private boolean firstime = true;
     private void find_place(View v) {
         FindPlaceFragment fragment = new FindPlaceFragment();
         fragment.setTargetFragment(this,0);
@@ -179,7 +180,14 @@ public class CreateEventFragment extends Fragment {
         // TODO: Revisar esta solución. Ahora, cuando se abre el fragment de elegir sitio, este se oculta. Una vez elegido,
         // el mapa se elimina desde el gestor de fragments de create event y se vuelve a mostrar este.
         getView().setVisibility(View.GONE);
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment).addToBackStack(null).commit();
+
+        if(firstime) {
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment, "Find_Place").addToBackStack(null).commit();
+            firstime = false;
+        } else {
+            fragment = (FindPlaceFragment) getActivity().getSupportFragmentManager().findFragmentByTag("Find_Place");
+            fragment.make_visible();
+        }
     }
 
     // Method to be called from the AddParticipantFragmentDialog
@@ -200,6 +208,13 @@ public class CreateEventFragment extends Fragment {
         ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
         ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
 
+        make_visible();
+
+        Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
+        findPlaceButton.setText(getString(R.string.create_event_change_place_button));
+    }
+
+    public void make_visible(){
         getView().setVisibility(View.VISIBLE);
     }
 }

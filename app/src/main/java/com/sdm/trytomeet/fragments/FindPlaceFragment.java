@@ -95,13 +95,12 @@ public class FindPlaceFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        /*
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-        */
+
         parent = inflater.inflate(R.layout.fragment_add_place, container, false);
 
         // Construct a GeoDataClient.
@@ -479,7 +478,10 @@ public class FindPlaceFragment extends Fragment
     }
 
     public void cancelClick(View v){
-        getTargetFragment().getFragmentManager().popBackStackImmediate();
+        CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
+        fragment.make_visible();
+        //getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
+        getView().setVisibility(View.GONE);
     }
 
     public void continueClick(View v)
@@ -495,7 +497,8 @@ public class FindPlaceFragment extends Fragment
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         fragment.add_site(site);
 
-        getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
+        //getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
+        getView().setVisibility(View.GONE);
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -528,5 +531,9 @@ public class FindPlaceFragment extends Fragment
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
+
+    public void make_visible(){
+        getView().setVisibility(View.VISIBLE);
     }
 }
