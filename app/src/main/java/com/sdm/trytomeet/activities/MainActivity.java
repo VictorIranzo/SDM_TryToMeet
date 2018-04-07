@@ -22,6 +22,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
+import com.sdm.trytomeet.fragments.FindPlaceFragment;
 
 import POJO.User;
 
@@ -137,6 +138,9 @@ public class MainActivity
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.frameLayout, fragment).commit();
                 break;
+            case R.id.profile:
+                FindPlaceFragment fragment2 = new FindPlaceFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment2).commit();
         }
         drawerLayout.closeDrawers();
         return true;

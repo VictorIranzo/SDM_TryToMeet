@@ -1,6 +1,5 @@
 package com.sdm.trytomeet.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,12 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.FindPlaceActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
 
@@ -157,8 +156,11 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void find_place(View v) {
-        Intent intent = new Intent(getActivity(), FindPlaceActivity.class);
-        getActivity().startActivity(intent);
+        FindPlaceFragment fragment = new FindPlaceFragment();
+        fragment.setTargetFragment(this,0);
+
+        getView().setVisibility(View.GONE);
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     // Method to be called from the AddParticipantFragmentDialog
@@ -176,6 +178,9 @@ public class CreateEventFragment extends Fragment {
     public void add_site(Site site){
         this.site = site;
         //TODO: Change UI when the site is selected.
-        ((TextView) getActivity().findViewById(R.id.selectedPlace)).setText(site.name);
+        ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
+        ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
+
+        getView().setVisibility(View.VISIBLE);
     }
 }

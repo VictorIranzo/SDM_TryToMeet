@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.activities;
+package com.sdm.trytomeet.fragments;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -6,13 +6,15 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -40,16 +42,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.fragments.CreateEventFragment;
 
 import POJO.Site;
 
 // TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
 
-public class FindPlaceActivity extends AppCompatActivity
+public class FindPlaceFragment extends Fragment
         implements OnMapReadyCallback {
 
-    private static final String TAG = FindPlaceActivity.class.getSimpleName();
+    private View parent;
+
+    private static final String TAG = FindPlaceFragment.class.getSimpleName();
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
 
@@ -95,29 +98,28 @@ public class FindPlaceActivity extends AppCompatActivity
     private EditText namePlace;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        /*
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-        setContentView(R.layout.activity_add_place);
+        */
+        parent = inflater.inflate(R.layout.fragment_add_place, container, false);
 
         // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this, null);
+        mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
 
         // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(getActivity(), null);
 
         // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Build the map.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 /*
@@ -129,7 +131,7 @@ public class FindPlaceActivity extends AppCompatActivity
 
         // TODO: Use the SupportPlaceAutoCompleteFragment.
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -161,24 +163,37 @@ public class FindPlaceActivity extends AppCompatActivity
             }
         });
 
-        namePlace = (EditText) findViewById(R.id.namePlace);
-        continueButton = (Button) findViewById(R.id.continue_button);
+        namePlace = (EditText) parent.findViewById(R.id.namePlace);
+        continueButton = (Button)parent.findViewById(R.id.continue_button);
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                continueClick(view);
+            }
+        });
 
         continueButton.setEnabled(false);
         namePlace.setVisibility(View.GONE);
         namePlace.addTextChangedListener(textWatcher);
-    }
 
-    /**
-     * Saves the state of the map when the activity is paused.
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (mMap != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            super.onSaveInstanceState(outState);
-        }
+        Button cancelButton = (Button) parent.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelClick(view);
+            }
+        });
+
+        Button nearToMe = (Button) parent.findViewById(R.id.near_button);
+        nearToMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openNearToMeDialog(view);
+            }
+        });
+
+        return parent;
     }
 
     /**
@@ -205,7 +220,7 @@ public class FindPlaceActivity extends AppCompatActivity
 
                 // Inflate the layouts for the info window, title and snippet.
                 View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.map), false);
+                        (FrameLayout) getActivity().findViewById(R.id.map), false);
 
                 TextView title = ((TextView) infoWindow.findViewById(R.id.title));
                 title.setText(marker.getTitle());
@@ -251,7 +266,7 @@ public class FindPlaceActivity extends AppCompatActivity
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                locationResult.addOnCompleteListener( getActivity(), new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
@@ -285,12 +300,12 @@ public class FindPlaceActivity extends AppCompatActivity
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+        if (ContextCompat.checkSelfPermission(this.getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
@@ -430,7 +445,7 @@ public class FindPlaceActivity extends AppCompatActivity
         };
 
         // Display the dialog.
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.pick_place)
                 .setItems(mLikelyPlaceNames, listener)
                 .show();
@@ -548,7 +563,7 @@ public class FindPlaceActivity extends AppCompatActivity
     }
 
     public void cancelClick(View v){
-        finish();
+        getTargetFragment().getFragmentManager().popBackStackImmediate();
     }
 
     public void continueClick(View v)
@@ -561,10 +576,12 @@ public class FindPlaceActivity extends AppCompatActivity
             site = new Site(selectedPlace.getTitle(),selectedPlace.getSnippet(),
                     selectedPlace.getPosition().latitude, selectedPlace.getPosition().longitude);
         }
-        CreateEventFragment fragment = (CreateEventFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_create_event);
-
+        //CreateEventFragment fragment = (CreateEventFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_create_event);
+        CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         fragment.add_site(site);
-        finish();
+
+        getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
+        //getTargetFragment().getFragmentManager().popBackStack();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
