@@ -2,15 +2,14 @@ package com.sdm.trytomeet.POJO;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-/**
- * Created by adrymc96 on 20/03/18.
- */
+import java.util.List;
 
 @IgnoreExtraProperties
 public class User {
     public String id;
     public String username;
     public String url;
+    public List<Site> favouriteSites;
 
     public User(){}
 

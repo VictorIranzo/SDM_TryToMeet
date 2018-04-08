@@ -11,4 +11,11 @@ public class Notification {
 
 
     public Notification(){}
+
+    public Notification(int purpose, String title, String text, String event_id) {
+        this.purpose = purpose;
+        this.title = title;
+        this.text = text;
+        this.event_id = event_id;
+    }
 }

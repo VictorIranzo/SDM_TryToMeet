@@ -12,4 +12,8 @@ public class InvitedTo {
     // TODO: RELLENAR CON LOS ATRIBUTOS QUE HAGAN FALTA
 
     public InvitedTo() {}
+
+    public InvitedTo(String state) {
+        this.state = state;
+    }
 }

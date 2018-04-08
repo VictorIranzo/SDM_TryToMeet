@@ -12,7 +12,6 @@ import java.util.List;
 public class Event {
     public String name;
     public String description;
-    // TODO: LUGAR PROPORCIONADO POR GOOGLE (ALGO PARA IDENTIFICARLO, NO TODA SU INFO)
     public Site site;
     public List<Date> possible_dates;
     public List<String> participants_id;

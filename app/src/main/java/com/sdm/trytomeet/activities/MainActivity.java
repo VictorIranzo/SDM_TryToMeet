@@ -12,25 +12,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
-import com.sdm.trytomeet.notifications.NotificactionListener;
 
-import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.notifications.NotificationService;
+import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 public class MainActivity
         extends AppCompatActivity
@@ -41,7 +32,6 @@ public class MainActivity
     public static GoogleSignInAccount account;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private DatabaseReference mDatabase;
     private Intent service;
 
     @Override
@@ -69,9 +59,6 @@ public class MainActivity
 
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Getting access to DB
-        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -81,29 +68,7 @@ public class MainActivity
         service = new Intent(this, NotificationService.class);
         this.startService(service);
 
-        /* TODO: PONERLO EN LA VENTANA DE LOGIN
-        * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
-        * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
-        */
-        // We store the current user in our DB (if they do not exist)
-        mDatabase.child("users").child(account.getId()).runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                User me = mutableData.getValue(User.class);
-                if(me == null) {
-                    me = new User();
-                    me.username = account.getDisplayName();
-                    me.id = account.getId();
-                    mutableData.setValue(me);
-                }
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                // Do nothing
-            }
-        });
+        UserFirebaseService.addGoogleUser(account);
     }
 
     @Override

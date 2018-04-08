@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
@@ -29,6 +28,8 @@ import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.POJO.Notification;
+import com.sdm.trytomeet.persistence.server.EventFirebaseService;
+import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
 
 public class CreateEventFragment extends Fragment {
 
@@ -110,46 +111,46 @@ public class CreateEventFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.create_event_header_confirm:
-                // We create the Event object
-                String name = ((TextView) parent.findViewById(R.id.create_event_title)).getText().toString();
-                String description = ((TextView) parent.findViewById(R.id.create_event_description)).getText().toString();
-                List<Date> possible_dates = new ArrayList<>(); for(Date date : dates) possible_dates.add(date);
-                List<String> participants_id = new ArrayList<>(); for(User user : participants) participants_id.add(user.id);
-                String creator_id = user_id;
-                String state = "PENDING";
-                Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
-
-                // We store the event in the DB
-                final String key = FirebaseDatabase.getInstance().getReference().child("events").push().getKey();
-                FirebaseDatabase.getInstance().getReference().child("events").child(key).setValue(event);
-
-                // We link each participant (and the creator) with the new event
-                List<String> to_invite = new ArrayList<>(participants_id);
-                to_invite.add(user_id);
-                for(String id : to_invite){
-                    InvitedTo inv = new InvitedTo();
-                    inv.state = "PENDING";
-                    FirebaseDatabase.getInstance().getReference().child("taking_part")
-                            .child(id).child("invitedTo").child(key).setValue(inv);
-                }
-
-                // We notify each user
-                to_invite.remove(user_id); // Not me
-                for(String id : to_invite){
-                    Notification not = new Notification();
-                    not.purpose = NotificactionListener.ADDED_TO_AN_EVENT;
-                    not.event_id = key;
-                    not.title = getResources().getString(R.string.create_event_notification_title);
-                    not.text = getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name);
-                    String not_key = FirebaseDatabase.getInstance().getReference().child("notifications")
-                            .child(id).push().getKey();
-                    FirebaseDatabase.getInstance().getReference().child("notifications")
-                            .child(id).child(not_key).setValue(not);
-                }
-
+                confirmEvent();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmEvent() {
+        // We create the Event object
+        String name = ((TextView) parent.findViewById(R.id.create_event_title)).getText().toString();
+        String description = ((TextView) parent.findViewById(R.id.create_event_description)).getText().toString();
+        List<Date> possible_dates = new ArrayList<>();
+        for(Date date : dates) possible_dates.add(date);
+        List<String> participants_id = new ArrayList<>();
+        for(User user : participants) participants_id.add(user.id);
+        String creator_id = user_id;
+        String state = "PENDING";
+        Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
+
+        // We store the event in the DB
+        String event_id = EventFirebaseService.addEvent(event);
+
+        // We link each participant (and the creator) with the new event
+        List<String> to_invite = new ArrayList<>(participants_id);
+        to_invite.add(user_id);
+        InvitedTo inv = new InvitedTo("PENDING");
+        for(String participant_id : to_invite){
+            EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
+        }
+
+        // We notify each user
+        to_invite.remove(user_id); // Not me
+        Notification notification = new Notification(
+                NotificactionListener.ADDED_TO_AN_EVENT,
+                getResources().getString(R.string.create_event_notification_title),
+                getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name),
+                event_id);
+
+        for(String participant_id : to_invite){
+            NotificationFirebaseService.addNotification(notification,participant_id);
+        }
     }
 
     private void add_participant(View view){
