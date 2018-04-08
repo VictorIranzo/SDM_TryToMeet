@@ -223,6 +223,8 @@ public class CreateEventFragment extends Fragment {
 
         Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
         findPlaceButton.setText(getString(R.string.create_event_change_place_button));
+
+        // TODO: Allow add favorite place after check that it's not one of the favorite places.
     }
 
     public void make_visible(){

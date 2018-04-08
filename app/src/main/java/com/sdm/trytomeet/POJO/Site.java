@@ -20,4 +20,9 @@ public class Site {
     }
 
     public Site(){}
+
+    @Override
+    public boolean equals(Object o){
+        return o instanceof Site && ((Site)o).name.equals(this.name);
+    }
 }

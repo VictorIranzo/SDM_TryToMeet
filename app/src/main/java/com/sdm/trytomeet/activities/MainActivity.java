@@ -143,7 +143,7 @@ public class MainActivity
         args.putString("user_id", account.getId());
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).commit();
     }
 
     private void goToFavoriteSites() {
@@ -153,7 +153,7 @@ public class MainActivity
         args.putString("user_id", account.getId());
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).commit();
     }
 
 }

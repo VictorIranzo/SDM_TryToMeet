@@ -65,8 +65,25 @@ public class UserFirebaseService extends FirebaseService{
         });
     }
 
-    public static void removeFavoriteSite(String user_id, Site selectedSite) {
+    public static void removeFavoriteSite(String user_id, final Site selectedSite) {
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()){
+                    DataSnapshot data = iterator.next();
+                    Site s = data.getValue(Site.class);
+                    if(s.equals(selectedSite)){
+                        data.getRef().removeValue();
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
     }
 
     public static String addUserFavoriteSite(String user_id, Site site) {
