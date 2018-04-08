@@ -8,13 +8,13 @@ import java.util.List;
 public class User {
     public String id;
     public String username;
-    public String url;
+    public String image;
     public List<Site> favouriteSites;
 
     public User(){}
 
     public String toString(){
-        return "Username: " + username + ", url: " + url;
+        return "Username: " + username;
     }
 
     @Override

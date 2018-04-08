@@ -27,6 +27,8 @@
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="ok">Ok</string>
+    <string name="edit">Edit</string>
 
     <!-->Map activity<-->
     <string name="title_activity_maps">Current Place Details</string>

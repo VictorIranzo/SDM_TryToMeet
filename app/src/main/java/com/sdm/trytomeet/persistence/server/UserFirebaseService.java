@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
+import com.sdm.trytomeet.fragments.ProfileFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -91,5 +92,29 @@ public class UserFirebaseService extends FirebaseService{
         getDatabaseReference().child("users").child(user_id).child("favorite_sites").child(key).setValue(site);
 
         return key;
+    }
+
+    public static void getUserFromProfile(String user_id, final ProfileFragment profileFragment){
+        getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                profileFragment.updateImageAndName(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void setUserImage(String user_id, String image)
+    {
+        getDatabaseReference().child("users").child(user_id).child("image").setValue(image);
+    }
+
+    public static void setUserName(String user_id, String name) {
+        getDatabaseReference().child("users").child(user_id).child("username").setValue(name);
     }
 }

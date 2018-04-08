@@ -12,25 +12,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
-import com.sdm.trytomeet.notifications.NotificactionListener;
 
-import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.fragments.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificationService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -128,9 +119,9 @@ public class MainActivity
                 goToFavoriteSites();
                 break;
 
-            case R.id.profile:
-                FindPlaceFragment fragment2 = new FindPlaceFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment2).commit();
+            case R.id.drawer_menu_profile:
+                goToProfile();
+                break;
         }
         drawerLayout.closeDrawers();
         return true;
@@ -148,6 +139,16 @@ public class MainActivity
 
     private void goToFavoriteSites() {
         FavoriteSitesFragment fragment = new FavoriteSitesFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", account.getId());
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
+    }
+
+    private void goToProfile() {
+        ProfileFragment fragment = new ProfileFragment();
         // Insert the arguments
         Bundle args = new Bundle();
         args.putString("user_id", account.getId());
