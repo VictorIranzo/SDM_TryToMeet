@@ -3,4 +3,7 @@
     <dimen name="drawer_header_height">150dp</dimen>
     <dimen name="drawer_header_padding">10dp</dimen>
     <dimen name="drawer_header_text">20sp</dimen>
+
+    <dimen name="list_row_site_description_text_size">24sp</dimen>
+    <dimen name="list_row_site_name_text_size">18sp</dimen>
 </resources>

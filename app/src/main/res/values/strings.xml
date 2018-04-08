@@ -3,7 +3,7 @@
     <string name="app_name">TryToMeet</string>
     <string name="drawer_menu_create_event">Create an event</string>
     <string name="profile">Profile</string>
-    <string name="history">History</string>
+    <string name="favorite_sites">Favorite sites</string>
     <string name="log_out">Log out</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>

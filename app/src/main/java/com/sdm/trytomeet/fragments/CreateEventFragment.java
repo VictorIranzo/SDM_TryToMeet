@@ -9,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
@@ -30,6 +32,7 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
+import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 public class CreateEventFragment extends Fragment {
 
@@ -61,7 +64,6 @@ public class CreateEventFragment extends Fragment {
         parent = inflater.inflate(R.layout.fragment_create_event, container, false);
         user_id = getArguments().getString("user_id");
 
-        // TODO: Move to the layout XML the definition of the onClick listener.
         Button add_partcipant = parent.findViewById(R.id.button_add_participant);
         add_partcipant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +80,19 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        final Button find_place = parent.findViewById(R.id.button_find_place);
+        Button find_place = parent.findViewById(R.id.button_find_place);
         find_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 find_place(v);
+            }
+        });
+
+        ImageButton add_favorite = parent.findViewById(R.id.button_favorite_site);
+        add_favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addFavoriteSite();
             }
         });
 
@@ -217,5 +227,11 @@ public class CreateEventFragment extends Fragment {
 
     public void make_visible(){
         getView().setVisibility(View.VISIBLE);
+    }
+
+    private void addFavoriteSite() {
+        UserFirebaseService.addUserFavoriteSite(user_id,site);
+
+        Toast.makeText(getActivity(),"Anyadido sITIO favorito",5).show();
     }
 }

@@ -1,11 +1,20 @@
 package com.sdm.trytomeet.persistence.server;
 
+import android.util.Log;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class UserFirebaseService extends FirebaseService{
 
@@ -34,5 +43,36 @@ public class UserFirebaseService extends FirebaseService{
                 // Do nothing
             }
         });
+    }
+
+    public static void getUserFavoriteSites(String user_id, final FavoriteSitesFragment favoriteSitesFragment){
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                List<Site> favouriteSites = new ArrayList<Site>();
+                while (iterator.hasNext()){
+                    Site s = iterator.next().getValue(Site.class);
+                    favouriteSites.add(s);
+                }
+                favoriteSitesFragment.addSitesToList(favouriteSites);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void removeFavoriteSite(String user_id, Site selectedSite) {
+
+    }
+
+    public static String addUserFavoriteSite(String user_id, Site site) {
+        String key = getDatabaseReference().child("users").child(user_id).child("favorite_sites").push().getKey();
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").child(key).setValue(site);
+
+        return key;
     }
 }

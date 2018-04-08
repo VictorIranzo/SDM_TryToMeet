@@ -26,6 +26,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
+import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
 import com.sdm.trytomeet.notifications.NotificactionListener;
 
@@ -42,7 +43,6 @@ public class MainActivity
     public static GoogleSignInAccount account;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private DatabaseReference mDatabase;
     private Intent service;
 
     @Override
@@ -70,9 +70,6 @@ public class MainActivity
 
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Getting access to DB
-        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -124,14 +121,13 @@ public class MainActivity
                 break;
 
             case R.id.drawer_menu_create_event:
-                CreateEventFragment fragment = new CreateEventFragment();
-                // Insert the arguments
-                Bundle args = new Bundle();
-                args.putString("user_id", account.getId());
-                fragment.setArguments(args);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.frameLayout, fragment).commit();
+                goToCreateEvent();
                 break;
+
+            case R.id.drawer_menu_favorite_sites:
+                goToFavoriteSites();
+                break;
+
             case R.id.profile:
                 FindPlaceFragment fragment2 = new FindPlaceFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment2).commit();
@@ -139,4 +135,25 @@ public class MainActivity
         drawerLayout.closeDrawers();
         return true;
     }
+
+    private void goToCreateEvent() {
+        CreateEventFragment fragment = new CreateEventFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", account.getId());
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frameLayout, fragment).commit();
+    }
+
+    private void goToFavoriteSites() {
+        FavoriteSitesFragment fragment = new FavoriteSitesFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", account.getId());
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frameLayout, fragment).commit();
+    }
+
 }

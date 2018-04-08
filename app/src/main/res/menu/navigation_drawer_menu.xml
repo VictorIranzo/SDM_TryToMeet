@@ -12,9 +12,9 @@
         android:title="@string/drawer_menu_create_event"
         app:showAsAction="always" />
     <item
-        android:id="@+id/mSettings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/history"
+        android:id="@+id/drawer_menu_favorite_sites"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="@string/favorite_sites"
         app:showAsAction="always" />
 
     <item

@@ -14,5 +14,10 @@ public class Site {
         this.longitude = longitude;
     }
 
+    public Site(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public Site(){}
 }

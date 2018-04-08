@@ -62,11 +62,10 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/imageView4"
+                    <ImageButton
+                        android:id="@+id/button_favorite_site"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:src="@android:drawable/btn_star_big_on" />
 
                     <TextView
