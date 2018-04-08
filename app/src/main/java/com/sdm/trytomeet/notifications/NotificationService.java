@@ -35,16 +35,22 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        FirebaseDatabase.getInstance().getReference().child("notifications")
-                .child(account_id).addValueEventListener(listener);
+        if(account_id.equals("")){
+            stopSelf();
+        }
+        else{
+            FirebaseDatabase.getInstance().getReference().child("notifications")
+                    .child(account_id).addValueEventListener(listener);
+        }
         return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        FirebaseDatabase.getInstance().getReference().child("notifications")
-                .child(MainActivity.account.getId()).removeEventListener(listener);
-        Log.e("Bye", "Bye");
+        if(!account_id.equals("")){
+            FirebaseDatabase.getInstance().getReference().child("notifications")
+                    .child(MainActivity.account.getId()).removeEventListener(listener);
+        }
         super.onDestroy();
     }
 }
