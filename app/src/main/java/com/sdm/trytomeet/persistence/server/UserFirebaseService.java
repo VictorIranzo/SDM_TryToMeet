@@ -10,6 +10,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.ProfileFragment;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class UserFirebaseService extends FirebaseService{
 
     // TODO: Revisar si esto se puede hacer con un push y guardando la key.
-    public static void addGoogleUser(final GoogleSignInAccount account){
+    public static void addGoogleUser(final GoogleSignInAccount account, final MainActivity mainActivity){
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
         * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
@@ -41,7 +42,8 @@ public class UserFirebaseService extends FirebaseService{
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                // Do nothing
+                // TODO: Revisar esto con Adrián.
+                UserFirebaseService.getUserFromDrawerHeader(account.getId(), mainActivity);
             }
         });
     }
@@ -100,6 +102,21 @@ public class UserFirebaseService extends FirebaseService{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 profileFragment.updateImageAndName(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getUserFromDrawerHeader(String user_id, final MainActivity mainActivity){
+        getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                mainActivity.setHeaderDrawer(user);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.sdm.trytomeet.fragments;
 
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -41,6 +42,8 @@ public class ProfileFragment extends Fragment {
     private Button cancelButton;
     private Button okButton;
     private EditText editName;
+
+    private String currentImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,7 @@ public class ProfileFragment extends Fragment {
         String newName = editName.getText().toString();
         UserFirebaseService.setUserName(user_id, newName);
         cancelButtonClick();
+        ((MainActivity) getActivity()).setHeaderDrawer(new User(newName,currentImage));
         userName.setText(newName);
     }
 
@@ -138,9 +142,11 @@ public class ProfileFragment extends Fragment {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
                 byte[] byteArray = byteArrayOutputStream .toByteArray();
 
-                String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                currentImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                UserFirebaseService.setUserImage(user_id,image);
+                UserFirebaseService.setUserImage(user_id,currentImage);
+
+                ((MainActivity) getActivity()).setHeaderDrawer(new User(userName.getText().toString(),currentImage));
 
 
             } catch (FileNotFoundException e) {
@@ -154,6 +160,8 @@ public class ProfileFragment extends Fragment {
     public void updateImageAndName(User user) {
         userName.setText(user.username);
         editName.setText(user.username);
+
+        currentImage = user.image;
         byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
         Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         profileImage.setImageBitmap(image);

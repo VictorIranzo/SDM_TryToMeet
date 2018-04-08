@@ -9,13 +9,14 @@
     android:background="@color/colorPrimary"
     android:padding="@dimen/drawer_header_padding">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/sym_def_app_icon" />
+    <com.sdm.trytomeet.components.CircularImageView
+        android:id="@+id/drawer_user_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/common_full_open_on_phone" />
 
     <TextView
+        android:id="@+id/drawer_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/fake_user"

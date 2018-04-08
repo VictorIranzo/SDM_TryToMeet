@@ -3,6 +3,8 @@ package com.sdm.trytomeet.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,11 +14,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
@@ -35,6 +42,8 @@ public class MainActivity
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private Intent service;
+
+    private User actualUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,19 @@ public class MainActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    public void setHeaderDrawer(User user) {
+        actualUser = user;
+        TextView userName =  findViewById(R.id.drawer_user_name);
+        userName.setText(user.username);
+
+        if(user.image != null) {
+            CircularImageView userImage = findViewById(R.id.drawer_user_image);
+            byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
+            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            userImage.setImageBitmap(image);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -70,7 +92,7 @@ public class MainActivity
         service = new Intent(this, NotificationService.class);
         this.startService(service);
 
-        UserFirebaseService.addGoogleUser(account);
+        UserFirebaseService.addGoogleUser(account, this);
     }
 
     @Override

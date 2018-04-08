@@ -13,6 +13,11 @@ public class User {
 
     public User(){}
 
+    public User(String username, String image) {
+        this.username = username;
+        this.image = image;
+    }
+
     public String toString(){
         return "Username: " + username;
     }
