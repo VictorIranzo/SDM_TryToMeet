@@ -1,16 +1,22 @@
 package com.sdm.trytomeet.persistence.server;
 
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
+import com.sdm.trytomeet.fragments.AddFriendFragmentDialog;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.ProfileFragment;
 
@@ -18,8 +24,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserFirebaseService extends FirebaseService{
+import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
+public class UserFirebaseService extends FirebaseService{
     // TODO: Revisar si esto se puede hacer con un push y guardando la key.
     public static void addGoogleUser(final GoogleSignInAccount account, final MainActivity mainActivity){
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
@@ -134,4 +141,64 @@ public class UserFirebaseService extends FirebaseService{
     public static void setUserName(String user_id, String name) {
         getDatabaseReference().child("users").child(user_id).child("username").setValue(name);
     }
+
+    public static void addFriend(final String user_id, final String friend_name){
+        getDatabaseReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                User u= new User();
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()){
+                    DataSnapshot data = iterator.next();
+                    final User s = data.getValue(User.class);
+                    if((s.username).equals(friend_name)){
+                        u.username=s.username;
+                        u.id= s.id;
+                        addFriendChecked(user_id,u);
+
+                    }
+                }
+
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+
+
+
+        }
+
+
+    private static void addFriendChecked(final String user_id,final User u) {
+
+        getDatabaseReference().child("friends").child(user_id)
+                .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final String msg;
+                        Friends friends = dataSnapshot.getValue(Friends.class);
+                        if (friends != null) {
+                            if (friends.friends.contains(u.id) == false) {
+                                friends.friends.add(u.id);
+                                getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                            }
+                        } else {
+                            Friends f = new Friends(new ArrayList<String>());
+                            f.friends.add(u.id);
+                            getDatabaseReference().child("friends").child(user_id).setValue(f);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
 }

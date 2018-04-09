@@ -22,11 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout panelChangeName;
     private Button cancelButton;
     private Button okButton;
+    private Button addFriendButton;
     private EditText editName;
 
     private String currentImage;
@@ -84,6 +87,13 @@ public class ProfileFragment extends Fragment {
                 okButtonClick();
             }
         });
+        addFriendButton = parent.findViewById(R.id.button_add_friend);
+        addFriendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addFriend(view);
+            }
+        });
 
         cancelButton = parent.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +128,15 @@ public class ProfileFragment extends Fragment {
         editButton.setVisibility(View.GONE);
         panelChangeName.setVisibility(View.VISIBLE);
         userName.setVisibility(View.GONE);
+    }
+
+    private void addFriend(View view){
+        // Show a pop-up to select among your friends
+        AddFriendFragmentDialog fragment = AddFriendFragmentDialog.newInstance(user_id);
+        fragment.setCancelable(false);
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
     private void setImage() {
@@ -161,9 +180,12 @@ public class ProfileFragment extends Fragment {
         userName.setText(user.username);
         editName.setText(user.username);
 
+        if( user.image != null){
         currentImage = user.image;
         byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
         Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        profileImage.setImageBitmap(image);
+        profileImage.setImageBitmap(image);}
     }
+
+
 }

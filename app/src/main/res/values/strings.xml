@@ -18,11 +18,17 @@
     <string name="create_event_add_a_date_button">Add a date</string>
     <string name="create_event_participants_title">Participants</string>
     <string name="create_event_add_a_participant_button">Add a participant</string>
+    <string name="create_event_friend_title">Friend</string>
+    <string name="create_event_add_a_friend_button">Add a friend</string>
     <string name="create_event_notification_title">Added to a new event</string>
     <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
 
     <string name="add_participant_filter">Friend\'s name:</string>
     <string name="add_participant_filter_hint">Insert your friend\'s name to filter</string>
+
+    <string name="added_friend_successfull">Friend added successfully</string>
+    <string name="added_friend_fail">Failed to add that friend</string>
+
 
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>

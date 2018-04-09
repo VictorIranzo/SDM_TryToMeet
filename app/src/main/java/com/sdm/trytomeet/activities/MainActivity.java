@@ -18,6 +18,7 @@ import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -178,5 +179,6 @@ public class MainActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
     }
+
 
 }
