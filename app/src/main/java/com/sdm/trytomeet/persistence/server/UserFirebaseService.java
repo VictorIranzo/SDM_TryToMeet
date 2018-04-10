@@ -12,12 +12,17 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Friends;
+import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.AddFriendFragmentDialog;
+import com.sdm.trytomeet.fragments.CreateEventFragment;
+import com.sdm.trytomeet.fragments.CreateGroupFragment;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
+import com.sdm.trytomeet.fragments.GroupsFragment;
+import com.sdm.trytomeet.fragments.MembersFragment;
 import com.sdm.trytomeet.fragments.ProfileFragment;
 
 import java.util.ArrayList;
@@ -26,9 +31,9 @@ import java.util.List;
 
 import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
-public class UserFirebaseService extends FirebaseService{
+public class UserFirebaseService extends FirebaseService {
     // TODO: Revisar si esto se puede hacer con un push y guardando la key.
-    public static void addGoogleUser(final GoogleSignInAccount account, final MainActivity mainActivity){
+    public static void addGoogleUser(final GoogleSignInAccount account, final MainActivity mainActivity) {
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
         * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
@@ -38,7 +43,7 @@ public class UserFirebaseService extends FirebaseService{
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 User me = mutableData.getValue(User.class);
-                if(me == null) {
+                if (me == null) {
                     me = new User();
                     me.username = account.getDisplayName();
                     me.id = account.getId();
@@ -55,13 +60,13 @@ public class UserFirebaseService extends FirebaseService{
         });
     }
 
-    public static void getUserFavoriteSites(String user_id, final FavoriteSitesFragment favoriteSitesFragment){
+    public static void getUserFavoriteSites(String user_id, final FavoriteSitesFragment favoriteSitesFragment) {
         getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                 List<Site> favouriteSites = new ArrayList<Site>();
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     Site s = iterator.next().getValue(Site.class);
                     favouriteSites.add(s);
                 }
@@ -80,10 +85,10 @@ public class UserFirebaseService extends FirebaseService{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     DataSnapshot data = iterator.next();
                     Site s = data.getValue(Site.class);
-                    if(s.equals(selectedSite)){
+                    if (s.equals(selectedSite)) {
                         data.getRef().removeValue();
                     }
                 }
@@ -103,7 +108,7 @@ public class UserFirebaseService extends FirebaseService{
         return key;
     }
 
-    public static void getUserFromProfile(String user_id, final ProfileFragment profileFragment){
+    public static void getUserFromProfile(String user_id, final ProfileFragment profileFragment) {
         getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -118,7 +123,8 @@ public class UserFirebaseService extends FirebaseService{
         });
     }
 
-    public static void getUserFromDrawerHeader(String user_id, final MainActivity mainActivity){
+
+    public static void getUserFromDrawerHeader(String user_id, final MainActivity mainActivity) {
         getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,8 +139,7 @@ public class UserFirebaseService extends FirebaseService{
         });
     }
 
-    public static void setUserImage(String user_id, String image)
-    {
+    public static void setUserImage(String user_id, String image) {
         getDatabaseReference().child("users").child(user_id).child("image").setValue(image);
     }
 
@@ -142,26 +147,47 @@ public class UserFirebaseService extends FirebaseService{
         getDatabaseReference().child("users").child(user_id).child("username").setValue(name);
     }
 
-    public static void addFriend(final String user_id, final String friend_name){
+    public static void getUsersFromMembersOfGroup(List <String> ids, final MembersFragment fragment) {
+        for (String s : ids) {
+            getDatabaseReference().child("users").child(s).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    fragment.addMemberToList(user);
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("Error", "Something bad");
+                }
+            });
+        }
+
+    }
+    public static void addFriend(final String user_id, final String friend_name, final ProfileFragment fragment) {
         getDatabaseReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                User u= new User();
+                boolean appeared=false;
+                User u = new User();
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     DataSnapshot data = iterator.next();
                     final User s = data.getValue(User.class);
-                    if((s.username).equals(friend_name)){
-                        u.username=s.username;
-                        u.id= s.id;
-                        addFriendChecked(user_id,u);
+                    if ((s.username).equals(friend_name)) {
+                        u.username = s.username;
+                        u.id = s.id;
+                        addFriendChecked(user_id, u,fragment);
+                        appeared=true;
 
                     }
+                }
+                if(!appeared){
+                    fragment.addedFriendSuccessfully(false);
                 }
 
 
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("Error", "Something bad");
@@ -169,11 +195,10 @@ public class UserFirebaseService extends FirebaseService{
         });
 
 
+    }
 
-        }
 
-
-    private static void addFriendChecked(final String user_id,final User u) {
+    private static void addFriendChecked(final String user_id, final User u,final ProfileFragment fragment) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -191,6 +216,7 @@ public class UserFirebaseService extends FirebaseService{
                             f.friends.add(u.id);
                             getDatabaseReference().child("friends").child(user_id).setValue(f);
                         }
+                        fragment.addedFriendSuccessfully(true);
 
 
                     }
@@ -201,7 +227,7 @@ public class UserFirebaseService extends FirebaseService{
                 });
     }
 
-    public static void removeFriend(final String user_id, final List<User> friends_remove){
+    public static void removeFriend(final String user_id, final List<User> friends_remove, final ProfileFragment fragment) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -209,25 +235,121 @@ public class UserFirebaseService extends FirebaseService{
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Friends friends = dataSnapshot.getValue(Friends.class);
                         if (friends != null) {
-                                for ( User u : friends_remove)
+                            for (User u : friends_remove)
                                 friends.friends.remove(u.id);
-                                getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                            getDatabaseReference().child("friends").child(user_id).setValue(friends);
                         }
+                        fragment.removedFriendSuccessfully(true);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        fragment.removedFriendSuccessfully(false);
+
                     }
                 });
-
-
-
-
-
-
-
     }
 
+    public static void createGroup(final Group group) {
 
+        String key = getDatabaseReference().child("groups").child(group.members.get(0)).push().getKey();
+        group.uniqueIdentifier=key;
+        for (String u : group.members) {
+            getDatabaseReference().child("groups").child(u).child(key).setValue(group);
+        }
+    }
+
+    public static void getGroups(final String user_id, final GroupsFragment groupFragment) {
+        getDatabaseReference().child("groups").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                List<Group> groups = new ArrayList<Group>();
+                while (iterator.hasNext()) {
+                    Group group = iterator.next().getValue(Group.class);
+                    groups.add(group);
+                }
+                groupFragment.addGroupsToList(groups);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void addFriendToGroup(final String friend,  final Group group ) {
+
+
+            getDatabaseReference().child("groups").child(friend).child(group.uniqueIdentifier).runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    Group groupToAdd = mutableData.getValue(Group.class);
+                    if(groupToAdd!=null){
+
+                        groupToAdd.members.add(friend);
+                    }
+                    else{
+                        group.members.add(friend);
+                        groupToAdd = group ;
+                    }
+                    mutableData.setValue(groupToAdd);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                }
+            });
+
+            for (String id: group.members){
+                getDatabaseReference().child("groups").child(id).child(group.uniqueIdentifier).runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData mutableData) {
+                        Group groupToAdd = mutableData.getValue(Group.class);
+                        if(groupToAdd!=null){
+
+                            groupToAdd.members.add(friend);
+                        }
+                        else{
+                            groupToAdd = group;
+                        }
+                        mutableData.setValue(groupToAdd);
+                        return Transaction.success(mutableData);
+                    }
+
+                    @Override
+                    public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                    }
+                });
+            }
+
+    }
+    public static void exitFromGroup(final String user_id,final Group group) {
+
+        getDatabaseReference().child("groups").child(user_id).child(group.uniqueIdentifier).setValue(null);
+        for (String id: group.members){
+            getDatabaseReference().child("groups").child(id).child(group.uniqueIdentifier).runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    Group groupToAdd = mutableData.getValue(Group.class);
+                    if (groupToAdd != null) {
+
+                        groupToAdd.members.remove(user_id);
+                        mutableData.setValue(groupToAdd);
+                    }
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                }
+            });
+        }
+    }
 }
 

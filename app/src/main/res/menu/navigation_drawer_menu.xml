@@ -16,6 +16,12 @@
         android:icon="@android:drawable/btn_star_big_on"
         android:title="@string/favorite_sites"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/drawer_menu_groups"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/groups_title"
+        app:showAsAction="always" />
+
 
     <item
         android:id="@+id/log_out"

@@ -29,6 +29,7 @@ import com.sdm.trytomeet.fragments.CreateEventFragment;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
 
+import com.sdm.trytomeet.fragments.GroupsFragment;
 import com.sdm.trytomeet.fragments.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificationService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
@@ -145,9 +146,22 @@ public class MainActivity
             case R.id.drawer_menu_profile:
                 goToProfile();
                 break;
+            case R.id.drawer_menu_groups:
+                goToGroups();
+                break;
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    private void goToGroups() {
+        GroupsFragment fragment = new GroupsFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", account.getId());
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
     }
 
     private void goToCreateEvent() {

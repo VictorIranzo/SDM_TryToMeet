@@ -1,5 +1,6 @@
 package com.sdm.trytomeet.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ public class AddFriendFragmentDialog  extends DialogFragment {
 
     private View parent;
     private static String user_id;
+    public static final int ADD_FRIEND= 2;
+
 
     public AddFriendFragmentDialog() {
         // Required empty public constructor
@@ -66,8 +69,8 @@ public class AddFriendFragmentDialog  extends DialogFragment {
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                UserFirebaseService.addFriend(user_id,editText.getText().toString());
+                getActivity().getIntent().putExtra("friend_id",editText.getText().toString());
+                getTargetFragment().onActivityResult(ADD_FRIEND, Activity.RESULT_OK, getActivity().getIntent());
 
             }
         });

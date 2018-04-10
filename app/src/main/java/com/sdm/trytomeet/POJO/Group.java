@@ -11,11 +11,13 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Group {
     public List<String> members;
+    public String name;
+    public String uniqueIdentifier;
 
     public Group(){}
 
-    public Group(List<String> members){
-        this.members = members;
+    public Group(List<String> members, String name){
+        this.members = members;this.name=name;
     }
 
     public String toString(){

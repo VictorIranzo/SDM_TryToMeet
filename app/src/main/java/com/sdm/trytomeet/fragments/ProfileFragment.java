@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -36,6 +37,9 @@ public class ProfileFragment extends Fragment {
     private String user_id;
 
     public static final int GET_FROM_GALLERY = 1;
+    public static final int ADD_FRIEND= 2;
+    public static final int REMOVE_FRIEND= 3;
+
 
     private CircularImageView profileImage;
     private TextView userName;
@@ -193,6 +197,16 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        if (requestCode==ADD_FRIEND){
+            String friend_id=data.getStringExtra("friend_id");
+            UserFirebaseService.addFriend(user_id,friend_id,this);
+
+        }
+        if (requestCode==REMOVE_FRIEND){
+            ArrayList<User> to_remove = new ArrayList<User>((List<User>)data.getSerializableExtra("to_remove"));
+            UserFirebaseService.removeFriend(user_id,to_remove,this);
+
+        }
     }
 
     public void updateImageAndName(User user) {
@@ -204,6 +218,22 @@ public class ProfileFragment extends Fragment {
         byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
         Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         profileImage.setImageBitmap(image);}
+    }
+
+    public void addedFriendSuccessfully(boolean res){
+        String message;
+        if(res) message=getString(R.string.added_friend_successfull);
+        else message =getString(R.string.added_friend_fail);
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+    }
+
+    public void removedFriendSuccessfully(boolean res){
+        String message;
+        if(res) message=getString(R.string.removed_friend_successfull);
+        else message =getString(R.string.removed_friend_fail);
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
     }
 
 

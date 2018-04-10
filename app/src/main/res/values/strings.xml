@@ -9,6 +9,11 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="fake_user">Manolo Papote</string>
 
+    <string name="new_group_title">New group</string>
+    <string name="groups_title">Groups</string>
+    <string name="group_name">Group name</string>
+    <string name="member_added">Friend added to the group</string>
+
     <string name="create_event_title">Title</string>
     <string name="create_event_title_hint">Insert the title of your event</string>
     <string name="create_event_description_hint">Insert the description of your event</string>
@@ -28,7 +33,15 @@
 
     <string name="added_friend_successfull">Friend added successfully</string>
     <string name="added_friend_fail">Failed to add that friend</string>
+
+    <string name="removed_friend_successfull">Friend removed successfully</string>
+    <string name="removed_friend_fail">Failed to remove that friend</string>
+
     <string name="noFriends">You have no friends yet</string>
+    <string name="noFriendsToAddToGroup">You dont have friends to add to this group</string>
+
+    <string name="exit_group_title">Exit group</string>
+    <string name="exit_group_message">Are you sure you want to exit from this group?</string>
 
 
 
