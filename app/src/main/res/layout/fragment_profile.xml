@@ -63,4 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add friend" />
+
+    <Button
+        android:id="@+id/button_remove_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove friend" />
 </LinearLayout>

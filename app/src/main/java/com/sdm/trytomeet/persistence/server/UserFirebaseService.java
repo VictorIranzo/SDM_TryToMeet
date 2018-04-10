@@ -201,4 +201,33 @@ public class UserFirebaseService extends FirebaseService{
                 });
     }
 
+    public static void removeFriend(final String user_id, final List<User> friends_remove){
+
+        getDatabaseReference().child("friends").child(user_id)
+                .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Friends friends = dataSnapshot.getValue(Friends.class);
+                        if (friends != null) {
+                                for ( User u : friends_remove)
+                                friends.friends.remove(u.id);
+                                getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
+
+
+
+
+
+    }
+
+
 }
+

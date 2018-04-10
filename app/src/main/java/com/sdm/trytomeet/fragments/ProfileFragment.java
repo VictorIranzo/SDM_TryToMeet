@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private Button cancelButton;
     private Button okButton;
     private Button addFriendButton;
+    private Button removeFriendButton;
     private EditText editName;
 
     private String currentImage;
@@ -87,11 +88,20 @@ public class ProfileFragment extends Fragment {
                 okButtonClick();
             }
         });
+
         addFriendButton = parent.findViewById(R.id.button_add_friend);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addFriend(view);
+            }
+        });
+
+        removeFriendButton = parent.findViewById(R.id.button_remove_friend);
+        removeFriendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeFriend(view);
             }
         });
 
@@ -133,6 +143,15 @@ public class ProfileFragment extends Fragment {
     private void addFriend(View view){
         // Show a pop-up to select among your friends
         AddFriendFragmentDialog fragment = AddFriendFragmentDialog.newInstance(user_id);
+        fragment.setCancelable(false);
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
+
+    private void removeFriend(View view){
+        // Show a pop-up to select among your friends
+        RemoveFriendFragmentDialog fragment = RemoveFriendFragmentDialog.newInstance(user_id);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);

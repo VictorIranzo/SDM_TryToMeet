@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/add" />
+            android:text="@string/select" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
