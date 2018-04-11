@@ -26,6 +26,7 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.CreateEventFragment;
+import com.sdm.trytomeet.fragments.EventFragment;
 import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.FindPlaceFragment;
 
@@ -145,6 +146,10 @@ public class MainActivity
             case R.id.drawer_menu_profile:
                 goToProfile();
                 break;
+
+            case R.id.drawer_menu_events:
+                goToEvent();
+                break;
         }
         drawerLayout.closeDrawers();
         return true;
@@ -172,6 +177,16 @@ public class MainActivity
 
     private void goToProfile() {
         ProfileFragment fragment = new ProfileFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", account.getId());
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
+    }
+
+    private void goToEvent() {
+        EventFragment fragment = new EventFragment();
         // Insert the arguments
         Bundle args = new Bundle();
         args.putString("user_id", account.getId());

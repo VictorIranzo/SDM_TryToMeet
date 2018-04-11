@@ -8,6 +8,8 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="fake_user">Manolo Papote</string>
+    <string name="drawer_menu_event">Events</string>
+
 
     <string name="create_event_title">Title</string>
     <string name="create_event_title_hint">Insert the title of your event</string>
@@ -39,6 +41,8 @@
     <string name="delete">Delete</string>
     <string name="ok">Ok</string>
     <string name="edit">Edit</string>
+    <string name="alert">Alert</string>
+
 
     <!-->Map activity<-->
     <string name="title_activity_maps">Current Place Details</string>
