@@ -1,8 +1,6 @@
 package com.sdm.trytomeet.fragments;
 
-/**
- * Created by Jordi on 11/04/2018.
- */
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -44,13 +42,7 @@ public class EventFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    /*private ArrayList<User> participants;
-    private CreateEventParticipantListAdapter participant_adapter;
 
-    private ArrayList<Date> dates;
-    private CreateEventDateListAdapter date_adapter;
-
-    private Site site;*/
 
     public EventFragment() {
         // Required empty public constructor
@@ -79,50 +71,7 @@ public class EventFragment extends Fragment {
 
         CardView evento = parent.findViewById(R.id.ev);
 
-        /*Button add_partcipant = parent.findViewById(R.id.button_add_participant);
-        add_partcipant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                add_participant(v);
-            }
-        });
 
-        Button add_date = parent.findViewById(R.id.button_add_date);
-        add_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                add_date(v);
-            }
-        });
-
-        Button find_place = parent.findViewById(R.id.button_find_place);
-        find_place.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                find_place(v);
-            }
-        });
-
-        ImageButton add_favorite = parent.findViewById(R.id.button_favorite_site);
-        add_favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addFavoriteSite();
-            }
-        });
-
-        // We configure the list view for dates
-        dates = new ArrayList<>();
-        final ListView list_view_date = parent.findViewById(R.id.date_list);
-        date_adapter = new CreateEventDateListAdapter(getContext(), R.id.date_list, dates);
-        list_view_date.setAdapter(date_adapter);
-
-        // We configure the list view for participants
-        participants = new ArrayList<>();
-        final ListView list_view_participant = parent.findViewById(R.id.participant_list);
-        participant_adapter = new CreateEventParticipantListAdapter(getContext(), R.id.participant_list, participants);
-        list_view_participant.setAdapter(participant_adapter);
-*/
         return parent;
 
     }
@@ -137,120 +86,13 @@ public class EventFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.alertTitle:
+                nothing();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-  /* private void confirmEvent() {
-        // We create the Event object
-        String name = ((TextView) parent.findViewById(R.id.create_event_title)).getText().toString();
-        String description = ((TextView) parent.findViewById(R.id.create_event_description)).getText().toString();
-        List<Date> possible_dates = new ArrayList<>();
-        for(Date date : dates) possible_dates.add(date);
-        List<String> participants_id = new ArrayList<>();
-        for(User user : participants) participants_id.add(user.id);
-        String creator_id = user_id;
-        String state = "PENDING";
-        Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
 
-        // We store the event in the DB
-        String event_id = EventFirebaseService.addEvent(event);
-
-        // We link each participant (and the creator) with the new event
-        List<String> to_invite = new ArrayList<>(participants_id);
-        to_invite.add(user_id);
-        InvitedTo inv = new InvitedTo("PENDING");
-        for(String participant_id : to_invite){
-            EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
-        }
-
-        // We notify each user
-        to_invite.remove(user_id); // Not me
-        Notification notification = new Notification(
-                NotificactionListener.ADDED_TO_AN_EVENT,
-                getResources().getString(R.string.create_event_notification_title),
-                getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name),
-                event_id);
-
-        for(String participant_id : to_invite){
-            NotificationFirebaseService.addNotification(notification,participant_id);
-        }
-    }
-
-    private void add_participant(View view){
-        // Show a pop-up to select among your friends
-        ArrayList<String> current_id_participants = new ArrayList<>();
-        for(User participant : participants) current_id_participants.add(participant.id);
-        AddParticipantFragmentDialog fragment = AddParticipantFragmentDialog.newInstance(user_id, current_id_participants);
-        fragment.setCancelable(false);
-        // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
-        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
-    }
-
-    private void add_date(View view){
-        // Show a pop-up to select a date
-        AddDateFragmentDialog fragment = AddDateFragmentDialog.newInstance();
-        fragment.setCancelable(false);
-        // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
-        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
-    }
-
-    private boolean firstime = true;
-    private void find_place(View v) {
-        FindPlaceFragment fragment = new FindPlaceFragment();
-        fragment.setTargetFragment(this,0);
-
-        // TODO: Revisar esta solución. Ahora, cuando se abre el fragment de elegir sitio, este se oculta. Una vez elegido,
-        // el mapa se elimina desde el gestor de fragments de create event y se vuelve a mostrar este.
-        getView().setVisibility(View.GONE);
-
-        if(firstime) {
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment, "Find_Place").addToBackStack(null).commit();
-            firstime = false;
-        } else {
-            fragment = (FindPlaceFragment) getActivity().getSupportFragmentManager().findFragmentByTag("Find_Place");
-            fragment.make_visible();
-        }
-    }
-
-    // Method to be called from the AddParticipantFragmentDialog
-    public void add_participants(ArrayList<User> to_add){
-        participants.addAll(to_add);
-        participant_adapter.notifyDataSetChanged();
-    }
-
-    // Method to be called from AddDateFragmentDialog
-    public void add_date(Date date){
-        if(!dates.contains(date)) dates.add(date);
-        date_adapter.notifyDataSetChanged();
-    }
-
-    public void add_site(Site site){
-        this.site = site;
-        //TODO: Change UI when the site is selected.
-        ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
-        ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
-
-        make_visible();
-
-        Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
-        findPlaceButton.setText(getString(R.string.create_event_change_place_button));
-
-        // TODO: Allow add favorite place after check that it's not one of the favorite places.
-    }
-
-    public void make_visible(){
-        getView().setVisibility(View.VISIBLE);
-    }
-    private void addFavoriteSite() {
-        UserFirebaseService.addUserFavoriteSite(user_id,site);
-
-        Toast.makeText(getActivity(),"Anyadido sITIO favorito",5).show();
-    }
-*/
     private void goToCreateEvent() {
         CreateEventFragment fragment = new CreateEventFragment();
         // Insert the arguments
@@ -261,4 +103,11 @@ public class EventFragment extends Fragment {
                 .replace(R.id.frameLayout, fragment).commit();
     }
 
+    public void nothing() {
+        Toast toast1 =
+                Toast.makeText(getContext(),
+                        "No hay notificaciones", Toast.LENGTH_SHORT);
+
+        toast1.show();
+    }
 }

@@ -151,6 +151,7 @@ public class MainActivity
 
             case R.id.drawer_menu_events:
                 goToEvent();
+                break;
 
             case R.id.drawer_menu_groups:
                 goToGroups();
