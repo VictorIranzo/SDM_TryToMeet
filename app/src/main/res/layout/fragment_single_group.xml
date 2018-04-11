@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_create_event"
+    tools:context="com.sdm.trytomeet.fragments.CreateEventFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/groupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ListView
+                android:id="@+id/members"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

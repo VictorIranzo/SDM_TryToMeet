@@ -2,10 +2,11 @@ package com.sdm.trytomeet.POJO;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.List;
 
 @IgnoreExtraProperties
-public class User {
+public class User  implements Serializable{
     public String id;
     public String username;
     public String image;

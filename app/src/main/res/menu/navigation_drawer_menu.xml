@@ -18,6 +18,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/drawer_menu_groups"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/groups_title"
+        app:showAsAction="always" />
+
+
+    <item
         android:id="@+id/drawer_menu_events"
         android:icon="@android:drawable/ic_lock_power_off"
         android:title="@string/drawer_menu_event"
