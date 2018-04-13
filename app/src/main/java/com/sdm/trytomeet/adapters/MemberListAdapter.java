@@ -16,6 +16,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by adrymc96 on 30/03/18.
@@ -25,9 +26,9 @@ public class MemberListAdapter extends ArrayAdapter<User>{
 
     Context context;
     int resource;
-    private ArrayList<User> data;
+    private List<User> data;
 
-    public MemberListAdapter(Context context, int resource, ArrayList<User> data){
+    public MemberListAdapter(Context context, int resource, List<User> data){
         super(context, resource, data);
         this.context = context;
         this.resource = resource;

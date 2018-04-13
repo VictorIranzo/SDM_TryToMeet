@@ -92,7 +92,7 @@ public class VoteDateListAdapter extends RecyclerView.Adapter<VoteDateListAdapte
                 dateButton.setBackgroundColor(Color.GREEN);
                 adapter.data.get(position).voted_users.add(adapter.user_id);
             }
-            
+
             dateButton.setText(adapter.data.get(position).toString());
         }
     }

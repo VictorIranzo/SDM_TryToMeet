@@ -13,6 +13,7 @@ import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
+import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Groups.MembersFragment;
@@ -49,6 +50,22 @@ public class UserFirebaseService extends FirebaseService {
                 UserFirebaseService.getUserFromDrawerHeader(account.getId(), mainActivity);
             }
         });
+    }
+
+    public static void getUser(String user_id, final EventFragment eventFragment)
+    {
+        getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            User u = dataSnapshot.getValue(User.class);
+            eventFragment.addUser(u);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.e("Error", "Something bad");
+        }
+    });
     }
 
     public static void getUserFavoriteSites(String user_id, final FavoriteSitesFragment favoriteSitesFragment) {
@@ -175,8 +192,6 @@ public class UserFirebaseService extends FirebaseService {
                 if(!appeared){
                     fragment.addedFriendSuccessfully(false);
                 }
-
-
             }
 
             @Override
@@ -208,8 +223,6 @@ public class UserFirebaseService extends FirebaseService {
                             getDatabaseReference().child("friends").child(user_id).setValue(f);
                         }
                         fragment.addedFriendSuccessfully(true);
-
-
                     }
 
                     @Override

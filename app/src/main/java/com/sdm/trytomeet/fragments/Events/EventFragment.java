@@ -12,9 +12,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Event;
+import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
+import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventFragment extends Fragment {
     private View parent;
@@ -29,9 +35,13 @@ public class EventFragment extends Fragment {
     private TextView event_site_name;
     private TextView event_site_description;
     private RecyclerView event_dates;
+    private ListView event_participants;
 
+    private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
+
     private Event shownEvent;
+    private List<User> participants;
 
     public EventFragment() {
     }
@@ -58,8 +68,11 @@ public class EventFragment extends Fragment {
         event_site_name =  parent.findViewById(R.id.event_site_name);
         event_site_description =  parent.findViewById(R.id.event_site_description);
         event_dates = parent.findViewById(R.id.event_dates);
+        event_participants = parent.findViewById(R.id.event_participants);
 
         event_dates.setLayoutManager(new GridLayoutManager(getActivity(),2));
+
+        participants = new ArrayList<User>();
 
         EventFirebaseService.getEvent(event_id, this);
 
@@ -67,6 +80,8 @@ public class EventFragment extends Fragment {
     }
 
     public void setUpEventView(Event event){
+        shownEvent = event;
+
         event_name.setText(event.name);
         event_name_edit.setText(event.name);
         event_state.setText(event.state);
@@ -77,5 +92,17 @@ public class EventFragment extends Fragment {
 
         voteDateListAdapter = new VoteDateListAdapter(event.possible_dates,user_id,event_id);
         event_dates.setAdapter(voteDateListAdapter);
+
+        participantsAdapter = new MemberListAdapter(getActivity(),R.id.event_participants,participants);
+        event_participants.setAdapter(participantsAdapter);
+        
+        for (String user: event.participants_id) {
+            UserFirebaseService.getUser(user,this);
+        }
+    }
+
+    public void addUser(User user) {
+        participants.add(user);
+        participantsAdapter.notifyDataSetChanged();
     }
 }

@@ -86,13 +86,11 @@
         android:layout_height="5dp"
         android:background="@android:color/darker_gray" />
 
-    <LinearLayout
+    <ListView
         android:id="@+id/event_participants"
+        android:choiceMode="none"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_height="wrap_content"/>
 
     <View
         android:layout_width="match_parent"
@@ -101,10 +99,10 @@
         android:layout_height="5dp"
         android:background="@android:color/darker_gray" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/event_dates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_dates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <View
         android:layout_width="match_parent"
