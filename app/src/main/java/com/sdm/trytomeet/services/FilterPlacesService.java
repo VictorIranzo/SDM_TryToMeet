@@ -1,8 +1,5 @@
 package com.sdm.trytomeet.services;
 
-import android.net.Uri;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -19,7 +16,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.sdm.trytomeet.POJO.Site;
-import com.sdm.trytomeet.fragments.FindPlaceFragment;
+import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
 import com.sdm.trytomeet.services.serializers.NearbySearchResult;
 import com.sdm.trytomeet.services.serializers.NearbySearchResults;
 import com.sdm.trytomeet.R;

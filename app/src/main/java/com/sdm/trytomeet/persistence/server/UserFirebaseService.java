@@ -1,13 +1,10 @@
 package com.sdm.trytomeet.persistence.server;
 
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
@@ -15,21 +12,15 @@ import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
-import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
-import com.sdm.trytomeet.fragments.AddFriendFragmentDialog;
-import com.sdm.trytomeet.fragments.CreateEventFragment;
-import com.sdm.trytomeet.fragments.CreateGroupFragment;
-import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
-import com.sdm.trytomeet.fragments.GroupsFragment;
-import com.sdm.trytomeet.fragments.MembersFragment;
-import com.sdm.trytomeet.fragments.ProfileFragment;
+import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
+import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
+import com.sdm.trytomeet.fragments.Groups.MembersFragment;
+import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
 public class UserFirebaseService extends FirebaseService {
     // TODO: Revisar si esto se puede hacer con un push y guardando la key.

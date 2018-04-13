@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Sites;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

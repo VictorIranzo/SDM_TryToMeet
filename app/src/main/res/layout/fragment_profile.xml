@@ -6,7 +6,7 @@
     android:gravity="top|center"
     android:orientation="vertical"
     android:padding="5dp"
-    tools:context="com.sdm.trytomeet.fragments.ProfileFragment">
+    tools:context="com.sdm.trytomeet.fragments.Profile.ProfileFragment">
 
     <com.sdm.trytomeet.components.CircularImageView
         android:id="@+id/circleImage"

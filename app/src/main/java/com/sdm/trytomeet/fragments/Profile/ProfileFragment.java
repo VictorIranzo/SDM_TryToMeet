@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Profile;
 
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;

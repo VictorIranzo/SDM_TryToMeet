@@ -1,10 +1,8 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Groups;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,17 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Group;
-import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.GroupsListAdapter;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GroupsFragment extends Fragment {

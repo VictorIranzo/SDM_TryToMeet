@@ -1,56 +1,47 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Events;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.sdm.trytomeet.POJO.Friends;
-import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
-import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
 
-import static android.view.View.GONE;
-import static com.google.android.gms.internal.zzahn.runOnUiThread;
+import com.sdm.trytomeet.POJO.Friends;
+import com.sdm.trytomeet.POJO.User;
 
-public class RemoveFriendFragmentDialog extends DialogFragment {
+public class AddParticipantFragmentDialog extends DialogFragment {
 
     private View parent;
     private String user_id;
     private ArrayList<User> my_friends;
+    private ArrayList<String> current_participants;
     private ListView list_view;
-    private TextView noFriends;
-    private ProgressBar progressBar;
-    public static final int REMOVE_FRIEND= 3;
 
 
-
-    public RemoveFriendFragmentDialog() {
+    public AddParticipantFragmentDialog() {
         // Required empty public constructor
     }
 
-    public static RemoveFriendFragmentDialog newInstance(String user_id){
-        RemoveFriendFragmentDialog res = new RemoveFriendFragmentDialog();
+    public static AddParticipantFragmentDialog newInstance(String user_id, ArrayList<String> current_participants){
+        AddParticipantFragmentDialog res = new AddParticipantFragmentDialog();
 
         // Insert the argument
         Bundle args = new Bundle();
         args.putString("user_id", user_id);
+        args.putSerializable("current_participants", current_participants);
         res.setArguments(args);
 
         return res;
@@ -65,6 +56,7 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         user_id = getArguments().getString("user_id");
+        current_participants = (ArrayList<String>) getArguments().getSerializable("current_participants");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -77,27 +69,26 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
                 return false;
             }
         });
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_remove_friend_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_participant_dialog, null);
 
         // We configure the list view
         my_friends = new ArrayList<>();
-        list_view = parent.findViewById(R.id.list_view_removeFriend);
-        noFriends = parent.findViewById(R.id.textViewRemoveFriend);
-        progressBar = parent.findViewById(R.id.remove_friend_progress_bar);
+        list_view = parent.findViewById(R.id.list_view);
         final AddParticipantListAdapter adapter = new AddParticipantListAdapter(getContext(), R.id.list_view, my_friends);
         list_view.setAdapter(adapter);
 
         // TODO: FILTER BY FRIENDS NAME
-        // TODO: Move to persistence folder.
+
 
         // We populate the friends list
         FirebaseDatabase.getInstance().getReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        final Friends friends = dataSnapshot.getValue(Friends.class);
+                        Friends friends = dataSnapshot.getValue(Friends.class);
                         if(friends != null){
                             for(String friend : friends.friends){ // For each one of my friends
+                                if(current_participants.contains(friend)) continue; // If that friend has been added skip it
                                 FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                         .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name
                                             @Override
@@ -116,18 +107,6 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
                             }
                         }
 
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(friends==null)
-                                   noFriends.setText(getResources().getString(R.string.noFriends));
-                                    progressBar.setVisibility(GONE);
-                                }
-                            });
-
-
-
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -135,13 +114,10 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
                     }
                 });
         builder.setView(parent);
-        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener(){
+        builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<User> to_remove = adapter.getToAdd();
-                getActivity().getIntent().putExtra("to_remove",to_remove);
-                getTargetFragment().onActivityResult(REMOVE_FRIEND, Activity.RESULT_OK, getActivity().getIntent());
-
+                ((CreateEventFragment)getTargetFragment()).add_participants(adapter.getToAdd());
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){

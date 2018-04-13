@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Events;
 
 
 import android.os.Bundle;
@@ -11,31 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.MainActivity;
-import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
-import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
-import com.sdm.trytomeet.notifications.NotificactionListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sdm.trytomeet.POJO.Date;
-import com.sdm.trytomeet.POJO.Event;
-import com.sdm.trytomeet.POJO.InvitedTo;
-import com.sdm.trytomeet.POJO.Site;
-import com.sdm.trytomeet.POJO.User;
-import com.sdm.trytomeet.POJO.Notification;
-import com.sdm.trytomeet.persistence.server.EventFirebaseService;
-import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
-import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 
 public class EventListFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Events;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +19,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
+import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
 import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import java.util.ArrayList;

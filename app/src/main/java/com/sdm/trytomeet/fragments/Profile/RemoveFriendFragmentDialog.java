@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Profile;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,36 +18,33 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Friends;
-import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
-import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
 
 import static android.view.View.GONE;
 import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
-public class AddMemberFragmentDialog extends DialogFragment {
+public class RemoveFriendFragmentDialog extends DialogFragment {
 
     private View parent;
     private String user_id;
     private ArrayList<User> my_friends;
-    private ArrayList<String> already_on_group;
-    private String group_name;
-    private String group_identifier;
     private ListView list_view;
     private TextView noFriends;
     private ProgressBar progressBar;
+    public static final int REMOVE_FRIEND= 3;
 
 
-    public AddMemberFragmentDialog() {
+
+    public RemoveFriendFragmentDialog() {
         // Required empty public constructor
     }
 
-    public static AddMemberFragmentDialog newInstance(String user_id){
-        AddMemberFragmentDialog res = new AddMemberFragmentDialog();
+    public static RemoveFriendFragmentDialog newInstance(String user_id){
+        RemoveFriendFragmentDialog res = new RemoveFriendFragmentDialog();
 
         // Insert the argument
         Bundle args = new Bundle();
@@ -66,11 +63,6 @@ public class AddMemberFragmentDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         user_id = getArguments().getString("user_id");
-        already_on_group= getArguments().getStringArrayList("group");
-        group_identifier= getArguments().getString("group_identifier");
-        group_name= getArguments().getString("group_name");
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -94,7 +86,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
         list_view.setAdapter(adapter);
 
         // TODO: FILTER BY FRIENDS NAME
-
+        // TODO: Move to persistence folder.
 
         // We populate the friends list
         FirebaseDatabase.getInstance().getReference().child("friends").child(user_id)
@@ -103,8 +95,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Friends friends = dataSnapshot.getValue(Friends.class);
                         if(friends != null){
-                            for(String friend : friends.friends){
-                                if(already_on_group.contains(friend)) continue; // If that friend has been added skip it// For each one of my friends
+                            for(String friend : friends.friends){ // For each one of my friends
                                 FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                         .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name
                                             @Override
@@ -122,11 +113,13 @@ public class AddMemberFragmentDialog extends DialogFragment {
                                         });
                             }
                         }
+
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(already_on_group.containsAll(friends.friends)){
-                                     noFriends.setText(getResources().getString(R.string.noFriendsToAddToGroup));}
+                                    if(friends==null)
+                                   noFriends.setText(getResources().getString(R.string.noFriends));
                                     progressBar.setVisibility(GONE);
                                 }
                             });
@@ -140,27 +133,18 @@ public class AddMemberFragmentDialog extends DialogFragment {
                     }
                 });
         builder.setView(parent);
-        builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!my_friends.isEmpty()) {
-
-                    Group group = new Group(already_on_group, group_name);
-                    group.uniqueIdentifier = group_identifier;
-                    for (User f : my_friends) {
-                        UserFirebaseService.addFriendToGroup(f.id, group);
-
-                    }
-                    getActivity().getIntent().putExtra("new",my_friends);
-                    getTargetFragment().onActivityResult(1, Activity.RESULT_OK, getActivity().getIntent());
-                }
+                ArrayList<User> to_remove = adapter.getToAdd();
+                getActivity().getIntent().putExtra("to_remove",to_remove);
+                getTargetFragment().onActivityResult(REMOVE_FRIEND, Activity.RESULT_OK, getActivity().getIntent());
 
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, getActivity().getIntent());
 
             }
         });

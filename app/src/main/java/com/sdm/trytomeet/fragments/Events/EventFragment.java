@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Events;
 
 import android.app.Fragment;
 import android.os.Bundle;

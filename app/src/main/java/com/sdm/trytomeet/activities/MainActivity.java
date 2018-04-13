@@ -23,12 +23,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
-import com.sdm.trytomeet.fragments.CreateEventFragment;
-import com.sdm.trytomeet.fragments.EventListFragment;
-import com.sdm.trytomeet.fragments.FavoriteSitesFragment;
+import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
-import com.sdm.trytomeet.fragments.GroupsFragment;
-import com.sdm.trytomeet.fragments.ProfileFragment;
+import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
+import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificationService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 

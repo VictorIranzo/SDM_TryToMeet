@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Profile;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -9,17 +9,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.google.firebase.database.FirebaseDatabase;
-import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.MainActivity;
-import com.sdm.trytomeet.persistence.server.FirebaseService;
-import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 /**
  * Created by Adrian on 09/04/2018.

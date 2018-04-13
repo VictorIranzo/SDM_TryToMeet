@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Sites;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -44,7 +44,7 @@ import com.google.android.gms.tasks.Task;
 import com.sdm.trytomeet.R;
 
 import com.sdm.trytomeet.POJO.Site;
-import com.sdm.trytomeet.services.FilterPlacesService;
+import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 
 // TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
 

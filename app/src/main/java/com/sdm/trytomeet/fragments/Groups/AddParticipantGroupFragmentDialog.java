@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments;
+package com.sdm.trytomeet.fragments.Groups;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,15 +14,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Friends;
+import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
 
 import java.util.ArrayList;
 
-import com.sdm.trytomeet.POJO.Friends;
-import com.sdm.trytomeet.POJO.User;
-
-public class AddParticipantFragmentDialog extends DialogFragment {
+public class AddParticipantGroupFragmentDialog extends DialogFragment {
 
     private View parent;
     private String user_id;
@@ -31,12 +30,12 @@ public class AddParticipantFragmentDialog extends DialogFragment {
     private ListView list_view;
 
 
-    public AddParticipantFragmentDialog() {
+    public AddParticipantGroupFragmentDialog() {
         // Required empty public constructor
     }
 
-    public static AddParticipantFragmentDialog newInstance(String user_id, ArrayList<String> current_participants){
-        AddParticipantFragmentDialog res = new AddParticipantFragmentDialog();
+    public static AddParticipantGroupFragmentDialog newInstance(String user_id, ArrayList<String> current_participants){
+        AddParticipantGroupFragmentDialog res = new AddParticipantGroupFragmentDialog();
 
         // Insert the argument
         Bundle args = new Bundle();
@@ -117,7 +116,7 @@ public class AddParticipantFragmentDialog extends DialogFragment {
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((CreateEventFragment)getTargetFragment()).add_participants(adapter.getToAdd());
+                ((CreateGroupFragment)getTargetFragment()).add_participants(adapter.getToAdd());
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
