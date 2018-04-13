@@ -18,6 +18,14 @@ public class Event {
     public String creator_id;
     public String state;
 
+    // With this static properties the state of the event is set.
+    // This is used to centralized the possible states of an event and
+    // because Firebase doesn't works well with enums.
+    public final static String PENDING = "PENDING";
+    public final static String VOTED = "VOTED";
+    public final static String CONFIRMED = "CONFIRMED";
+    public final static String DONE = "DONE";
+
     public Event(){}
 
     // This method should be properly adapted when using it

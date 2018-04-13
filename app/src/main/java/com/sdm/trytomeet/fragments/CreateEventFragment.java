@@ -136,7 +136,7 @@ public class CreateEventFragment extends Fragment {
         List<String> participants_id = new ArrayList<>();
         for(User user : participants) participants_id.add(user.id);
         String creator_id = user_id;
-        String state = "PENDING";
+        String state = Event.PENDING;
         Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
 
         // We store the event in the DB

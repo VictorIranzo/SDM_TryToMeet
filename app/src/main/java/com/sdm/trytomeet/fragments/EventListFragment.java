@@ -37,14 +37,14 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
-public class EventFragment extends Fragment {
+public class EventListFragment extends Fragment {
 
     private View parent;
     private String user_id;
 
 
 
-    public EventFragment() {
+    public EventListFragment() {
         // Required empty public constructor
     }
 
