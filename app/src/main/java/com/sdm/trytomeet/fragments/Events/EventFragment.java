@@ -75,7 +75,7 @@ public class EventFragment extends Fragment {
         event_site_name.setText(event.site.name);
         event_site_description.setText(event.site.description);
 
-        voteDateListAdapter = new VoteDateListAdapter(event.possible_dates,user_id);
+        voteDateListAdapter = new VoteDateListAdapter(event.possible_dates,user_id,event_id);
         event_dates.setAdapter(voteDateListAdapter);
     }
 }

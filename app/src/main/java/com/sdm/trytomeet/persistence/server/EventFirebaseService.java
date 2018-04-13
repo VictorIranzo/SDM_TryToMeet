@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
@@ -36,6 +37,48 @@ public class EventFirebaseService extends FirebaseService{
             public void onDataChange(DataSnapshot dataSnapshot) {
                     Event e = dataSnapshot.getValue(Event.class);
                     eventFragment.setUpEventView(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void addVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                for (Date d: e.possible_dates) {
+                    if(d.equals(date)){
+                        d.voted_users.add(user_id);
+                        break;
+                    }
+                }
+                getDatabaseReference().child("events").child(event_id).setValue(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void removeVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                for (Date d: e.possible_dates) {
+                    if(d.equals(date)){
+                        d.voted_users.remove(user_id);
+                        break;
+                    }
+                }
+                getDatabaseReference().child("events").child(event_id).setValue(e);
             }
 
             @Override
