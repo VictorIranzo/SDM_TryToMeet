@@ -11,16 +11,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
 public class EventListFragment extends Fragment {
 
     private View parent;
     private String user_id;
 
+
+    // TODO: Remove this.
+    private Button pruebas;
 
 
     public EventListFragment() {
@@ -50,6 +55,14 @@ public class EventListFragment extends Fragment {
 
         CardView evento = parent.findViewById(R.id.ev);
 
+        pruebas = parent.findViewById(R.id.pruebas);
+
+        pruebas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToEvent();
+            }
+        });
 
         return parent;
 
@@ -88,5 +101,19 @@ public class EventListFragment extends Fragment {
                         "No hay notificaciones", Toast.LENGTH_SHORT);
 
         toast1.show();
+    }
+
+    private void goToEvent(){
+        String event_id= "-L9W90Dm39W5yGI6sevJ";
+        EventFragment fragment = new EventFragment();
+
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", user_id);
+        args.putString("event_id", event_id);
+        fragment.setArguments(args);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
     }
 }

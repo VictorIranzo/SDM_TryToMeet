@@ -10,6 +10,12 @@
     tools:context="com.sdm.trytomeet.fragments.Events.EventListFragment">
 
 
+    <Button
+        android:id="@+id/pruebas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pruebas"/>
+
     <android.support.v7.widget.CardView
         android:id="@+id/ev"
         android:layout_width="match_parent"
