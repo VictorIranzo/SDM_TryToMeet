@@ -88,7 +88,7 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
         list_view.setAdapter(adapter);
 
         // TODO: FILTER BY FRIENDS NAME
-
+        // TODO: Move to persistence folder.
 
         // We populate the friends list
         FirebaseDatabase.getInstance().getReference().child("friends").child(user_id)
