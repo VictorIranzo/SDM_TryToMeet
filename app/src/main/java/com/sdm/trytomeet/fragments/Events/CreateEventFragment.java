@@ -162,6 +162,18 @@ public class CreateEventFragment extends Fragment {
         for(String participant_id : to_invite){
             NotificationFirebaseService.addNotification(notification,participant_id);
         }
+
+        goToEventList();
+    }
+
+    private void goToEventList() {
+        EventListFragment fragment = new EventListFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", user_id);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
     }
 
     private void add_participant(View view){

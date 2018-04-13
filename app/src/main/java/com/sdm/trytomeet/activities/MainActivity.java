@@ -147,7 +147,7 @@ public class MainActivity
 
 
             case R.id.drawer_menu_events:
-                goToEvent();
+                goToEventList();
                 break;
 
             case R.id.drawer_menu_groups:
@@ -198,7 +198,7 @@ public class MainActivity
                 .replace(R.id.frameLayout, fragment).commit();
     }
 
-    private void goToEvent() {
+    private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
         // Insert the arguments
         Bundle args = new Bundle();
