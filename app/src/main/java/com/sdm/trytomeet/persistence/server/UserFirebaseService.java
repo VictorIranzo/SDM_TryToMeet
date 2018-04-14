@@ -131,7 +131,6 @@ public class UserFirebaseService extends FirebaseService {
         });
     }
 
-
     public static void getUserFromDrawerHeader(String user_id, final MainActivity mainActivity) {
         getDatabaseReference().child("users").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

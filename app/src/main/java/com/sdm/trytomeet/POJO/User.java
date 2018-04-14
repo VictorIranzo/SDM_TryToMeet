@@ -10,6 +10,9 @@ public class User  implements Serializable{
     public String id;
     public String username;
     public String image;
+
+    // This property is never serialized when the User is retrieved. This is because the name of
+    // the attribute and the property in Firebase doesn't match. This behaviour is expected.
     public List<Site> favouriteSites;
 
     public User(){}
