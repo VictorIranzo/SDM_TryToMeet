@@ -7,10 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
@@ -20,6 +23,7 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EventFragment extends Fragment {
@@ -36,9 +40,16 @@ public class EventFragment extends Fragment {
     private TextView event_site_description;
     private RecyclerView event_dates;
     private ListView event_participants;
+    private ListView event_comments;
+    private EditText comment_write;
+    private Button add_comment;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
+
+    public ArrayList<HashMap<String,String>> comments = new ArrayList<>();
+    public SimpleAdapter commentsAdapter;
+
 
     private Event shownEvent;
     private List<User> participants;
@@ -69,6 +80,21 @@ public class EventFragment extends Fragment {
         event_site_description =  parent.findViewById(R.id.event_site_description);
         event_dates = parent.findViewById(R.id.event_dates);
         event_participants = parent.findViewById(R.id.event_participants);
+        event_comments = parent.findViewById(R.id.event_comments);
+        comment_write = parent.findViewById(R.id.comment_write);
+        add_comment = parent.findViewById(R.id.add_comment);
+
+        add_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addComment();
+            }
+        });
+
+        // Reuse the favorite sites list.
+        commentsAdapter = new SimpleAdapter(getActivity(), comments, R.layout.site_list_row,
+                new String[]{"user","comment"}, new int[]{R.id.siteName, R.id.siteDescription});
+        event_comments.setAdapter(commentsAdapter);
 
         event_dates.setLayoutManager(new GridLayoutManager(getActivity(),2));
 
@@ -77,6 +103,16 @@ public class EventFragment extends Fragment {
         EventFirebaseService.getEvent(event_id, this);
 
         return parent;
+    }
+
+    private void addComment() {
+        if(currentUser != null) {
+            EventFirebaseService.AddComment(
+                    new Comment(currentUser.username, comment_write.getText().toString()),
+                    event_id);
+
+            comment_write.setText("");
+        }
     }
 
     public void setUpEventView(Event event){
@@ -95,13 +131,33 @@ public class EventFragment extends Fragment {
 
         participantsAdapter = new MemberListAdapter(getActivity(),R.id.event_participants,participants);
         event_participants.setAdapter(participantsAdapter);
-        
+
+        if(event.participants_id != null)
         for (String user: event.participants_id) {
             UserFirebaseService.getUser(user,this);
         }
+
+        if(event.comments != null)
+        for (Comment c : event.comments.values()){
+            getEventComment(c);
+        }
     }
 
+    private void getEventComment(Comment c) {
+        comments.add(getCommentHashMap(c.author,c.text));
+        commentsAdapter.notifyDataSetChanged();
+    }
+
+    private HashMap<String, String> getCommentHashMap(String user, String comment) {
+        HashMap<String,String> item = new HashMap<String,String>();
+        item.put("user", user);
+        item.put("comment", comment);
+        return item;
+    }
+
+    User currentUser;
     public void addUser(User user) {
+        if(user.id.equals(user_id)) currentUser = user;
         participants.add(user);
         participantsAdapter.notifyDataSetChanged();
     }

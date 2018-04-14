@@ -22,101 +22,128 @@
             android:paddingRight="10dp"
             app:srcCompat="@android:drawable/btn_star_big_on" />
 
-        <TextView
-            android:id="@+id/event_name"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/list_row_site_name_text_size"
+                android:text="Title" />
+
+            <TextView
+                android:id="@+id/event_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="State" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/list_row_site_name_text_size"
-            android:text="Title" />
-    </LinearLayout>
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/event_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/event_state"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="State" />
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Description" />
 
-    <EditText
-        android:id="@+id/event_name_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
+            <EditText
+                android:id="@+id/event_description_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/event_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Description" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:background="@android:color/darker_gray" />
 
-    <EditText
-        android:id="@+id/event_description_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
+            <TextView
+                android:id="@+id/event_site_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Site name" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="5dp"
-        android:background="@android:color/darker_gray" />
+            <TextView
+                android:id="@+id/event_site_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Site description" />
 
-    <TextView
-        android:id="@+id/event_site_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Site name" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:background="@android:color/darker_gray" />
 
-    <TextView
-        android:id="@+id/event_site_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Site description" />
+            <ListView
+                android:id="@+id/event_participants"
+                android:choiceMode="none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="5dp"
-        android:background="@android:color/darker_gray" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:background="@android:color/darker_gray" />
 
-    <ListView
-        android:id="@+id/event_participants"
-        android:choiceMode="none"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/event_dates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="5dp"
-        android:background="@android:color/darker_gray" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="5dp"
+                android:background="@android:color/darker_gray" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/event_dates"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <ListView
+                android:id="@+id/event_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:choiceMode="none" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="5dp"
-        android:background="@android:color/darker_gray" />
+            <EditText
+                android:id="@+id/comment_write"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="20"
+                android:inputType="textMultiLine" />
+            <Button
+                android:id="@+id/add_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AnyaDIR Comentario"/>
+        </LinearLayout>
+    </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/event_comments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
 </LinearLayout>

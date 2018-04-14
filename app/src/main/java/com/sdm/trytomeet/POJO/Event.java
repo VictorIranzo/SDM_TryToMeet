@@ -2,6 +2,8 @@ package com.sdm.trytomeet.POJO;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ public class Event {
     public Site site;
     public List<Date> possible_dates;
     public List<String> participants_id;
+    public HashMap<String,Comment> comments;
     public String creator_id;
     public String state;
 
@@ -38,6 +41,7 @@ public class Event {
         this.creator_id = creator_id;
         this.state = state;
         this.site = site;
+        this.comments = new HashMap<String,Comment>();
     }
 
 }

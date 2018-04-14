@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
@@ -86,5 +87,10 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+    }
+
+    public static void AddComment(Comment c, String event_id){
+        String key = getDatabaseReference().child("events").child(event_id).child("comments").push().getKey();
+        getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
     }
 }
