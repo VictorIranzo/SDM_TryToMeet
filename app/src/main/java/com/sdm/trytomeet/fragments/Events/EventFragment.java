@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +22,7 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
+import com.sdm.trytomeet.components.ListViewInScrollView;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -84,6 +88,10 @@ public class EventFragment extends Fragment {
         comment_write = parent.findViewById(R.id.comment_write);
         add_comment = parent.findViewById(R.id.add_comment);
 
+        comment_write.addTextChangedListener(textWatcher);
+
+        add_comment.setEnabled(false);
+
         add_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,8 +110,45 @@ public class EventFragment extends Fragment {
 
         EventFirebaseService.getEvent(event_id, this);
 
+        /*
+        ListViewInScrollView.setListViewHeightBasedOnChildren(event_participants);
+        event_participants.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        ListViewInScrollView.setListViewHeightBasedOnChildren(event_comments);
+        event_comments.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        */
+
         return parent;
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        public void afterTextChanged(Editable s) {
+            if (s.length() == 0) {
+                add_comment.setEnabled(false);
+            } else {
+                add_comment.setEnabled(true);
+            }
+        }
+    };
 
     private void addComment() {
         if(currentUser != null) {

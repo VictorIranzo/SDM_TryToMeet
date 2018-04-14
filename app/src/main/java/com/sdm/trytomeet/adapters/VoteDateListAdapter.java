@@ -42,7 +42,7 @@ public class VoteDateListAdapter extends RecyclerView.Adapter<VoteDateListAdapte
         holder.position = position;
         holder.dateButton.setText(data.get(position).toString());
 
-        if(data.get(position).voted_users.contains(user_id))
+        if(data.get(position).voted_users != null && data.get(position).voted_users.contains(user_id))
         {
             holder.dateButton.setBackgroundColor(Color.GREEN);
             holder.voted = true;
@@ -90,7 +90,8 @@ public class VoteDateListAdapter extends RecyclerView.Adapter<VoteDateListAdapte
                 EventFirebaseService.addVote(adapter.event_id, adapter.user_id, adapter.data.get(position));
                 voted = true;
                 dateButton.setBackgroundColor(Color.GREEN);
-                adapter.data.get(position).voted_users.add(adapter.user_id);
+                if(adapter.data.get(position).voted_users == null) adapter.data.get(position).voted_users = new ArrayList<String>();
+                    adapter.data.get(position).voted_users.add(adapter.user_id);
             }
 
             dateButton.setText(adapter.data.get(position).toString());

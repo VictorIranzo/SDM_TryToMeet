@@ -42,6 +42,8 @@ public class Date {
     // TODO: Internacionalización de toString.
     @Override
     public String toString(){
-        return day + "/" + month + "/" + year + " " + hour +":" + minute + "\n" + "Votes: " + voted_users.size();
+        int votes = 0;
+        if(voted_users != null) votes = voted_users.size();
+        return day + "/" + month + "/" + year + " " + hour +":" + minute + "\n" + "Votes: " + votes;
     }
 }

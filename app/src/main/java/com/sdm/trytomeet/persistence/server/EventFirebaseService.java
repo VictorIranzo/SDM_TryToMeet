@@ -54,6 +54,7 @@ public class EventFirebaseService extends FirebaseService{
                 Event e = dataSnapshot.getValue(Event.class);
                 for (Date d: e.possible_dates) {
                     if(d.equals(date)){
+                        if(d.voted_users == null) d.voted_users = new ArrayList<String>();
                         d.voted_users.add(user_id);
                         break;
                     }
