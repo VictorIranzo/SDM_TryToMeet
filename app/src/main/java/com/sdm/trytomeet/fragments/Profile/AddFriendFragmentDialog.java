@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sdm.trytomeet.R;
 
@@ -57,6 +58,11 @@ public class AddFriendFragmentDialog  extends DialogFragment {
 
         parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_friend_dialog, null);
         final EditText editText= parent.findViewById(R.id.editTextAddFriend);
+        editText.setHint(getResources().getString(R.string.add_friend_filter));
+        final TextView tv= parent.findViewById(R.id.textViewAddFriend);
+        tv.setText(getResources().getString(R.string.add_friend_filter));
+
+
         builder.setView(parent);
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
             @Override

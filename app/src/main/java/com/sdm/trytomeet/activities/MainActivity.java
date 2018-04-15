@@ -93,6 +93,7 @@ public class MainActivity
         this.startService(service);
 
         UserFirebaseService.addGoogleUser(account, this);
+        UserFirebaseService.registerEmail(account.getId(), cleanEmail(account.getEmail()));
     }
 
     @Override
@@ -208,5 +209,7 @@ public class MainActivity
                 .replace(R.id.frameLayout, fragment).commit();
     }
 
-
+    public static String cleanEmail(String string) {
+        return string.replace(".", ",");
+    }
 }

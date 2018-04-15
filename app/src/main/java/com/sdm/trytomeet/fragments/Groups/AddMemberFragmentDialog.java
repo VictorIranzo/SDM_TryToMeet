@@ -125,7 +125,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(already_on_group.containsAll(friends.friends)){
+                                    if(friends==null || already_on_group.containsAll(friends.friends)){
                                      noFriends.setText(getResources().getString(R.string.noFriendsToAddToGroup));}
                                     progressBar.setVisibility(GONE);
                                 }
