@@ -1,6 +1,7 @@
 package com.sdm.trytomeet.adapters;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.sdm.trytomeet.R;
 import java.util.ArrayList;
 
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.fragments.Profile.View_external_user;
 
 /**
  * Created by adrymc96 on 30/03/18.
@@ -43,6 +45,14 @@ public class CreateEventParticipantListAdapter extends ArrayAdapter<User>{
             public void onClick(View v) {
                 data.remove(user);
                 notifyDataSetChanged();
+            }
+        });
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View_external_user external_user = View_external_user.newInstance(user);
+                external_user.show(((FragmentActivity)context).getSupportFragmentManager(), "dialog");
             }
         });
 
