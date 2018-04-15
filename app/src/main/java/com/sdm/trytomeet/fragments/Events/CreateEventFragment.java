@@ -2,6 +2,7 @@ package com.sdm.trytomeet.fragments.Events;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
@@ -70,6 +76,14 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 add_participant(v);
+            }
+        });
+
+        Button add_group = parent.findViewById(R.id.button_add_group);
+        add_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add_group(v);
             }
         });
 
@@ -187,6 +201,17 @@ public class CreateEventFragment extends Fragment {
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
+    private void add_group(View view){
+        //Show a pop-up to select among your groups
+        ArrayList<String> current_id_participants = new ArrayList<>();
+        for(User participant : participants) current_id_participants.add(participant.id);
+        AddGroupFragmentDialog fragment = AddGroupFragmentDialog.newInstance(user_id, current_id_participants);
+        fragment.setCancelable(false);
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
+
     private void add_date(View view){
         // Show a pop-up to select a date
         AddDateFragmentDialog fragment = AddDateFragmentDialog.newInstance();
@@ -218,6 +243,41 @@ public class CreateEventFragment extends Fragment {
     public void add_participants(ArrayList<User> to_add){
         participants.addAll(to_add);
         participant_adapter.notifyDataSetChanged();
+    }
+
+    // Method to be called from the AddGroupFragmentDialog
+    public void add_group(ArrayList<Group> toAdd) {
+        for(Group group : toAdd){
+            for(String member : group.members){
+                if(member.equals(user_id)) continue;
+
+                boolean add = true;
+                for(User participant : participants){
+                    if(participant.id.equals(member)){
+                        add = false;
+                        Log.e("Got","it");
+                        break;
+                    }
+                }
+
+                if(add){
+                    FirebaseDatabase.getInstance().getReference().child("users").child(member)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    participants.add(user);
+                                    participant_adapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+        }
     }
 
     // Method to be called from AddDateFragmentDialog
