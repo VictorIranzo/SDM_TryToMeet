@@ -170,40 +170,25 @@ public class UserFirebaseService extends FirebaseService {
         }
 
     }
-    public static void addFriend(final String user_id, final String friend_name, final ProfileFragment fragment) {
-        getDatabaseReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+    public static void addFriend(final String user_id, final String friend_email, final ProfileFragment fragment) {
+
+        getDatabaseReference().child("email").child(friend_email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean appeared=false;
-                User u = new User();
-                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                while (iterator.hasNext()) {
-                    DataSnapshot data = iterator.next();
-                    final User s = data.getValue(User.class);
-                    if ((s.username).equals(friend_name)) {
-                        u.username = s.username;
-                        u.id = s.id;
-                        addFriendChecked(user_id, u,fragment);
-                        appeared=true;
-
-                    }
-                }
-                if(!appeared){
-                    fragment.addedFriendSuccessfully(false);
-                }
+                String user = dataSnapshot.getValue(String.class);
+                if(user!=null && user!=user_id) addFriendChecked(user_id,user,fragment);
+                else fragment.addedFriendSuccessfully(false);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("Error", "Something bad");
             }
         });
 
-
     }
 
 
-    private static void addFriendChecked(final String user_id, final User u,final ProfileFragment fragment) {
+    private static void addFriendChecked(final String user_id, final String friend,final ProfileFragment fragment) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -212,13 +197,13 @@ public class UserFirebaseService extends FirebaseService {
                         final String msg;
                         Friends friends = dataSnapshot.getValue(Friends.class);
                         if (friends != null) {
-                            if (friends.friends.contains(u.id) == false) {
-                                friends.friends.add(u.id);
+                            if (friends.friends.contains(friend) == false) {
+                                friends.friends.add(friend);
                                 getDatabaseReference().child("friends").child(user_id).setValue(friends);
                             }
                         } else {
                             Friends f = new Friends(new ArrayList<String>());
-                            f.friends.add(u.id);
+                            f.friends.add(friend);
                             getDatabaseReference().child("friends").child(user_id).setValue(f);
                         }
                         fragment.addedFriendSuccessfully(true);
@@ -353,6 +338,11 @@ public class UserFirebaseService extends FirebaseService {
                 }
             });
         }
+    }
+
+    public static void registerEmail(final String user_id, final String email) {
+
+        getDatabaseReference().child("email").child(email).setValue(user_id);
     }
 }
 

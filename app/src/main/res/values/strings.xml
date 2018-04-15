@@ -29,7 +29,7 @@
     <string name="create_event_add_a_friend_button">Add a friend</string>
     <string name="create_event_notification_title">Added to a new event</string>
     <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
-
+    <string name="add_friend_filter">Friend\'s email:</string>
     <string name="add_participant_filter">Friend\'s name:</string>
     <string name="add_participant_filter_hint">Insert your friend\'s name to filter</string>
 

@@ -198,8 +198,8 @@ public class ProfileFragment extends Fragment {
             }
         }
         if (requestCode==ADD_FRIEND){
-            String friend_id=data.getStringExtra("friend_id");
-            UserFirebaseService.addFriend(user_id,friend_id,this);
+            String friend_email=data.getStringExtra("friend_id");
+            UserFirebaseService.addFriend(user_id, MainActivity.cleanEmail(friend_email),this);
 
         }
         if (requestCode==REMOVE_FRIEND){
