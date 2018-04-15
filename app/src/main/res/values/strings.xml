@@ -27,11 +27,15 @@
     <string name="create_event_add_a_participant_button">Add a participant</string>
     <string name="create_event_friend_title">Friend</string>
     <string name="create_event_add_a_friend_button">Add a friend</string>
+    <string name="create_event_add_a_group_button">Add a group</string>
     <string name="create_event_notification_title">Added to a new event</string>
     <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
 
     <string name="add_participant_filter">Friend\'s name:</string>
     <string name="add_participant_filter_hint">Insert your friend\'s name to filter</string>
+
+    <string name="add_group_filter">Group\'s name:</string>
+    <string name="add_group_filter_hint">Insert the group\'s name to filter</string>
 
     <string name="added_friend_successfull">Friend added successfully</string>
     <string name="added_friend_fail">Failed to add that friend</string>
@@ -52,6 +56,7 @@
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="view">View</string>
     <string name="ok">Ok</string>
     <string name="edit">Edit</string>
     <string name="alert">Alert</string>
