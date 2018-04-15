@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Comment;
+import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
@@ -47,6 +49,7 @@ public class EventFragment extends Fragment {
     private ListView event_comments;
     private EditText comment_write;
     private Button add_comment;
+    private Button confirmate;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
@@ -87,6 +90,8 @@ public class EventFragment extends Fragment {
         event_comments = parent.findViewById(R.id.event_comments);
         comment_write = parent.findViewById(R.id.comment_write);
         add_comment = parent.findViewById(R.id.add_comment);
+        confirmate = parent.findViewById(R.id.confirm_event);
+
 
         comment_write.addTextChangedListener(textWatcher);
 
@@ -98,6 +103,14 @@ public class EventFragment extends Fragment {
                 addComment();
             }
         });
+
+        confirmate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmate_event();
+            }
+        });
+
 
         // Reuse the favorite sites list.
         commentsAdapter = new SimpleAdapter(getActivity(), comments, R.layout.site_list_row,
@@ -186,11 +199,31 @@ public class EventFragment extends Fragment {
         for (Comment c : event.comments.values()){
             getEventComment(c);
         }
+
+        if(event.creator_id.equals(user_id) && allVoted(event.possible_dates,event.participants_id))
+        {
+            confirmate.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getEventComment(Comment c) {
         comments.add(getCommentHashMap(c.author,c.text));
         commentsAdapter.notifyDataSetChanged();
+    }
+    private boolean allVoted(List<Date> possible_dates, List<String> participants_id){
+        ArrayList<String> users= new ArrayList<String>();
+        for( Date date : possible_dates){
+            if (date.voted_users!= null) {
+                for (String user : date.voted_users) {
+                    if (!users.contains(user)) users.add(user);
+                }
+            }
+        }
+        System.out.println(users.size());
+        System.out.println(participants_id.size());
+        if (users.size() == participants_id.size()) return true;
+        else return false;
+
     }
 
     private HashMap<String, String> getCommentHashMap(String user, String comment) {
@@ -205,5 +238,17 @@ public class EventFragment extends Fragment {
         if(user.id.equals(user_id)) currentUser = user;
         participants.add(user);
         participantsAdapter.notifyDataSetChanged();
+    }
+
+    public void confirmate_event() {
+        EventFirebaseService.confirmateEvent(event_id);
+        EventListFragment fragment = new EventListFragment();
+        Toast.makeText(getActivity(),getResources().getString(R.string.event_confimed), Toast.LENGTH_LONG).show();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id",user_id);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
     }
 }

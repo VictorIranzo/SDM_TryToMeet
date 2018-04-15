@@ -16,6 +16,9 @@
     <string name="group_name">Group name</string>
     <string name="member_added">Friend added to the group</string>
 
+
+    <string name="confirm_event">Confirm event</string>
+    <string name="event_confimed">The event is now confirmed</string>
     <string name="create_event_title">Title</string>
     <string name="create_event_title_hint">Insert the title of your event</string>
     <string name="create_event_description_hint">Insert the description of your event</string>
@@ -40,6 +43,7 @@
     <string name="removed_friend_fail">Failed to remove that friend</string>
 
     <string name="noFriends">You have no friends yet</string>
+
     <string name="noFriendsToAddToGroup">You dont have friends to add to this group</string>
 
     <string name="exit_group_title">Exit group</string>

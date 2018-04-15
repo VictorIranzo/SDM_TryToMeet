@@ -94,4 +94,20 @@ public class EventFirebaseService extends FirebaseService{
         String key = getDatabaseReference().child("events").child(event_id).child("comments").push().getKey();
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
     }
+
+    public static void confirmateEvent(final String event_id){
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                e.state="CONFIRMED";
+                getDatabaseReference().child("events").child(event_id).setValue(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
 }
