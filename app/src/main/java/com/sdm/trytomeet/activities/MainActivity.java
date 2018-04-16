@@ -20,6 +20,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
@@ -72,16 +76,30 @@ public class MainActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void setHeaderDrawer(User user) {
+    public void setHeaderDrawer(final User user) {
         actualUser = user;
         TextView userName =  findViewById(R.id.drawer_user_name);
         userName.setText(user.username);
 
+
         if(user.image != null) {
-            CircularImageView userImage = findViewById(R.id.drawer_user_image);
-            byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            userImage.setImageBitmap(image);
+            //TODO: usar el cache
+            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String download_image = dataSnapshot.getValue(String.class);
+                            CircularImageView userImage = findViewById(R.id.drawer_user_image);
+                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
+                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            userImage.setImageBitmap(image);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
         }
     }
 

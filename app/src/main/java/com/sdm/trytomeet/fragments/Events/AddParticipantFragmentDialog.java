@@ -88,6 +88,7 @@ public class AddParticipantFragmentDialog extends DialogFragment {
                         Friends friends = dataSnapshot.getValue(Friends.class);
                         if(friends != null){
                             for(String friend : friends.friends){ // For each one of my friends
+                                if(friend == null) continue; // As we can eliminate friends for the list, some positions can be null
                                 if(current_participants.contains(friend)) continue; // If that friend has been added skip it
                                 FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                         .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name

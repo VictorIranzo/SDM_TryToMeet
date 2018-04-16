@@ -147,7 +147,9 @@ public class UserFirebaseService extends FirebaseService {
     }
 
     public static void setUserImage(String user_id, String image) {
-        getDatabaseReference().child("users").child(user_id).child("image").setValue(image);
+        String key = getDatabaseReference().child("images").push().getKey();
+        getDatabaseReference().child("images").child(key).setValue(image);
+        getDatabaseReference().child("users").child(user_id).child("image").setValue(key);
     }
 
     public static void setUserName(String user_id, String name) {

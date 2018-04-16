@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
@@ -46,11 +50,25 @@ public class MemberListAdapter extends ArrayAdapter<User>{
         final User user = data.get(position);
         ((TextView) convertView.findViewById(R.id.memberName)).setText(user.username);
 
+        final View view = convertView;
         if(user.image!=null){
-            byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            CircularImageView profileImage =convertView.findViewById(R.id.circleImage);
-            profileImage.setImageBitmap(image);
+            //TODO: usar el cache
+            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String download_image = dataSnapshot.getValue(String.class);
+                            CircularImageView profileImage = view.findViewById(R.id.circleImage);
+                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
+                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            profileImage.setImageBitmap(image);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {

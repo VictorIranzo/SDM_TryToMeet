@@ -33,6 +33,11 @@
     <string name="create_event_add_a_group_button">Add a group</string>
     <string name="create_event_notification_title">Added to a new event</string>
     <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
+    <string name="create_event_missing_title">A title is needed</string>
+    <string name="create_event_missing_description">A description is needed</string>
+    <string name="create_event_missing_place">A place is needed</string>
+    <string name="create_event_missing_dates">At least one date is needed</string>
+    <string name="create_event_missing_participants">At least one participant is needed</string>
     <string name="add_friend_filter">Friend\'s email:</string>
     <string name="add_participant_filter">Friend\'s name:</string>
     <string name="add_participant_filter_hint">Insert your friend\'s name to filter</string>

@@ -1,5 +1,10 @@
 package com.sdm.trytomeet.fragments.Profile;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
@@ -190,12 +195,10 @@ public class ProfileFragment extends Fragment {
 
                 ((MainActivity) getActivity()).setHeaderDrawer(new User(userName.getText().toString(),currentImage));
 
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
         if (requestCode==ADD_FRIEND){
             String friend_email=data.getStringExtra("friend_id");
@@ -214,10 +217,24 @@ public class ProfileFragment extends Fragment {
         editName.setText(user.username);
 
         if( user.image != null){
-        currentImage = user.image;
-        byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-        Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        profileImage.setImageBitmap(image);}
+            //TODO: usar el cache
+            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String download_image = dataSnapshot.getValue(String.class);
+                            currentImage = download_image;
+                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
+                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            profileImage.setImageBitmap(image);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
     }
 
     public void addedFriendSuccessfully(boolean res){
