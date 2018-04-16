@@ -7,11 +7,4 @@
             android:orderInCategory="1"
             app:showAsAction="ifRoom" />
 
-        <item
-            android:id="@+id/alertActive"
-            android:checkable="false"
-            android:icon="?android:attr/colorError"
-            android:orderInCategory="1"
-            android:title="@string/alert"
-            android:visible="false" />
 </menu>

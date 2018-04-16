@@ -44,4 +44,9 @@ public class Event {
         this.comments = new HashMap<String,Comment>();
     }
 
+
+    public Event(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 }

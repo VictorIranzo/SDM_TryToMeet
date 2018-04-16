@@ -2,6 +2,7 @@ package com.sdm.trytomeet.persistence.server;
 
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,6 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{
+
+    private static ArrayList<Event> name = new ArrayList<Event>();
+    final String names = new String();
+
+
     public static String addEvent(Event event){
         String key = getDatabaseReference().child("events").push().getKey();
         getDatabaseReference().child("events").child(key).setValue(event);
@@ -109,5 +115,88 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+    }
+
+    public static ArrayList nameEvent(final String user_id){
+        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo")
+        .addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String eventi = dataSnapshot.getKey();
+                System.out.println(eventi);
+                getDatabaseReference().child("events").child(eventi).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Event e = dataSnapshot.getValue(Event.class);
+                        name.add(e);
+                        //getDatabaseReference().child("events").child(event_id).setValue(e);
+                        System.out.println(name);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("Error", "Something bad");
+                    }
+                });
+
+                //name = getDatabaseReference().child("events").child(eventi).child("name");
+                //System.out.println(name);
+
+                /*ArrayList<String> listaEv = new ArrayList<>();
+                listaEv += llave;*/
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        }); /*{ // Get invited events
+                    //@Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Friends friends = dataSnapshot.getValue(Friends.class);
+                        if (friends != null) {
+                            for (User u : friends_remove)
+                                friends.friends.remove(u.id);
+                            getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                        }
+                    }
+                        //fragment.removedFriendSuccessfully(true);
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Event even = dataSnapshot.getValue(Event.class);
+                        if (even.name != "") {
+                            String key = even.name;
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+                    });*/
+        return name;
+        /*getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").on('value', function(data) {
+            var element = data.val();
+            $.each(element, function(nodo, value) {
+                if(nodo == '-L-qKRq1_yZmTdjvRqfN') console.log(value.name);
+            });*/
+
+
     }
 }

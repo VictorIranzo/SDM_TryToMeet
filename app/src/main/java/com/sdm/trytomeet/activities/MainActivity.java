@@ -13,15 +13,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.adapters.EventAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
@@ -30,7 +35,12 @@ import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificationService;
+import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity
         extends AppCompatActivity
@@ -45,10 +55,24 @@ public class MainActivity
 
     private User actualUser;
 
+    private List<Event> events;
+    private List<Event> evento;
+
+    private RecyclerView rv;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager llm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        rv = (RecyclerView)findViewById(R.id.rv);
+
+        llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+        //rv.setHasFixedSize(true);
+
 
         // As we're using a Toolbar, we should retrieve it and set it
         // to be our ActionBar
@@ -70,6 +94,36 @@ public class MainActivity
 
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
+
+        initializeData();
+        initializeAdapter();
+
+    }
+
+
+
+
+        private void initializeData(){
+        events = new ArrayList<>();
+        evento = EventFirebaseService.nameEvent(account.getId());
+        Iterator<Event> iterator = evento.iterator();
+        System.out.println("Hola?");
+        while(iterator.hasNext()){
+            System.out.println("Hey?");
+            Event eve = iterator.next();
+            //iterator.next();
+            //Event eve = evento.get(i);
+            events.add(new Event(eve.name, eve.description));
+        }
+        //if (!iterator.hasNext()){initializeData();}
+        //events.add(new Event(EventFirebaseService.nameEvent(account.getId()), "23 years old"));
+        events.add(new Event("Lavery Maiss", "25 years old"));
+        events.add(new Event("Lillie Watts", "35 years old"));
+    }
+
+    private void initializeAdapter(){
+        adapter = new EventAdapter(events);
+        rv.setAdapter(adapter);
     }
 
     public void setHeaderDrawer(User user) {
@@ -84,6 +138,14 @@ public class MainActivity
             userImage.setImageBitmap(image);
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.event_menu, menu);
+        return true;
+    }
+
 
     @Override
     protected void onStart() {
