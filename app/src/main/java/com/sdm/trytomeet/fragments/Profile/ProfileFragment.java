@@ -1,5 +1,6 @@
 package com.sdm.trytomeet.fragments.Profile;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,24 +182,19 @@ public class ProfileFragment extends Fragment {
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             Bitmap bitmap = null;
+
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
 
                 profileImage.setImageBitmap(bitmap);
+                CircularImageView userImage = getActivity().findViewById(R.id.drawer_user_image);
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream .toByteArray();
-
-                currentImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                UserFirebaseService.setUserImage(user_id,currentImage);
-
-                ((MainActivity) getActivity()).setHeaderDrawer(new User(userName.getText().toString(),currentImage));
+                UserFirebaseService.setUserImage(user_id, selectedImage, getActivity());
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
 
         }
         if (requestCode==ADD_FRIEND){
@@ -217,23 +214,7 @@ public class ProfileFragment extends Fragment {
         editName.setText(user.username);
 
         if( user.image != null){
-            //TODO: usar el cache
-            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String download_image = dataSnapshot.getValue(String.class);
-                            currentImage = download_image;
-                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
-                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            profileImage.setImageBitmap(image);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+            Glide.with(this).load(user.image).into(profileImage);
         }
     }
 

@@ -1,13 +1,27 @@
 package com.sdm.trytomeet.persistence.server;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.Site;
@@ -146,10 +160,16 @@ public class UserFirebaseService extends FirebaseService {
         });
     }
 
-    public static void setUserImage(String user_id, String image) {
-        String key = getDatabaseReference().child("images").push().getKey();
-        getDatabaseReference().child("images").child(key).setValue(image);
-        getDatabaseReference().child("users").child(user_id).child("image").setValue(key);
+    public static void setUserImage(final String user_id, final Uri image, final Activity activity) {
+        StorageReference path = getStorageReference().child("images").child(image.getLastPathSegment());
+        path.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getDatabaseReference().child("users").child(user_id).child("image").setValue(taskSnapshot.getDownloadUrl().toString());
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity.getBaseContext());
+                getUserFromDrawerHeader(prefs.getString("account_id",""), (MainActivity) activity);
+            }
+        });
     }
 
     public static void setUserName(String user_id, String name) {

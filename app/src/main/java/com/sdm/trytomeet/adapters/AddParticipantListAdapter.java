@@ -9,11 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
 
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Profile.View_external_user;
 
 /**
@@ -41,6 +43,10 @@ public class AddParticipantListAdapter extends ArrayAdapter<User>{
                     .inflate(R.layout.add_participant_friend_layout, null);
         }
         final User user = data.get(position);
+        if(user.image != null){
+            CircularImageView imageView = (CircularImageView) convertView.findViewById(R.id.user_image);
+            Glide.with(context).load(user.image).into(imageView);
+        }
         ((TextView) convertView.findViewById(R.id.username)).setText(user.username);
         ((CheckBox) convertView.findViewById(R.id.checkBox_add)).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.database.DataSnapshot;
@@ -83,23 +85,8 @@ public class MainActivity
 
 
         if(user.image != null) {
-            //TODO: usar el cache
-            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String download_image = dataSnapshot.getValue(String.class);
-                            CircularImageView userImage = findViewById(R.id.drawer_user_image);
-                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
-                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            userImage.setImageBitmap(image);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+            CircularImageView userImage = findViewById(R.id.drawer_user_image);
+            Glide.with(this).load(user.image).into(userImage);
         }
     }
 

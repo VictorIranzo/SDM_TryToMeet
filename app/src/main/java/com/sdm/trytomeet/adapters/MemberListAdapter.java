@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,23 +53,8 @@ public class MemberListAdapter extends ArrayAdapter<User>{
 
         final View view = convertView;
         if(user.image!=null){
-            //TODO: usar el cache
-            FirebaseDatabase.getInstance().getReference().child("images").child(user.image)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String download_image = dataSnapshot.getValue(String.class);
-                            CircularImageView profileImage = view.findViewById(R.id.circleImage);
-                            byte[] decodedString = Base64.decode(download_image, Base64.DEFAULT);
-                            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            profileImage.setImageBitmap(image);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+            CircularImageView profileImage = view.findViewById(R.id.circleImage);
+            Glide.with(context).load(user.image).into(profileImage);
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {

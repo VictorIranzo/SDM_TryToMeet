@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -76,6 +77,11 @@ public class View_external_user extends DialogFragment {
 
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_view_external_user, null);
         builder.setView(view);
+
+        if(user.image != null){
+            CircularImageView userImage = view.findViewById(R.id.user_image);
+            Glide.with(this).load(user.image).into(userImage);
+        }
 
         ((TextView) view.findViewById(R.id.username)).setText(user.username);
 
