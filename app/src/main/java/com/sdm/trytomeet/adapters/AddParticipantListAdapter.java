@@ -1,18 +1,22 @@
 package com.sdm.trytomeet.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.components.CircularImageView;
@@ -22,11 +26,12 @@ import com.sdm.trytomeet.fragments.Profile.View_external_user;
  * Created by adrymc96 on 30/03/18.
  */
 
-public class AddParticipantListAdapter extends ArrayAdapter<User>{
+public class AddParticipantListAdapter extends ArrayAdapter<User> implements Filterable{
 
     Context context;
     int resource;
     ArrayList<User> data;
+    ArrayList<User> to_show;
     private ArrayList<User> to_add;
 
     public AddParticipantListAdapter(Context context, int resource, ArrayList<User> data){
@@ -35,6 +40,12 @@ public class AddParticipantListAdapter extends ArrayAdapter<User>{
         this.resource = resource;
         this.data = data;
         this.to_add = new ArrayList<User>();
+        to_show = data;
+    }
+
+    @Override
+    public int getCount() {
+        return to_show.size();
     }
 
     public View getView(final int position, View convertView, ViewGroup parent){
@@ -42,7 +53,7 @@ public class AddParticipantListAdapter extends ArrayAdapter<User>{
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.add_participant_friend_layout, null);
         }
-        final User user = data.get(position);
+        final User user = to_show.get(position);
         if(user.image != null){
             CircularImageView imageView = (CircularImageView) convertView.findViewById(R.id.user_image);
             Glide.with(context).load(user.image).into(imageView);
@@ -73,6 +84,46 @@ public class AddParticipantListAdapter extends ArrayAdapter<User>{
 
     public ArrayList<User> getToAdd(){
         return to_add;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults(); // Holds the results of a filtering operation in values
+                ArrayList<User> res = new ArrayList<User>();
+
+                //If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+                //else does the Filtering and returns FilteredArrList(Filtered)
+
+                if (constraint == null || constraint.length() == 0) {
+                    // set the Original result to return
+                    results.count = data.size();
+                    results.values = data;
+                } else {
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < data.size(); i++) {
+                        User user = data.get(i);
+                        if (user.username.toLowerCase().startsWith(constraint.toString())) {
+                            res.add(user);
+                        }
+                    }
+                    // set the Filtered result to return
+                    results.count = res.size();
+                    results.values = res;
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                to_show = (ArrayList<User>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+        return filter;
     }
 }
 

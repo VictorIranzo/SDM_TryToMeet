@@ -1,12 +1,15 @@
 package com.sdm.trytomeet.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,11 +29,12 @@ import java.util.List;
  * Created by adrymc96 on 30/03/18.
  */
 
-public class AddGroupListAdapter extends ArrayAdapter<Group>{
+public class AddGroupListAdapter extends ArrayAdapter<Group> implements Filterable{
 
     Context context;
     int resource;
     ArrayList<Group> data;
+    ArrayList<Group> to_show;
     private ArrayList<Group> to_add;
 
     public AddGroupListAdapter(Context context, int resource, ArrayList<Group> data){
@@ -38,7 +42,13 @@ public class AddGroupListAdapter extends ArrayAdapter<Group>{
         this.context = context;
         this.resource = resource;
         this.data = data;
+        to_show = data;
         this.to_add = new ArrayList<Group>();
+    }
+
+    @Override
+    public int getCount() {
+        return to_show.size();
     }
 
     public View getView(final int position, View convertView, ViewGroup parent){
@@ -46,7 +56,7 @@ public class AddGroupListAdapter extends ArrayAdapter<Group>{
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(R.layout.add_group_layout, null);
         }
-        final Group group = data.get(position);
+        final Group group = to_show.get(position);
         ((TextView) convertView.findViewById(R.id.group_name)).setText(group.name);
         ((CheckBox) convertView.findViewById(R.id.checkBox_add)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +105,46 @@ public class AddGroupListAdapter extends ArrayAdapter<Group>{
 
     public ArrayList<Group> getToAdd(){
         return to_add;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults(); // Holds the results of a filtering operation in values
+                ArrayList<Group> res = new ArrayList<Group>();
+
+                //If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+                //else does the Filtering and returns FilteredArrList(Filtered)
+
+                if (constraint == null || constraint.length() == 0) {
+                    // set the Original result to return
+                    results.count = data.size();
+                    results.values = data;
+                } else {
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < data.size(); i++) {
+                        Group group = data.get(i);
+                        if (group.name.toLowerCase().startsWith(constraint.toString())) {
+                            res.add(group);
+                        }
+                    }
+                    // set the Filtered result to return
+                    results.count = res.size();
+                    results.values = res;
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                to_show = (ArrayList<Group>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+        return filter;
     }
 }
 

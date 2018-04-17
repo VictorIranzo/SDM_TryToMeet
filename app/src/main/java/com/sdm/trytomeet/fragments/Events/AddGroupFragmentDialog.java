@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -78,7 +81,23 @@ public class AddGroupFragmentDialog extends DialogFragment {
         final AddGroupListAdapter adapter = new AddGroupListAdapter(getContext(), R.id.list_view, my_groups);
         list_view.setAdapter(adapter);
 
-        // TODO: FILTER BY GROUP NAME
+        EditText editText = parent.findViewById(R.id.editTextAddGroup);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
 
         // We populate the group list

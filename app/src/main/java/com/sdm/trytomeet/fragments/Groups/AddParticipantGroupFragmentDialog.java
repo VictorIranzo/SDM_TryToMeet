@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -76,7 +80,22 @@ public class AddParticipantGroupFragmentDialog extends DialogFragment {
         final AddParticipantListAdapter adapter = new AddParticipantListAdapter(getContext(), R.id.list_view, my_friends);
         list_view.setAdapter(adapter);
 
-        // TODO: FILTER BY FRIENDS NAME
+        EditText editText = parent.findViewById(R.id.editTextAddFriend);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         // We populate the friends list
@@ -87,6 +106,7 @@ public class AddParticipantGroupFragmentDialog extends DialogFragment {
                         Friends friends = dataSnapshot.getValue(Friends.class);
                         if(friends != null){
                             for(String friend : friends.friends){ // For each one of my friends
+                                if(friend == null) continue; // This can happen because of the possibility of removing a friend
                                 if(current_participants.contains(friend)) continue; // If that friend has been added skip it
                                 FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                         .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name
