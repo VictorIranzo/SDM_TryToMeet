@@ -68,6 +68,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private LinearLayout event_map;
 
     private RecyclerView event_dates;
+    private TextView confirmed_date;
+
     private ListView event_participants;
     private ListView event_comments;
     private EditText comment_write;
@@ -117,6 +119,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_showMap_button = parent.findViewById(R.id.event_showMap_button);
 
         event_dates = parent.findViewById(R.id.event_dates);
+        confirmed_date = parent.findViewById(R.id.confirmed_date);
         event_participants = parent.findViewById(R.id.event_participants);
 
         event_comments = parent.findViewById(R.id.event_comments);
@@ -214,6 +217,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_site_name.setText(event.site.name);
         event_site_description.setText(event.site.description);
 
+        enableVoting();
+
         voteDateListAdapter = new VoteDateListAdapter(event.possible_dates, user_id, event_id);
         event_dates.setAdapter(voteDateListAdapter);
 
@@ -250,6 +255,14 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+    }
+
+    private void enableVoting() {
+        if(!shownEvent.state.equals(Event.PENDING)){
+            event_dates.setVisibility(GONE);
+            confirmed_date.setVisibility(VISIBLE);
+            confirmed_date.setText(shownEvent.getWinningDate().toString());
+        }
     }
 
     private void getEventComment(Comment c) {
