@@ -18,12 +18,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
@@ -44,7 +52,7 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class EventFragment extends Fragment {
+public class EventFragment extends Fragment implements OnMapReadyCallback {
     private View parent;
     private String user_id;
     private String event_id;
@@ -56,6 +64,9 @@ public class EventFragment extends Fragment {
     private EditText event_description_edit;
     private TextView event_site_name;
     private TextView event_site_description;
+    private Button event_showMap_button;
+    private LinearLayout event_map;
+
     private RecyclerView event_dates;
     private ListView event_participants;
     private ListView event_comments;
@@ -99,16 +110,26 @@ public class EventFragment extends Fragment {
         event_state = parent.findViewById(R.id.event_state);
         event_description = parent.findViewById(R.id.event_description);
         event_description_edit = parent.findViewById(R.id.event_description_edit);
+
         event_site_name = parent.findViewById(R.id.event_site_name);
         event_site_description = parent.findViewById(R.id.event_site_description);
+        event_map = parent.findViewById(R.id.event_map);
+        event_showMap_button = parent.findViewById(R.id.event_showMap_button);
+
         event_dates = parent.findViewById(R.id.event_dates);
         event_participants = parent.findViewById(R.id.event_participants);
+
         event_comments = parent.findViewById(R.id.event_comments);
         comment_write = parent.findViewById(R.id.comment_write);
         add_comment = parent.findViewById(R.id.add_comment);
         confirmate = parent.findViewById(R.id.confirm_event);
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
+
+
+        // Build the map.
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.event_google_map);
+        mapFragment.getMapAsync(this);
 
         comment_write.addTextChangedListener(textWatcher);
 
@@ -135,6 +156,12 @@ public class EventFragment extends Fragment {
             }
         });
 
+        event_showMap_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMap();
+            }
+        });
 
         // Reuse the favorite sites list.
         commentsAdapter = new SimpleAdapter(getActivity(), comments, R.layout.site_list_row,
@@ -146,30 +173,6 @@ public class EventFragment extends Fragment {
         participants = new ArrayList<User>();
 
         EventFirebaseService.getEvent(event_id, this);
-
-        /*
-        ListViewInScrollView.setListViewHeightBasedOnChildren(event_participants);
-        event_participants.setOnTouchListener(new View.OnTouchListener() {
-            // Setting on Touch Listener for handling the touch inside ScrollView
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-
-        ListViewInScrollView.setListViewHeightBasedOnChildren(event_comments);
-        event_comments.setOnTouchListener(new View.OnTouchListener() {
-            // Setting on Touch Listener for handling the touch inside ScrollView
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-        */
 
         return parent;
     }
@@ -341,6 +344,42 @@ public class EventFragment extends Fragment {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private static final int DEFAULT_ZOOM = 15;
+    private static GoogleMap map = null;
+    private static Marker marker = null;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+    }
+
+    private static boolean shownMap = false;
+    private void showMap(){
+        if(map != null && shownEvent != null && shownEvent.site != null){
+
+            if(shownMap){
+                event_map.setVisibility(GONE);
+                event_showMap_button.setText(getString(R.string.event_show_map));
+            } else {
+                event_map.setVisibility(VISIBLE);
+                event_showMap_button.setText(getString(R.string.event_hide_map));
+            }
+            shownMap = !shownMap;
+
+            if(marker == null){
+                marker = map.addMarker(new MarkerOptions()
+                        .title(shownEvent.site.name)
+                        .position(new LatLng(shownEvent.site.latitude, shownEvent.site.longitude))
+                        .snippet(shownEvent.site.description));
+            }
+
+            // Position the map's camera at the location of the marker.
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(),
+                    DEFAULT_ZOOM));
+            map.getUiSettings().setScrollGesturesEnabled(false);
         }
     }
 }

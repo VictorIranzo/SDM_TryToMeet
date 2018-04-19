@@ -107,6 +107,26 @@
                 android:gravity="center"
                 android:text="Site description" />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/event_showMap_button"
+                android:text="@string/event_show_map"/>
+
+            <LinearLayout
+                android:id="@+id/event_map"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp">
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/event_google_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context="com.sdm.trytomeet.fragments.Events.EventFragment" />
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_marginBottom="5dp"
