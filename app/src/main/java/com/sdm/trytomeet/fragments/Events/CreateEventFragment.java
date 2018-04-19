@@ -179,7 +179,7 @@ public class CreateEventFragment extends Fragment {
             Notification notification = new Notification(
                     NotificactionListener.ADDED_TO_AN_EVENT,
                     getResources().getString(R.string.create_event_notification_title),
-                    getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name),
+                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name),
                     event_id);
 
             for (String participant_id : to_invite) {
@@ -317,6 +317,6 @@ public class CreateEventFragment extends Fragment {
     private void addFavoriteSite() {
         UserFirebaseService.addUserFavoriteSite(user_id,site);
 
-        Toast.makeText(getActivity(),"Anyadido sITIO favorito",5).show();
+        Toast.makeText(getActivity(),"Anyadido sITIO favorito",Toast.LENGTH_LONG).show();
     }
 }

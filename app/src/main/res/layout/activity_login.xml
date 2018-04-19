@@ -28,8 +28,10 @@
         app:layout_constraintTop_toBottomOf="@+id/button3"
         app:layout_constraintVertical_bias="0.342" />
 
+
+
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/sign_in_facebook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -72,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_facebook" />
 
     <Button
         android:id="@+id/button3"
@@ -105,7 +107,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="84dp"
         android:src="@drawable/trytomeet"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in_facebook"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

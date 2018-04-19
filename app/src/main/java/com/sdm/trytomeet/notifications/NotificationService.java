@@ -49,7 +49,7 @@ public class NotificationService extends Service {
     public void onDestroy() {
         if(!account_id.equals("")){
             FirebaseDatabase.getInstance().getReference().child("notifications")
-                    .child(MainActivity.account.getId()).removeEventListener(listener);
+                    .child(account_id).removeEventListener(listener);
         }
         super.onDestroy();
     }

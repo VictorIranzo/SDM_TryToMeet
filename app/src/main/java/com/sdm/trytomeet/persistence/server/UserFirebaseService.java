@@ -39,20 +39,20 @@ import java.util.List;
 
 public class UserFirebaseService extends FirebaseService {
     // TODO: Revisar si esto se puede hacer con un push y guardando la key.
-    public static void addGoogleUser(final GoogleSignInAccount account, final MainActivity mainActivity) {
+    public static void addUser(final String account_id, final String account_name, final MainActivity mainActivity) {
         /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
         * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
         */
         // We store the current user in our DB (if they do not exist)
-        getDatabaseReference().child("users").child(account.getId()).runTransaction(new Transaction.Handler() {
+        getDatabaseReference().child("users").child(account_id).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 User me = mutableData.getValue(User.class);
                 if (me == null) {
                     me = new User();
-                    me.username = account.getDisplayName();
-                    me.id = account.getId();
+                    me.username = account_name;
+                    me.id = account_id;
                     mutableData.setValue(me);
                 }
                 return Transaction.success(mutableData);
@@ -61,7 +61,7 @@ public class UserFirebaseService extends FirebaseService {
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                 // TODO: Revisar esto con Adrián.
-                UserFirebaseService.getUserFromDrawerHeader(account.getId(), mainActivity);
+                UserFirebaseService.getUserFromDrawerHeader(account_id, mainActivity);
             }
         });
     }

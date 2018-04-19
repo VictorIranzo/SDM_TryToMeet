@@ -92,5 +92,9 @@
     <string name="bar">Bar</string>
     <string name="park">Park</string>
     <string name="shops">Shopping Mall</string>
+
+    <!--Facebook-->
+    <string name="facebook_app_id">615456122132608</string>
+    <string name="fb_login_protocol_scheme">fb615456122132608</string>
     
 </resources>

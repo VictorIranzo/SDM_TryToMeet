@@ -32,6 +32,8 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
 
+import java.util.ArrayList;
+
 public class View_external_user extends DialogFragment {
 
     private User user;
@@ -92,7 +94,7 @@ public class View_external_user extends DialogFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Friends friends = dataSnapshot.getValue(Friends.class);
-                if(!friends.friends.contains(user.id) && !user_id.equals(user.id)){
+                if((friends==null || !friends.friends.contains(user.id)) && !user_id.equals(user.id)){
                     add_as_a_friend.setVisibility(View.VISIBLE);
                 }
             }
@@ -112,7 +114,14 @@ public class View_external_user extends DialogFragment {
                             @Override
                             public Transaction.Result doTransaction(MutableData mutableData) {
                                 Friends friends = mutableData.getValue(Friends.class);
-                                friends.friends.add(user.id);
+                                if(friends==null){
+                                    ArrayList<String> thisFriend =new ArrayList<String>();
+                                    thisFriend.add(user.id);
+                                    friends= new Friends(thisFriend);
+
+                                }
+                                else{
+                                friends.friends.add(user.id);}
                                 mutableData.setValue(friends);
                                 return Transaction.success(mutableData);
                             }
