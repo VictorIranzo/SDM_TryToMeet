@@ -34,6 +34,7 @@ import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Groups.MembersFragment;
 import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificactionListener;
+import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -95,6 +96,26 @@ public class UserFirebaseService extends FirebaseService {
                     favouriteSites.add(s);
                 }
                 favoriteSitesFragment.addSitesToList(favouriteSites);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void getUserFavoriteSites(String user_id, final FindPlaceFragment findPlaceFragment) {
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                List<Site> favouriteSites = new ArrayList<Site>();
+                while (iterator.hasNext()) {
+                    Site s = iterator.next().getValue(Site.class);
+                    favouriteSites.add(s);
+                }
+                findPlaceFragment.addSitesToList(favouriteSites);
             }
 
             @Override

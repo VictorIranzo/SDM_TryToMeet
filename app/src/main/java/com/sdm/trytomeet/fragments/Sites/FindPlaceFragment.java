@@ -1,8 +1,10 @@
 package com.sdm.trytomeet.fragments.Sites;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -45,6 +47,10 @@ import com.sdm.trytomeet.R;
 
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
 
@@ -86,6 +92,8 @@ public class FindPlaceFragment extends Fragment
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
+
+    private List<Site> favoriteSites;
 
     private Marker selectedPlace;
 
@@ -183,6 +191,14 @@ public class FindPlaceFragment extends Fragment
             }
         });
 
+        Button favorites = (Button) parent.findViewById(R.id.favorites_button);
+        favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openFavorites(view);
+            }
+        });
+
         Button filter = (Button) parent.findViewById(R.id.filter_button);
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +206,10 @@ public class FindPlaceFragment extends Fragment
                 filter_click(view);
             }
         });
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String user_id = prefs.getString("account_id", "");
+        UserFirebaseService.getUserFavoriteSites(user_id,this);
 
         return parent;
     }
@@ -476,6 +496,47 @@ public class FindPlaceFragment extends Fragment
         showCurrentPlace();
     }
 
+
+    private void openFavorites(View view) {
+        if(favoriteSites == null) return;
+
+        // Ask the user to choose the place where they are now.
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mMap.clear();
+
+                // The "which" argument contains the position of the selected item.
+                LatLng markerLatLng = new LatLng(favoriteSites.get(which).latitude, favoriteSites.get(which).longitude);
+                String markerSnippet = favoriteSites.get(which).description;
+
+                // Add a marker for the selected place, with an info window
+                // showing information about that place.
+                selectedPlace = mMap.addMarker(new MarkerOptions()
+                        .title(favoriteSites.get(which).name)
+                        .position(markerLatLng)
+                        .snippet(markerSnippet));
+
+                selectedPlace.showInfoWindow();
+
+                // Position the map's camera at the location of the marker.
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
+                        DEFAULT_ZOOM));
+            }
+        };
+
+        String[] favoriteSiteNames = new String[favoriteSites.size()];
+        for(int i = 0; i < favoriteSiteNames.length; i++){
+            favoriteSiteNames[i] = favoriteSites.get(i).name;
+        }
+
+        // Display the dialog.
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.pick_place)
+                .setItems(favoriteSiteNames, listener)
+                .show();
+    }
+
     public void cancelClick(View v){
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
@@ -550,5 +611,9 @@ public class FindPlaceFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         // Do nothing.
+    }
+
+    public void addSitesToList(List<Site> favouriteSites) {
+        this.favoriteSites = favouriteSites;
     }
 }
