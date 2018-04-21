@@ -57,6 +57,29 @@ public class EventFirebaseService extends FirebaseService{
     }
 
     public static void addVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+                for (Date d: event.possible_dates) {
+                    if(d.equals(date)){
+                        if(d.voted_users == null) d.voted_users = new ArrayList<String>();
+                        d.voted_users.add(user_id);
+                        break;
+                    }
+                }
+
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
+        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR
+        /*
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,9 +99,30 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+        */
     }
 
     public static void removeVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+                for (Date d: event.possible_dates) {
+                    if(d.equals(date)){
+                        d.voted_users.remove(user_id);
+                        break;
+                    }
+                }
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+            }
+        });
+        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR                                                                      }
+        /*
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,6 +141,7 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+        */
     }
 
     public static void AddComment(Comment c, String event_id){
