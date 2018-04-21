@@ -29,7 +29,7 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Event_image_gallery extends Fragment {
+public class EventImageGallery extends Fragment {
 
     String event_id;
     ArrayList<String> images;
@@ -39,7 +39,7 @@ public class Event_image_gallery extends Fragment {
     private final int GET_FROM_GALLERY = 1;
     ChildEventListener listener;
 
-    public Event_image_gallery() {
+    public EventImageGallery() {
         // Required empty public constructor
     }
 

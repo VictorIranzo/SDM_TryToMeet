@@ -101,7 +101,7 @@ public class FavoriteSitesFragment extends Fragment {
     private void deleteSite() {
         if(selectedSite != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("bOrrar Sitio");
+            builder.setTitle(getString(R.string.delete_site));
 
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 @Override

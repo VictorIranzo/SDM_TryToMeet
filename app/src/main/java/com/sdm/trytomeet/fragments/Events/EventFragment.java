@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +46,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -333,7 +331,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             show_images.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = new Event_image_gallery();
+                    Fragment fragment = new EventImageGallery();
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", event_id);
                     fragment.setArguments(bundle);

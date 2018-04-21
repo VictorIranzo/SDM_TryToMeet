@@ -22,20 +22,20 @@
             android:id="@+id/near_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Cerca de mí"
+            android:text="@string/places_nearToMe"
             />
 
         <Button
             android:id="@+id/favorites_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Favoritos"/>
+            android:text="@string/places_favorites"/>
 
         <Button
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Filtro"/>
+            android:text="@string/places_filter"/>
 
     </LinearLayout>
 
@@ -55,7 +55,7 @@
         android:id="@+id/namePlace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Introduce un nombre para el sitio"/>
+        android:hint="@string/places_placeHint"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,13 +66,13 @@
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Cancel"
+            android:text="@string/cancel"
             />
 
         <Button
             android:id="@+id/continue_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Continue"/>
+            android:text="@string/continuee"/>
     </LinearLayout>
 </LinearLayout>
