@@ -478,9 +478,7 @@ public class FindPlaceFragment extends Fragment
 
     public void cancelClick(View v){
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
-        fragment.make_visible();
-        //getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
-        getView().setVisibility(View.GONE);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
 
     public void continueClick(View v)
@@ -495,9 +493,7 @@ public class FindPlaceFragment extends Fragment
         }
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         fragment.add_site(site);
-
-        //getTargetFragment().getFragmentManager().beginTransaction().remove(this).commit();
-        getView().setVisibility(View.GONE);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -534,5 +530,25 @@ public class FindPlaceFragment extends Fragment
 
     public void make_visible(){
         getView().setVisibility(View.VISIBLE);
+    }
+
+    // See: https://stackoverflow.com/questions/14083950/duplicate-id-tag-null-or-parent-id-with-another-fragment-for-com-google-androi
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null)
+            getChildFragmentManager().beginTransaction().remove(mapFragment).commitAllowingStateLoss();
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        if (autocompleteFragment != null)
+            getActivity().getFragmentManager().beginTransaction().remove(autocompleteFragment).commitAllowingStateLoss();
+    }
+
+    // See: https://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        // Do nothing.
     }
 }
