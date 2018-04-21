@@ -100,7 +100,6 @@ public class FindPlaceFragment extends Fragment
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-
         parent = inflater.inflate(R.layout.fragment_add_place, container, false);
 
         // Construct a GeoDataClient.

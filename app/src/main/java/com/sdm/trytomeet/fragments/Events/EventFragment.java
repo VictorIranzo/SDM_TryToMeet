@@ -291,7 +291,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void enable_show_images(){
-        if(shownEvent.state.equals(Event.CONFIRMED)){
+        if(shownEvent.state.equals(Event.DONE)){
             final Button show_images = parent.findViewById(R.id.show_images);
             show_images.setVisibility(View.VISIBLE);
             show_images.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +300,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                     Fragment fragment = new Event_image_gallery();
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", event_id);
-                    //bundle.putStringArrayList("images", (ArrayList<String>)shownEvent.images);
                     fragment.setArguments(bundle);
                     getFragmentManager().beginTransaction().replace(R.id.frameLayout,
                             fragment).addToBackStack("gallery").commit();
