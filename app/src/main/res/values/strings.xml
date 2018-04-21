@@ -9,6 +9,8 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="fake_user">Manolo Papote</string>
     <string name="drawer_menu_event">Events</string>
+    <string name="drawer_menu_historic">Historic</string>
+
 
 
     <string name="new_group_title">New group</string>

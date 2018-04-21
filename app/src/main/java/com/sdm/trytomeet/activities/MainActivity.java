@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +31,7 @@ import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.fragments.Events.HistoricEvents;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
@@ -145,7 +148,6 @@ public class MainActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.event_menu, menu);
         return true;
     }
 
@@ -226,6 +228,10 @@ public class MainActivity
             case R.id.drawer_menu_groups:
                 goToGroups();
                 break;
+
+            case R.id.drawer_menu_hystoric:
+                goToHistoric();
+                break;
         }
         drawerLayout.closeDrawers();
         return true;
@@ -273,6 +279,16 @@ public class MainActivity
 
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
+        // Insert the arguments
+        Bundle args = new Bundle();
+        args.putString("user_id", id);
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
+    }
+
+    private void goToHistoric() {
+        HistoricEvents fragment = new HistoricEvents();
         // Insert the arguments
         Bundle args = new Bundle();
         args.putString("user_id", id);

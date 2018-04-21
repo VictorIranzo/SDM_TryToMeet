@@ -1,6 +1,5 @@
 package com.sdm.trytomeet.fragments.Events;
 
-
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -23,16 +22,16 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Hacer visible botón de añadir evento.
 // TODO: Redireccionar a evento en el click.
-public class EventListFragment extends Fragment {
+
+public class HistoricEvents extends Fragment{
 
     private View parent;
     private String user_id;
 
     private List<Event> events;
 
-    private RecyclerView rv;
+    private RecyclerView recyclerView;
     private EventListAdapter adapter;
     private RecyclerView.LayoutManager llm;
 
@@ -41,7 +40,7 @@ public class EventListFragment extends Fragment {
     private Button pruebas;
 
 
-    public EventListFragment() {
+    public HistoricEvents() {
         // Required empty public constructor
     }
 
@@ -55,20 +54,14 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_main, container, false);
+        parent = inflater.inflate(R.layout.fragment_pending_events, container, false);
         user_id = getArguments().getString("user_id");
 
-        FloatingActionButton createButton = parent.findViewById(R.id.floatingActionButton);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCreateEvent();
-            }
-        });
-        rv = parent.findViewById(R.id.rv);
+
+        recyclerView = parent.findViewById(R.id.recyclerView);
 
         llm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);
 
         events = new ArrayList<Event>();
 
@@ -82,10 +75,9 @@ public class EventListFragment extends Fragment {
                 goToEvent();
             }
         });*/
-        //EventFirebaseService.updateEvent();
         initializeAdapter();
 
-        EventFirebaseService.getEventName(user_id,this);
+        EventFirebaseService.getHistoricEvent(user_id,this);
 
         return parent;
 
@@ -94,65 +86,29 @@ public class EventListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.event_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.alertTitle:
-                goToPendingEvents();
-                break;
-        }
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void goToCreateEvent() {
-        CreateEventFragment fragment = new CreateEventFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
-    }
 
-    public void goToPendingEvents() {
-        PendingEvents fragment = new PendingEvents();
 
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
-    }
 
-    private void goToEvent(){
-        String event_id= "-L9W90Dm39W5yGI6sevJ";
-        EventFragment fragment = new EventFragment();
-
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        args.putString("event_id", event_id);
-        fragment.setArguments(args);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
-    }
 
     private void initializeAdapter(){
         adapter = new EventListAdapter(events);
-        rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        rv.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        recyclerView.setAdapter(adapter);
     }
 
     public void addEventToList(Event e){
-        if(e.state.equals("CONFIRMED") || e.state.equals("VOTED")) {
+        if (e.state.equals("CANCELLED") || e.state.equals("DONE")){
             events.add(e);
             adapter.notifyDataSetChanged();
         }
+
     }
 }

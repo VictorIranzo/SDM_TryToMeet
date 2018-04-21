@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/drawer_menu_events"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/drawer_menu_event"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/drawer_menu_profile"
         android:icon="@drawable/ic_action_name"
@@ -23,11 +30,10 @@
         android:title="@string/groups_title"
         app:showAsAction="always" />
 
-
     <item
-        android:id="@+id/drawer_menu_events"
-        android:icon="@android:drawable/ic_menu_my_calendar"
-        android:title="@string/drawer_menu_event"
+        android:id="@+id/drawer_menu_hystoric"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/drawer_menu_historic"
         app:showAsAction="always" />
 
     <item
@@ -35,5 +41,7 @@
         android:icon="@android:drawable/ic_lock_power_off"
         android:title="@string/log_out"
         app:showAsAction="always" />
+
+
 
 </menu>

@@ -22,6 +22,7 @@ public class Event {
     public String state;
     public String image;
     public HashMap<String, String> images;
+    public Date confirmed_date;
 
     // With this static properties the state of the event is set.
     // This is used to centralized the possible states of an event and
