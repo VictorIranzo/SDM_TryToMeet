@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -67,10 +69,16 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rv = (RecyclerView)findViewById(R.id.rv);
+        /*FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.frameLayout, new EventListFragment());
+        transaction.commit();*/
+
+
+        /*rv = (RecyclerView)findViewById(R.id.rv);
 
         llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
+        rv.setLayoutManager(llm);*/
         //rv.setHasFixedSize(true);
 
 
@@ -95,9 +103,8 @@ public class MainActivity
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
 
-        initializeData();
-        initializeAdapter();
-
+        /*initializeData();
+        initializeAdapter();*/
     }
 
 
@@ -107,18 +114,16 @@ public class MainActivity
         events = new ArrayList<>();
         evento = EventFirebaseService.nameEvent(account.getId());
         Iterator<Event> iterator = evento.iterator();
-        System.out.println("Hola?");
         while(iterator.hasNext()){
-            System.out.println("Hey?");
             Event eve = iterator.next();
-            //iterator.next();
-            //Event eve = evento.get(i);
-            events.add(new Event(eve.name, eve.description));
+            if (eve != null){
+                events.add(new Event(eve.name, eve.description));
+            }
         }
         //if (!iterator.hasNext()){initializeData();}
         //events.add(new Event(EventFirebaseService.nameEvent(account.getId()), "23 years old"));
-        events.add(new Event("Lavery Maiss", "25 years old"));
-        events.add(new Event("Lillie Watts", "35 years old"));
+        //events.add(new Event("Lavery Maiss", "25 years old"));
+        //events.add(new Event("Lillie Watts", "35 years old"));
     }
 
     private void initializeAdapter(){

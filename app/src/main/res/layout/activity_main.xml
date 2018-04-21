@@ -22,27 +22,6 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/rv" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|right"
-            android:orientation="vertical">
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:visibility="visible"
-                app:backgroundTint="@color/login"
-                app:srcCompat="@android:drawable/ic_menu_add" />
-        </LinearLayout>
-
     </LinearLayout>
 
     <!-- The paddingTop is used to show the content just below the Toolbar -->
