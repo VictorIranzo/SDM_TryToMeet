@@ -59,10 +59,6 @@ public class MainActivity
     private List<Event> events;
     private List<Event> evento;
 
-    private RecyclerView rv;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager llm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,11 +120,6 @@ public class MainActivity
         //events.add(new Event("Lavery Maiss", "25 years old"));
         //events.add(new Event("Lillie Watts", "35 years old"));
     }*/
-
-    private void initializeAdapter(){
-        adapter = new EventListAdapter(events);
-        rv.setAdapter(adapter);
-    }
 
     public void setHeaderDrawer(final User user) {
         actualUser = user;

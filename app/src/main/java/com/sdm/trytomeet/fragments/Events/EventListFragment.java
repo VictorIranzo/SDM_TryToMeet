@@ -16,11 +16,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Event;
+import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 // TODO: Hacer visible botón de añadir evento.
@@ -30,7 +32,7 @@ public class EventListFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    private List<Event> events;
+    private List<EventWithKey> events;
 
     private RecyclerView rv;
     private EventListAdapter adapter;
@@ -70,7 +72,7 @@ public class EventListFragment extends Fragment {
         llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
-        events = new ArrayList<Event>();
+        events = new ArrayList<EventWithKey>();
 
         //CardView evento = parent.findViewById(R.id.ev);
 
@@ -84,7 +86,7 @@ public class EventListFragment extends Fragment {
         });*/
         initializeAdapter();
 
-        EventFirebaseService.getEventName(user_id,this);
+        EventFirebaseService.getUserEvents(user_id,this);
 
         return parent;
 
@@ -125,8 +127,7 @@ public class EventListFragment extends Fragment {
         toast1.show();
     }
 
-    private void goToEvent(){
-        String event_id= "-L9W90Dm39W5yGI6sevJ";
+    public void goToEvent(String event_id){
         EventFragment fragment = new EventFragment();
 
         // Insert the arguments
@@ -140,13 +141,13 @@ public class EventListFragment extends Fragment {
     }
 
     private void initializeAdapter(){
-        adapter = new EventListAdapter(events);
+        adapter = new EventListAdapter(events, this);
         rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         rv.setAdapter(adapter);
     }
 
-    public void addEventToList(Event e){
-        events.add(e);
+    public void addEventToList(String event_id, Event e){
+        events.add(new EventWithKey(event_id,e));
         adapter.notifyDataSetChanged();
     }
 }

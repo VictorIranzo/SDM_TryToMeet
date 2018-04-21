@@ -237,7 +237,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                 getEventComment(c);
             }
 
-        if (event.creator_id.equals(user_id) && allVoted(event.possible_dates, event.participants_id)) {
+        if (event.creator_id.equals(user_id) && event.allVoted()) {
             confirmate.setVisibility(VISIBLE);
         }
         event_description.setOnClickListener(new View.OnClickListener() {
@@ -269,22 +269,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private void getEventComment(Comment c) {
         comments.add(getCommentHashMap(c.author, c.text));
         commentsAdapter.notifyDataSetChanged();
-    }
-
-    private boolean allVoted(List<Date> possible_dates, List<String> participants_id) {
-        ArrayList<String> users = new ArrayList<String>();
-        for (Date date : possible_dates) {
-            if (date.voted_users != null) {
-                for (String user : date.voted_users) {
-                    if (!users.contains(user)) users.add(user);
-                }
-            }
-        }
-        System.out.println(users.size());
-        System.out.println(participants_id.size());
-        if (users.size() == participants_id.size()) return true;
-        else return false;
-
     }
 
     private void enable_show_images(){

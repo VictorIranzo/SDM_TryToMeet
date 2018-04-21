@@ -33,6 +33,11 @@ public class Event {
 
     public Event(){}
 
+    public Event(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
+
     // This method should be properly adapted when using it
     public Event(String name, String description, List<Date> possible_dates,
                  List<String> participants_id, String creator_id, String state, Site site){
@@ -63,9 +68,18 @@ public class Event {
         return winner;
     }
 
+    public boolean allVoted() {
+        ArrayList<String> users = new ArrayList<String>();
+        for (Date date : possible_dates) {
+            if (date.voted_users != null) {
+                for (String user : date.voted_users) {
+                    if (!users.contains(user)) users.add(user);
+                }
+            }
+        }
 
-    public Event(String name, String description){
-        this.name = name;
-        this.description = description;
+        if (users.size() == participants_id.size()) return true;
+        else return false;
+
     }
 }

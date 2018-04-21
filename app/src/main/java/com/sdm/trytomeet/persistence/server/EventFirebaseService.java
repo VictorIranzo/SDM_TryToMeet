@@ -226,7 +226,7 @@ public class EventFirebaseService extends FirebaseService{
 
     }
 
-    public static void getEventName(final String user_id, final EventListFragment eventListFragment){
+    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment){
         getDatabaseReference().child("taking_part").child(user_id)
         .addValueEventListener(new ValueEventListener() {
             @Override
@@ -239,7 +239,7 @@ public class EventFirebaseService extends FirebaseService{
                             Event e = dataSnapshot.getValue(Event.class);
 
                             // In this way, deleted events are added to the list.
-                            if(e != null) eventListFragment.addEventToList(e);
+                            if(e != null) eventListFragment.addEventToList(dataSnapshot.getKey(),e);
                         }
 
                         @Override
