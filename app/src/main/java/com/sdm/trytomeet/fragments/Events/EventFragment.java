@@ -228,9 +228,10 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         String dateString = df.format(today);
 
         if (currentUser != null) {
-            EventFirebaseService.AddComment(
-                    new Comment(currentUser.username, comment_write.getText().toString(), dateString, currentUser.image),
-                    event_id);
+            Comment c = new Comment(currentUser.username, comment_write.getText().toString(), dateString, currentUser.image);
+            EventFirebaseService.AddComment(c,event_id);
+
+            putEventComment(c);
 
             comment_write.setText("");
         }
