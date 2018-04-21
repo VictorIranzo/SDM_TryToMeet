@@ -8,6 +8,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
@@ -219,6 +220,10 @@ public class ProfileFragment extends Fragment {
         if( user.image != null){
             Glide.with(this).load(user.image).into(profileImage);
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("account_name", user.username);
+        editor.apply();
     }
 
     public void addedFriendSuccessfully(boolean res){

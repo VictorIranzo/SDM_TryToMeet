@@ -28,7 +28,7 @@ public class GroupsFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    public ArrayList<Group> groupList = new ArrayList<>();
+    public ArrayList<Group> groupList;
     public ListView listViewGroups;
     public GroupsListAdapter adapter;
 
@@ -51,6 +51,7 @@ public class GroupsFragment extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 
+        groupList = new ArrayList<>();
         listViewGroups = parent.findViewById(R.id.list_groups);
         adapter = new GroupsListAdapter(getActivity(),R.id.list_groups,groupList);
 
@@ -70,7 +71,7 @@ public class GroupsFragment extends Fragment {
                 args.putString("group_identifier", groupList.get(position).uniqueIdentifier);
                 fragment.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, fragment).commit();
+                        .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
 
             }
         });

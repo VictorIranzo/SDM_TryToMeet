@@ -182,9 +182,8 @@ public class CreateEventFragment extends Fragment {
             Notification notification = new Notification(
                     NotificactionListener.ADDED_TO_AN_EVENT,
                     getResources().getString(R.string.create_event_notification_title),
-                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name),
-                    event_id);
-
+                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name));
+            notification.event_id = event_id;
             for (String participant_id : to_invite) {
                 NotificationFirebaseService.addNotification(notification, participant_id);
             }

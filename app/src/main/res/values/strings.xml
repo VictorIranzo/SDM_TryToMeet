@@ -31,8 +31,6 @@
     <string name="create_event_friend_title">Friend</string>
     <string name="create_event_add_a_friend_button">Add a friend</string>
     <string name="create_event_add_a_group_button">Add a group</string>
-    <string name="create_event_notification_title">Added to a new event</string>
-    <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
     <string name="create_event_missing_title">A title is needed</string>
     <string name="create_event_missing_description">A description is needed</string>
     <string name="create_event_missing_place">A place is needed</string>
@@ -75,6 +73,11 @@
     <string name="confirm">Confirm</string>
 
 
+    <!-->Notification <-->
+    <string name="create_event_notification_title">Added to a new event</string>
+    <string name="create_event_notification_text">%1$s has added you to the event %2$s</string>
+    <string name="added_to_a_group_notification_title">Added to a new group</string>
+    <string name="added_to_a_group_notification_text">%1$s has added you to the group %2$s</string>
 
     <!-->Map activity<-->
     <string name="title_activity_maps">Current Place Details</string>
@@ -108,7 +111,5 @@
     <string name="show_images">Show images</string>
     <string name="add_image">Add image</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

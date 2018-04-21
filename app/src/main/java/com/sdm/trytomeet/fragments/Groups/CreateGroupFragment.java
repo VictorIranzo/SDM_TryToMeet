@@ -1,6 +1,8 @@
 package com.sdm.trytomeet.fragments.Groups;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +28,7 @@ public class CreateGroupFragment extends Fragment {
 
     private View parent;
     private String user_id;
+    private String username;
 
     private ArrayList<User> participants;
     private CreateEventParticipantListAdapter participant_adapter;
@@ -45,7 +48,9 @@ public class CreateGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_create_group, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
+        username = prefs.getString("account_name", "");
 
         Button add_partcipant = parent.findViewById(R.id.button_add_participant);
         add_partcipant.setOnClickListener(new View.OnClickListener() {
@@ -74,14 +79,14 @@ public class CreateGroupFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.create_event_header_confirm:
-                confirmEvent();
+                confirmGroup();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void confirmEvent() {
-        // We create the Event object
+    private void confirmGroup() {
+        // We create the Group object
         String name = ((EditText) parent.findViewById(R.id.groupName)).getText().toString();
         List<String> participants_id = new ArrayList<>();
         participants_id.add(user_id);
@@ -89,7 +94,9 @@ public class CreateGroupFragment extends Fragment {
         Group group = new Group(participants_id, name);
 
         // We store the event in the DB
-        UserFirebaseService.createGroup(group);
+        UserFirebaseService.createGroup(group, user_id,
+                getResources().getString(R.string.added_to_a_group_notification_title),
+                getResources().getString(R.string.added_to_a_group_notification_text, username, name));
 
         Toast.makeText(getActivity(),"Group added", Toast.LENGTH_SHORT).show();
 
