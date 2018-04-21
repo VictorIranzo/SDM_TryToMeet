@@ -76,6 +76,9 @@ public class EventFirebaseService extends FirebaseService{
                     if(d.equals(date)){
                         if(d.voted_users == null) d.voted_users = new ArrayList<String>();
                         d.voted_users.add(user_id);
+
+                        EventFirebaseService.SetTakingPart(event_id,user_id,InvitedTo.VOTED);
+
                         break;
                     }
                 }
@@ -111,6 +114,23 @@ public class EventFirebaseService extends FirebaseService{
             }
         });
         */
+    }
+
+    private static void SetTakingPart(String event_id, String user_id, final String state) {
+        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                InvitedTo invitedTo = mutableData.getValue(InvitedTo.class);
+                invitedTo.state = state;
+                mutableData.setValue(invitedTo);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
     }
 
     public static void removeVote(final String event_id, final String user_id, final Date date){
@@ -286,7 +306,5 @@ public class EventFirebaseService extends FirebaseService{
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
 }
