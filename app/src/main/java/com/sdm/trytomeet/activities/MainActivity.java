@@ -135,20 +135,19 @@ public class MainActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.event_menu, menu);
-        return true;
-    }
-
-
-    @Override
     protected void onStart() {
         super.onStart();
+
 
         service = new Intent(this, NotificationService.class);
         this.startService(service);
         if(accountFacebook!=null) { id=accountFacebook.getUid(); name=accountFacebook.getDisplayName(); email=accountFacebook.getEmail();}
         else if(accountGoogle!=null) {id= accountGoogle.getId(); name=accountGoogle.getDisplayName(); email=accountGoogle.getEmail();}
+
+        // Default fragment
+        EventListFragment fragment = new EventListFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
 
         UserFirebaseService.addUser(id,name, this);
         UserFirebaseService.registerEmail(id, cleanEmail(email));
@@ -224,52 +223,32 @@ public class MainActivity
 
     private void goToGroups() {
         GroupsFragment fragment = new GroupsFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToCreateEvent() {
         CreateEventFragment fragment = new CreateEventFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToFavoriteSites() {
         FavoriteSitesFragment fragment = new FavoriteSitesFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id",id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToProfile() {
         ProfileFragment fragment = new ProfileFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     public static String cleanEmail(String string) {

@@ -1,6 +1,8 @@
 package com.sdm.trytomeet.fragments.Events;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,7 +71,8 @@ public class CreateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_create_event, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         Button add_partcipant = parent.findViewById(R.id.button_add_participant);
         add_partcipant.setOnClickListener(new View.OnClickListener() {
@@ -240,8 +243,9 @@ public class CreateEventFragment extends Fragment {
         // el mapa se elimina desde el gestor de fragments de create event y se vuelve a mostrar este.
         getView().setVisibility(View.GONE);
 
+
         if(firstime) {
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment, "Find_Place").addToBackStack(null).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack("Find_Place").commit();
             firstime = false;
         } else {
             fragment = (FindPlaceFragment) getActivity().getSupportFragmentManager().findFragmentByTag("Find_Place");

@@ -1,7 +1,9 @@
 package com.sdm.trytomeet.fragments.Events;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +24,6 @@ import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 // TODO: Hacer visible botón de añadir evento.
@@ -57,8 +58,9 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_main, container, false);
-        user_id = getArguments().getString("user_id");
+        parent = inflater.inflate(R.layout.fragment_event_list, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         FloatingActionButton createButton = parent.findViewById(R.id.floatingActionButton);
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +139,7 @@ public class EventListFragment extends Fragment {
         fragment.setArguments(args);
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void initializeAdapter(){
