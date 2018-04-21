@@ -30,6 +30,7 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
+import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Groups.MembersFragment;
@@ -236,7 +237,7 @@ public class UserFirebaseService extends FirebaseService {
         }
 
     }
-    public static void addFriend(final String user_id, final String friend_email, final ProfileFragment fragment) {
+    public static void addFriend(final String user_id, final String friend_email, final FriendsFragment fragment) {
 
         getDatabaseReference().child("email").child(friend_email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -254,7 +255,7 @@ public class UserFirebaseService extends FirebaseService {
     }
 
 
-    private static void addFriendChecked(final String user_id, final String friend,final ProfileFragment fragment) {
+    private static void addFriendChecked(final String user_id, final String friend,final FriendsFragment fragment) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -273,6 +274,7 @@ public class UserFirebaseService extends FirebaseService {
                             getDatabaseReference().child("friends").child(user_id).setValue(f);
                         }
                         fragment.addedFriendSuccessfully(true);
+                        FriendsFragment.reloadFriends();
                     }
 
                     @Override
@@ -281,7 +283,7 @@ public class UserFirebaseService extends FirebaseService {
                 });
     }
 
-    public static void removeFriend(final String user_id, final List<User> friends_remove, final ProfileFragment fragment) {
+    public static void removeFriend(final String user_id, final List<User> friends_remove) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -292,13 +294,13 @@ public class UserFirebaseService extends FirebaseService {
                             for (User u : friends_remove)
                                 friends.friends.remove(u.id);
                             getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                            FriendsFragment.reloadFriends();
                         }
-                        fragment.removedFriendSuccessfully(true);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        fragment.removedFriendSuccessfully(false);
+
 
                     }
                 });

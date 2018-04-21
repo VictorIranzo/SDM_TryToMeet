@@ -1,30 +1,23 @@
 package com.sdm.trytomeet.fragments.Profile;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.components.CircularImageView;
+import com.sdm.trytomeet.fragments.Friends.AddFriendFragmentDialog;
+import com.sdm.trytomeet.fragments.Friends.RemoveFriendFragmentDialog;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +47,6 @@ public class ProfileFragment extends Fragment {
     private LinearLayout panelChangeName;
     private Button cancelButton;
     private Button okButton;
-    private Button addFriendButton;
-    private Button removeFriendButton;
     private EditText editName;
 
     private String currentImage;
@@ -104,21 +92,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        addFriendButton = parent.findViewById(R.id.button_add_friend);
-        addFriendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addFriend(view);
-            }
-        });
-
-        removeFriendButton = parent.findViewById(R.id.button_remove_friend);
-        removeFriendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeFriend(view);
-            }
-        });
 
         cancelButton = parent.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -155,24 +128,6 @@ public class ProfileFragment extends Fragment {
         userName.setVisibility(View.GONE);
     }
 
-    private void addFriend(View view){
-        // Show a pop-up to select among your friends
-        AddFriendFragmentDialog fragment = AddFriendFragmentDialog.newInstance(user_id);
-        fragment.setCancelable(false);
-        // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
-        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
-    }
-
-    private void removeFriend(View view){
-        // Show a pop-up to select among your friends
-        RemoveFriendFragmentDialog fragment = RemoveFriendFragmentDialog.newInstance(user_id);
-        fragment.setCancelable(false);
-        // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
-        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
-    }
-
     private void setImage() {
         startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
     }
@@ -201,16 +156,7 @@ public class ProfileFragment extends Fragment {
 
 
         }
-        if (requestCode==ADD_FRIEND){
-            String friend_email=data.getStringExtra("friend_id");
-            UserFirebaseService.addFriend(user_id, MainActivity.cleanEmail(friend_email),this);
 
-        }
-        if (requestCode==REMOVE_FRIEND){
-            ArrayList<User> to_remove = new ArrayList<User>((List<User>)data.getSerializableExtra("to_remove"));
-            UserFirebaseService.removeFriend(user_id,to_remove,this);
-
-        }
     }
 
     public void updateImageAndName(User user) {
@@ -226,21 +172,6 @@ public class ProfileFragment extends Fragment {
         editor.apply();
     }
 
-    public void addedFriendSuccessfully(boolean res){
-        String message;
-        if(res) message=getString(R.string.added_friend_successfull);
-        else message =getString(R.string.added_friend_fail);
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-    }
-
-    public void removedFriendSuccessfully(boolean res){
-        String message;
-        if(res) message=getString(R.string.removed_friend_successfull);
-        else message =getString(R.string.removed_friend_fail);
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-    }
 
 
 }

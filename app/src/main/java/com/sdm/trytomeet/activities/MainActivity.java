@@ -29,6 +29,7 @@ import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
@@ -204,6 +205,10 @@ public class MainActivity
                 goToFavoriteSites();
                 break;
 
+            case R.id.drawer_menu_friends:
+                goToFriends();
+                break;
+
             case R.id.drawer_menu_profile:
                 goToProfile();
                 break;
@@ -223,6 +228,11 @@ public class MainActivity
 
     private void goToGroups() {
         GroupsFragment fragment = new GroupsFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+    }
+    private void goToFriends() {
+        FriendsFragment fragment = new FriendsFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }

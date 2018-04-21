@@ -28,5 +28,11 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:text="@string/add_as_a_friend" />
+    <Button
+        android:id="@+id/remove_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/remove_friend" />
 
 </LinearLayout>

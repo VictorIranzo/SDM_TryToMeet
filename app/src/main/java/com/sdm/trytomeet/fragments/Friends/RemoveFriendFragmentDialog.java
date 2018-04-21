@@ -1,4 +1,4 @@
-package com.sdm.trytomeet.fragments.Profile;
+package com.sdm.trytomeet.fragments.Friends;
 
 import android.app.Activity;
 import android.app.Dialog;
