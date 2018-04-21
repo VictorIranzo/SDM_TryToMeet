@@ -168,8 +168,8 @@
 
             <ListView
                 android:id="@+id/event_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:choiceMode="none" />
 
             <EditText
@@ -204,6 +204,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel_event" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_event" />
+
         </LinearLayout>
     </ScrollView>
 

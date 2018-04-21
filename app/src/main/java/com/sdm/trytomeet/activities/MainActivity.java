@@ -25,12 +25,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.sdm.trytomeet.POJO.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
 import com.sdm.trytomeet.fragments.Events.HistoricEvents;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
@@ -105,6 +108,24 @@ public class MainActivity
         initializeAdapter();*/
     }
 
+    private void answer_to_notification(int action) {
+        switch (action){
+            case Notification.ADDED_TO_AN_EVENT:
+            case Notification.EVENT_CONFIRMATE:
+            case Notification.COMMENT_ADDED:
+            case Notification.IMAGE_UPLOADED:
+                EventListFragment fragment = new EventListFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("goto", getIntent().getStringExtra("event_id"));
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameLayout, fragment).commit();
+                break;
+            case 2: // ADDED TO A GROUP
+                break;
+        }
+    }
+
 
 
 
@@ -153,15 +174,17 @@ public class MainActivity
         if(accountFacebook!=null) { id=accountFacebook.getUid(); name=accountFacebook.getDisplayName(); email=accountFacebook.getEmail();}
         else if(accountGoogle!=null) {id= accountGoogle.getId(); name=accountGoogle.getDisplayName(); email=accountGoogle.getEmail();}
 
-        // Default fragment
-        EventListFragment fragment = new EventListFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
 
         UserFirebaseService.addUser(id,name, this);
         UserFirebaseService.registerEmail(id, cleanEmail(email));
 
-
+        int action = getIntent().getIntExtra("action", 0); // Used to behave properly to the notifications
+        if(action != 0) answer_to_notification(action); // If coming from notification
+        else{ // Default fragment
+            EventListFragment fragment = new EventListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout, fragment).commit();
+        }
     }
 
     @Override
@@ -213,6 +236,10 @@ public class MainActivity
                 goToFavoriteSites();
                 break;
 
+            case R.id.drawer_menu_friends:
+                goToFriends();
+                break;
+
             case R.id.drawer_menu_profile:
                 goToProfile();
                 break;
@@ -236,6 +263,11 @@ public class MainActivity
 
     private void goToGroups() {
         GroupsFragment fragment = new GroupsFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+    }
+    private void goToFriends() {
+        FriendsFragment fragment = new FriendsFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }

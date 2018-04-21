@@ -28,7 +28,9 @@ import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
+import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
+import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Groups.MembersFragment;
@@ -116,6 +118,26 @@ public class UserFirebaseService extends FirebaseService {
                     favouriteSites.add(s);
                 }
                 findPlaceFragment.addSitesToList(favouriteSites);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void checkIfFavouriteSite(final Site site, String user_id, final CreateEventFragment createEventFragment) {
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                List<Site> favouriteSites = new ArrayList<Site>();
+                while (iterator.hasNext()) {
+                    Site s = iterator.next().getValue(Site.class);
+                    if(s.equals(site)) return;
+                }
+                createEventFragment.showAddFavourite();
             }
 
             @Override
@@ -215,7 +237,7 @@ public class UserFirebaseService extends FirebaseService {
         }
 
     }
-    public static void addFriend(final String user_id, final String friend_email, final ProfileFragment fragment) {
+    public static void addFriend(final String user_id, final String friend_email, final FriendsFragment fragment) {
 
         getDatabaseReference().child("email").child(friend_email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -233,7 +255,7 @@ public class UserFirebaseService extends FirebaseService {
     }
 
 
-    private static void addFriendChecked(final String user_id, final String friend,final ProfileFragment fragment) {
+    private static void addFriendChecked(final String user_id, final String friend,final FriendsFragment fragment) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -252,6 +274,7 @@ public class UserFirebaseService extends FirebaseService {
                             getDatabaseReference().child("friends").child(user_id).setValue(f);
                         }
                         fragment.addedFriendSuccessfully(true);
+                        FriendsFragment.reloadFriends();
                     }
 
                     @Override
@@ -260,7 +283,7 @@ public class UserFirebaseService extends FirebaseService {
                 });
     }
 
-    public static void removeFriend(final String user_id, final List<User> friends_remove, final ProfileFragment fragment) {
+    public static void removeFriend(final String user_id, final List<User> friends_remove) {
 
         getDatabaseReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends
@@ -271,13 +294,13 @@ public class UserFirebaseService extends FirebaseService {
                             for (User u : friends_remove)
                                 friends.friends.remove(u.id);
                             getDatabaseReference().child("friends").child(user_id).setValue(friends);
+                            FriendsFragment.reloadFriends();
                         }
-                        fragment.removedFriendSuccessfully(true);
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        fragment.removedFriendSuccessfully(false);
+
 
                     }
                 });
@@ -292,7 +315,7 @@ public class UserFirebaseService extends FirebaseService {
 
             // Create the notifications for the others users
             if(!user_id.equals(u)){
-                Notification not = new Notification(NotificactionListener.ADDED_TO_AN_EVENT,
+                Notification not = new Notification(Notification.ADDED_TO_AN_EVENT,
                         notification_title, notification_text);
                 not.group_id = key;
                 NotificationFirebaseService.addNotification(not, u);
@@ -369,7 +392,7 @@ public class UserFirebaseService extends FirebaseService {
             }
 
             // Notify that user
-            Notification not = new Notification(NotificactionListener.ADDED_TO_A_GROUP, title, text);
+            Notification not = new Notification(Notification.ADDED_TO_A_GROUP, title, text);
             not.group_id = group.uniqueIdentifier;
             NotificationFirebaseService.addNotification(not, friend);
 

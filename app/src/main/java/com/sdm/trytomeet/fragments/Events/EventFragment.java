@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,14 +35,17 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.adapters.CommentListAdapter;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -77,14 +79,15 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private CircularImageView image;
 
     private Button cancel_event;
+    private Button delete_event;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
+    private CommentListAdapter commentListAdapter;
     public static final int GET_FROM_GALLERY = 1;
 
 
-    public ArrayList<HashMap<String, String>> comments = new ArrayList<>();
-    public SimpleAdapter commentsAdapter;
+    public List<Comment> comments;
 
 
     private Event shownEvent;
@@ -127,6 +130,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         add_comment = parent.findViewById(R.id.add_comment);
         confirm_event = parent.findViewById(R.id.confirm_event);
         cancel_event = parent.findViewById(R.id.cancel_event);
+        delete_event = parent.findViewById(R.id.delete_event);
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
 
@@ -174,10 +178,9 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        // Reuse the favorite sites list.
-        commentsAdapter = new SimpleAdapter(getActivity(), comments, R.layout.site_list_row,
-                new String[]{"user", "comment"}, new int[]{R.id.siteName, R.id.siteDescription});
-        event_comments.setAdapter(commentsAdapter);
+        comments = new ArrayList<Comment>();
+        commentListAdapter = new CommentListAdapter(getActivity(),R.id.event_comments,comments);
+        event_comments.setAdapter(commentListAdapter);
 
         event_dates.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
@@ -220,10 +223,17 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     };
 
     private void addComment() {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        java.util.Date today = Calendar.getInstance().getTime();
+        String dateString = df.format(today);
+
         if (currentUser != null) {
-            EventFirebaseService.AddComment(
-                    new Comment(currentUser.username, comment_write.getText().toString()),
-                    event_id);
+            Comment c = new Comment(currentUser.username, comment_write.getText().toString(), dateString, currentUser.image);
+            EventFirebaseService.AddComment(c,event_id, user_id, shownEvent.participants_id,
+                    getResources().getString(R.string.comment_added_notification_title),
+                    getResources().getString(R.string.comment_added_notification_text, currentUser.username, shownEvent.name));
+
+            putEventComment(c);
 
             comment_write.setText("");
         }
@@ -250,6 +260,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants);
         event_participants.setAdapter(participantsAdapter);
 
+        setUpDeleteEvent();
+
         if(event.image!=null) Glide.with(this).load(event.image).into(image);
 
         // Adds the creator to the participants list.
@@ -262,7 +274,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
 
         if (event.comments != null)
             for (Comment c : event.comments.values()) {
-                getEventComment(c);
+                putEventComment(c);
             }
 
         if (event.creator_id.equals(user_id) && event.state.equals(Event.PENDING)) {
@@ -291,6 +303,67 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         enable_show_images();
     }
 
+    private void setUpDeleteEvent() {
+        if(shownEvent.state.equals(Event.PENDING)|| shownEvent.state.equals(Event.CONFIRMED))
+        {
+            if(shownEvent.creator_id.equals(user_id)){
+                delete_event.setVisibility(GONE);
+                return;
+            }
+
+            delete_event.setText(getString(R.string.leave_event));
+            delete_event.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getString(R.string.sure_Leave_Event));
+
+                    builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EventFirebaseService.deleteTakingPart(user_id,event_id);
+                            EventFirebaseService.deleteParticipant(user_id,event_id);
+
+                            goToEventList();
+                        }
+                    });
+
+                    builder.setNegativeButton(android.R.string.no, null);
+                    builder.show();
+                }
+            });
+        }
+        if(shownEvent.state.equals(Event.DONE)|| shownEvent.state.equals(Event.CANCELED))
+        {
+            delete_event.setText(getString(R.string.delete_history));
+            delete_event.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getString(R.string.sure_Delete_History));
+
+                    builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EventFirebaseService.deleteTakingPart(user_id,event_id);
+
+                            goToEventList();
+                        }
+                    });
+
+                    builder.setNegativeButton(android.R.string.no, null);
+                    builder.show();
+                }
+            });
+        }
+    }
+
+    private void goToEventList() {
+        EventListFragment fragment = new EventListFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+    }
+
     private void enableVoting() {
         if(!shownEvent.state.equals(Event.PENDING)){
             event_dates.setVisibility(GONE);
@@ -311,9 +384,9 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void getEventComment(Comment c) {
-        comments.add(getCommentHashMap(c.author, c.text));
-        commentsAdapter.notifyDataSetChanged();
+    private void putEventComment(Comment c) {
+        comments.add(c);
+        commentListAdapter.notifyDataSetChanged();
     }
 
     private void enable_show_images(){
@@ -323,22 +396,18 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             show_images.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = new Event_image_gallery();
+                    Fragment fragment = new EventImageGallery();
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", event_id);
+                    bundle.putString("event_name", shownEvent.name);
+                    bundle.putString("username", currentUser.username);
+                    bundle.putStringArrayList("participants", (ArrayList<String>) shownEvent.participants_id);
                     fragment.setArguments(bundle);
                     getFragmentManager().beginTransaction().replace(R.id.frameLayout,
                             fragment).addToBackStack("gallery").commit();
                 }
             });
         }
-    }
-
-    private HashMap<String, String> getCommentHashMap(String user, String comment) {
-        HashMap<String, String> item = new HashMap<String, String>();
-        item.put("user", user);
-        item.put("comment", comment);
-        return item;
     }
 
     User currentUser;

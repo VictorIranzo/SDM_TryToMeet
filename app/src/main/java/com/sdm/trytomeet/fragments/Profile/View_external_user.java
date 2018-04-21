@@ -31,6 +31,8 @@ import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
+import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
+import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
 
@@ -88,6 +90,8 @@ public class View_external_user extends DialogFragment {
         ((TextView) view.findViewById(R.id.username)).setText(user.username);
 
         final Button add_as_a_friend = view.findViewById(R.id.add_as_a_friend);
+        final Button remove_friend = view.findViewById(R.id.remove_friend);
+
 
         FirebaseDatabase.getInstance().getReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,6 +100,9 @@ public class View_external_user extends DialogFragment {
                 Friends friends = dataSnapshot.getValue(Friends.class);
                 if((friends==null || !friends.friends.contains(user.id)) && !user_id.equals(user.id)){
                     add_as_a_friend.setVisibility(View.VISIBLE);
+                }
+                if(friends!=null && friends.friends.contains(user.id)){
+                    remove_friend.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -135,7 +142,16 @@ public class View_external_user extends DialogFragment {
                 dismiss();
             }
         });
+        remove_friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<User> toDelete= new ArrayList<User>();
+                toDelete.add(user);
+                UserFirebaseService.removeFriend(user_id,toDelete );
 
+                dismiss();
+            }
+        });
 
         return builder.create();
     }

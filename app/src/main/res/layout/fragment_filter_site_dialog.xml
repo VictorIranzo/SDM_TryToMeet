@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tipo de sitio" />
+        android:text="@string/site_type" />
 
     <RadioGroup
         android:id="@+id/radioGroup_Type"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Radio de búsqueda" />
+            android:text="@string/ration" />
 
         <Spinner
             android:id="@+id/spinner_radio"

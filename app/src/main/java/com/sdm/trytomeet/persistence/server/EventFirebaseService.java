@@ -76,14 +76,17 @@ public class EventFirebaseService extends FirebaseService{
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 Event event = mutableData.getValue(Event.class);
+                if(event == null) return Transaction.success(mutableData);
                 for (Date d: event.possible_dates) {
                     if(d.equals(date)){
                         if(d.voted_users == null) d.voted_users = new ArrayList<String>();
                         d.voted_users.add(user_id);
+
+                        EventFirebaseService.SetTakingPart(event_id,user_id,InvitedTo.VOTED);
+
                         break;
                     }
                 }
-
                 mutableData.setValue(event);
                 return Transaction.success(mutableData);
             }
@@ -117,11 +120,29 @@ public class EventFirebaseService extends FirebaseService{
         */
     }
 
+    private static void SetTakingPart(String event_id, String user_id, final String state) {
+        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                InvitedTo invitedTo = mutableData.getValue(InvitedTo.class);
+                invitedTo.state = state;
+                mutableData.setValue(invitedTo);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
+
     public static void removeVote(final String event_id, final String user_id, final Date date){
         getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 Event event = mutableData.getValue(Event.class);
+                if(event == null) return Transaction.success(mutableData);
                 for (Date d: event.possible_dates) {
                     if(d.equals(date)){
                         d.voted_users.remove(user_id);
@@ -159,9 +180,17 @@ public class EventFirebaseService extends FirebaseService{
         */
     }
 
-    public static void AddComment(Comment c, String event_id){
+    public static void AddComment(Comment c, String event_id, String user_id, List<String> participants, String title, String text){
         String key = getDatabaseReference().child("events").child(event_id).child("comments").push().getKey();
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
+
+        // Notify the other users
+        for(String user : participants){
+            if(!user.equals(user_id));
+                Notification not = new Notification(Notification.COMMENT_ADDED,title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+        }
     }
 
     public static void confirmateEvent(final String event_id, final Date date, String user_id, List<String> participant, String title, String text){
@@ -183,7 +212,7 @@ public class EventFirebaseService extends FirebaseService{
         // Notify the others users
         for(String user : participant){
             if(!user.equals(user_id)){
-                Notification not = new Notification(NotificactionListener.EVENT_CONFIRMATE, title, text);
+                Notification not = new Notification(Notification.EVENT_CONFIRMATE, title, text);
                 not.event_id = event_id;
                 NotificationFirebaseService.addNotification(not, user);
             }
@@ -236,7 +265,7 @@ public class EventFirebaseService extends FirebaseService{
     }
 
 
-    public static void uploadImage(final String event_id, Uri selectedImage) {
+    public static void uploadImage(final String event_id, Uri selectedImage, ArrayList<String> participants, String user_id, String title, String text) {
         final StorageReference path = getStorageReference().child("images").child("event_images").child(selectedImage.getLastPathSegment());
         path.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -245,6 +274,15 @@ public class EventFirebaseService extends FirebaseService{
                 getDatabaseReference().child("events").child(event_id).child("images").child(key).setValue(taskSnapshot.getDownloadUrl().toString());
             }
         });
+
+        // Notify users
+        for(String user : participants){
+            if(!user_id.equals(user)){
+                Notification not = new Notification(Notification.IMAGE_UPLOADED, title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+            }
+        }
     }
 
 
@@ -286,42 +324,51 @@ public class EventFirebaseService extends FirebaseService{
                         }
                     }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
+    
 
-
-
-    public static void updateEvent(){
-        getDatabaseReference().child("events").addValueEventListener(new ValueEventListener() {
+    public static void deleteTakingPart(String user_id, String event_id) {
+        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Event e = dataSnapshot.getValue(Event.class);
-                java.util.Date d = new java.util.Date();
-                Calendar c = new GregorianCalendar();
-                c.setTime(d);
-                if(e.confirmed_date != null && e.confirmed_date.year >= c.get(Calendar.YEAR) &&
-                        e.confirmed_date.month >= c.get(Calendar.MONTH) &&
-                        e.confirmed_date.day >= c.get(Calendar.DATE) &&
-                        e.confirmed_date.hour >= c.get(Calendar.HOUR) &&
-                        e.confirmed_date.minute > c.get(Calendar.MINUTE)){
-                    e.state = "DONE";
-
-                }
-
-
+                dataSnapshot.getRef().removeValue();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", "Something bad");
+
             }
         });
+    }
 
+    public static void deleteParticipant(final String user_id, String event_id) {
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+
+                if(event == null) return Transaction.success(mutableData);
+
+                event.participants_id.remove(user_id);
+                for (Date date: event.possible_dates) {
+                    date.voted_users.remove(user_id);
+                }
+
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
     }
 
 
