@@ -227,6 +227,9 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
 
         if(event.image!=null) Glide.with(this).load(event.image).into(image);
 
+        // Adds the creator to the participants list.
+        UserFirebaseService.getUser(event.creator_id, this);
+
         if (event.participants_id != null)
             for (String user : event.participants_id) {
                 UserFirebaseService.getUser(user, this);
@@ -263,6 +266,14 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             event_dates.setVisibility(GONE);
             confirmed_date.setVisibility(VISIBLE);
             confirmed_date.setText(shownEvent.getWinningDate().toString());
+        }
+
+        if(user_id.equals(shownEvent.creator_id)) {
+            event_dates.setVisibility(GONE);
+
+            // Shows the resume of date voting.
+            confirmed_date.setVisibility(VISIBLE);
+            confirmed_date.setText(shownEvent.getPossibleDatesResume());
         }
     }
 

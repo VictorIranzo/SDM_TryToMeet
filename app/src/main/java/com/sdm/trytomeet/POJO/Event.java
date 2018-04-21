@@ -82,4 +82,13 @@ public class Event {
         else return false;
 
     }
+
+    public String getPossibleDatesResume(){
+        String result = "";
+        for (Date date: possible_dates) {
+            result += date.toString() + '\n';
+        }
+
+        return result;
+    }
 }
