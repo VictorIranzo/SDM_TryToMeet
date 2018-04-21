@@ -16,6 +16,7 @@ import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
+import com.sdm.trytomeet.fragments.Events.EventListFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -117,21 +118,18 @@ public class EventFirebaseService extends FirebaseService{
         });
     }
 
-    public static ArrayList nameEvent(final String user_id){
+    public static void getEventName(final String user_id, final EventListFragment eventListFragment){
         getDatabaseReference().child("taking_part").child(user_id).child("invitedTo")
-        .addChildEventListener(new ChildEventListener() {
+        .addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String eventi = dataSnapshot.getKey();
-                System.out.println(eventi);
-                getDatabaseReference().child("events").child(eventi).addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String evento = dataSnapshot.getKey();
+                System.out.println(evento);
+                getDatabaseReference().child("events").child(evento).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Event e = dataSnapshot.getValue(Event.class);
-                        name.add(e);
-                        //getDatabaseReference().child("events").child(event_id).setValue(e);
-                        System.out.println(name);
-
+                        eventListFragment.addEventToList(e);
                     }
 
                     @Override
@@ -140,62 +138,13 @@ public class EventFirebaseService extends FirebaseService{
                     }
                 });
 
-                //name = getDatabaseReference().child("events").child(eventi).child("name");
-                //System.out.println(name);
-
-                /*ArrayList<String> listaEv = new ArrayList<>();
-                listaEv += llave;*/
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                System.out.println("The read failed: " + databaseError.getCode());
             }
-        }); /*{ // Get invited events
-                    //@Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Friends friends = dataSnapshot.getValue(Friends.class);
-                        if (friends != null) {
-                            for (User u : friends_remove)
-                                friends.friends.remove(u.id);
-                            getDatabaseReference().child("friends").child(user_id).setValue(friends);
-                        }
-                    }
-                        //fragment.removedFriendSuccessfully(true);
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Event even = dataSnapshot.getValue(Event.class);
-                        if (even.name != "") {
-                            String key = even.name;
-                        }
-                    }
-
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                    });*/
-        return name;
-        /*getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").on('value', function(data) {
-            var element = data.val();
-            $.each(element, function(nodo, value) {
-                if(nodo == '-L-qKRq1_yZmTdjvRqfN') console.log(value.name);
-            });*/
+        });
 
 
     }

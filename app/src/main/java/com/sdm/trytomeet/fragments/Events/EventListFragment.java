@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,14 +16,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.adapters.EventAdapter;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
+
+import java.util.List;
 
 public class EventListFragment extends Fragment {
 
     private View parent;
     private String user_id;
+
+    private List<Event> events;
+    //private List<Event> evento;
+
+    private RecyclerView rv;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager llm;
 
 
     // TODO: Remove this.
@@ -42,7 +55,7 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_event_list, container, false);
+        parent = inflater.inflate(R.layout.fragment_main, container, false);
         user_id = getArguments().getString("user_id");
 
         FloatingActionButton createButton = parent.findViewById(R.id.floatingActionButton);
@@ -52,17 +65,22 @@ public class EventListFragment extends Fragment {
                 goToCreateEvent();
             }
         });
+        RecyclerView rv = parent.findViewById(R.id.rv);
 
-        CardView evento = parent.findViewById(R.id.ev);
+        llm = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(llm);
 
-        pruebas = parent.findViewById(R.id.pruebas);
+        //CardView evento = parent.findViewById(R.id.ev);
 
-        pruebas.setOnClickListener(new View.OnClickListener() {
+        //pruebas = parent.findViewById(R.id.pruebas);
+
+        /*pruebas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToEvent();
             }
-        });
+        });*/
+        initializeAdapter();
 
         return parent;
 
@@ -115,5 +133,16 @@ public class EventListFragment extends Fragment {
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
+    }
+
+    private void initializeAdapter(){
+        adapter = new EventAdapter(events);
+        rv.setAdapter(adapter);
+    }
+
+    public void addEventToList(Event e){
+        events.add(new Event(e.name, e.description));
+        adapter = new EventAdapter(events);
+        rv.setAdapter(adapter);
     }
 }

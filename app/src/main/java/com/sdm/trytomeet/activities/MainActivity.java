@@ -110,7 +110,7 @@ public class MainActivity
 
 
 
-        private void initializeData(){
+        /*private void initializeData(){
         events = new ArrayList<>();
         evento = EventFirebaseService.nameEvent(account.getId());
         Iterator<Event> iterator = evento.iterator();
@@ -124,7 +124,7 @@ public class MainActivity
         //events.add(new Event(EventFirebaseService.nameEvent(account.getId()), "23 years old"));
         //events.add(new Event("Lavery Maiss", "25 years old"));
         //events.add(new Event("Lillie Watts", "35 years old"));
-    }
+    }*/
 
     private void initializeAdapter(){
         adapter = new EventAdapter(events);
