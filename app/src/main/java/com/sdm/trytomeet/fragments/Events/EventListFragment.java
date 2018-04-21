@@ -21,7 +21,9 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventAdapter;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
+import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventListFragment extends Fragment {
@@ -65,10 +67,12 @@ public class EventListFragment extends Fragment {
                 goToCreateEvent();
             }
         });
-        RecyclerView rv = parent.findViewById(R.id.rv);
+        rv = parent.findViewById(R.id.rv);
 
         llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
+
+        events = new ArrayList<Event>();
 
         //CardView evento = parent.findViewById(R.id.ev);
 
@@ -81,6 +85,8 @@ public class EventListFragment extends Fragment {
             }
         });*/
         initializeAdapter();
+
+        EventFirebaseService.getEventName(user_id,this);
 
         return parent;
 
@@ -141,8 +147,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void addEventToList(Event e){
-        events.add(new Event(e.name, e.description));
-        adapter = new EventAdapter(events);
-        rv.setAdapter(adapter);
+        events.add(e);
+        adapter.notifyDataSetChanged();
     }
 }

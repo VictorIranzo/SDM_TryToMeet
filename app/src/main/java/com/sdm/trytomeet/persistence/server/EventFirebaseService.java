@@ -22,6 +22,7 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
+import com.sdm.trytomeet.POJO.TakingPart;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
@@ -226,25 +227,28 @@ public class EventFirebaseService extends FirebaseService{
     }
 
     public static void getEventName(final String user_id, final EventListFragment eventListFragment){
-        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo")
+        getDatabaseReference().child("taking_part").child(user_id)
         .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String evento = dataSnapshot.getKey();
-                System.out.println(evento);
-                getDatabaseReference().child("events").child(evento).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Event e = dataSnapshot.getValue(Event.class);
-                        eventListFragment.addEventToList(e);
-                    }
+                TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                for (String event_id: takingPart.invitedTo.keySet()) {
+                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Event e = dataSnapshot.getValue(Event.class);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Error", "Something bad");
-                    }
-                });
+                            // In this way, deleted events are added to the list.
+                            if(e != null) eventListFragment.addEventToList(e);
+                        }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("Error", "Something bad");
+                        }
+                    });
+
+                }
             }
 
             @Override
