@@ -72,6 +72,7 @@ public class EventFirebaseService extends FirebaseService{
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 Event event = mutableData.getValue(Event.class);
+                if(event == null) return Transaction.success(mutableData);
                 for (Date d: event.possible_dates) {
                     if(d.equals(date)){
                         if(d.voted_users == null) d.voted_users = new ArrayList<String>();
@@ -82,7 +83,6 @@ public class EventFirebaseService extends FirebaseService{
                         break;
                     }
                 }
-
                 mutableData.setValue(event);
                 return Transaction.success(mutableData);
             }
@@ -138,6 +138,7 @@ public class EventFirebaseService extends FirebaseService{
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 Event event = mutableData.getValue(Event.class);
+                if(event == null) return Transaction.success(mutableData);
                 for (Date d: event.possible_dates) {
                     if(d.equals(date)){
                         d.voted_users.remove(user_id);
