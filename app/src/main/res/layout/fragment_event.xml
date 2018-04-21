@@ -13,14 +13,11 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:cropToPadding="false"
-            android:paddingLeft="0dp"
-            android:paddingRight="10dp"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+        <com.sdm.trytomeet.components.CircularImageView
+            android:id="@+id/image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/common_full_open_on_phone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -67,11 +64,27 @@
                 android:gravity="center"
                 android:text="Description" />
 
-            <EditText
-                android:id="@+id/event_description_edit"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/event_description_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/edit_description_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:text="@string/edit" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -93,6 +106,26 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Site description" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/event_showMap_button"
+                android:text="@string/event_show_map"/>
+
+            <LinearLayout
+                android:id="@+id/event_map"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp">
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/event_google_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context="com.sdm.trytomeet.fragments.Events.EventFragment" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -120,6 +153,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:id="@+id/confirmed_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_marginBottom="5dp"
@@ -143,7 +182,14 @@
                 android:id="@+id/add_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="AnyaDIR Comentario"/>
+                android:text="@string/add_comment"/>
+
+            <Button
+                android:id="@+id/show_images"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/show_images"/>
 
             <Button
                 android:id="@+id/confirm_event"

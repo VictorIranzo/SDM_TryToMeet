@@ -6,4 +6,5 @@
 
     <dimen name="list_row_site_description_text_size">24sp</dimen>
     <dimen name="list_row_site_name_text_size">18sp</dimen>
+
 </resources>

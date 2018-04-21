@@ -13,12 +13,12 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+        <com.sdm.trytomeet.components.CircularImageView
+            android:id="@+id/user_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/common_full_open_on_phone" />
 
         <TextView
             android:id="@+id/username"

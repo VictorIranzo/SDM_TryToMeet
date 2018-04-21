@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,6 +31,8 @@ import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.components.CircularImageView;
+
+import java.util.ArrayList;
 
 public class View_external_user extends DialogFragment {
 
@@ -77,6 +80,11 @@ public class View_external_user extends DialogFragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_view_external_user, null);
         builder.setView(view);
 
+        if(user.image != null){
+            CircularImageView userImage = view.findViewById(R.id.user_image);
+            Glide.with(this).load(user.image).into(userImage);
+        }
+
         ((TextView) view.findViewById(R.id.username)).setText(user.username);
 
         final Button add_as_a_friend = view.findViewById(R.id.add_as_a_friend);
@@ -86,7 +94,7 @@ public class View_external_user extends DialogFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Friends friends = dataSnapshot.getValue(Friends.class);
-                if(!friends.friends.contains(user.id) && !user_id.equals(user.id)){
+                if((friends==null || !friends.friends.contains(user.id)) && !user_id.equals(user.id)){
                     add_as_a_friend.setVisibility(View.VISIBLE);
                 }
             }
@@ -106,7 +114,14 @@ public class View_external_user extends DialogFragment {
                             @Override
                             public Transaction.Result doTransaction(MutableData mutableData) {
                                 Friends friends = mutableData.getValue(Friends.class);
-                                friends.friends.add(user.id);
+                                if(friends==null){
+                                    ArrayList<String> thisFriend =new ArrayList<String>();
+                                    thisFriend.add(user.id);
+                                    friends= new Friends(thisFriend);
+
+                                }
+                                else{
+                                friends.friends.add(user.id);}
                                 mutableData.setValue(friends);
                                 return Transaction.success(mutableData);
                             }

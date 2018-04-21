@@ -9,11 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
 
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Profile.View_external_user;
 
 /**
@@ -39,6 +41,10 @@ public class CreateEventParticipantListAdapter extends ArrayAdapter<User>{
                     .inflate(R.layout.create_event_participant_layout, null);
         }
         final User user = data.get(position);
+        if(user.image != null){
+            CircularImageView imageView = (CircularImageView) convertView.findViewById(R.id.user_image);
+            Glide.with(context).load(user.image).into(imageView);
+        }
         ((TextView) convertView.findViewById(R.id.username)).setText(user.username);
         ((Button) convertView.findViewById(R.id.delete_participant_button)).setOnClickListener(new View.OnClickListener() {
             @Override

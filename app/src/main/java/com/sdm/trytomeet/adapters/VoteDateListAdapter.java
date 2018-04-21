@@ -82,7 +82,7 @@ public class VoteDateListAdapter extends RecyclerView.Adapter<VoteDateListAdapte
             {
                 EventFirebaseService.removeVote(adapter.event_id, adapter.user_id, adapter.data.get(position));
                 voted = false;
-                dateButton.setBackgroundColor(Color.GRAY);
+                dateButton.setBackgroundResource(android.R.drawable.btn_default);
                 adapter.data.get(position).voted_users.remove(adapter.user_id);
             }
             else

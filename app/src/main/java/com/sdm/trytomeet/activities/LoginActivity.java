@@ -16,13 +16,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sdm.trytomeet.R;
 
 import android.support.v7.widget.Toolbar;
@@ -30,9 +47,17 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class LoginActivity extends AppCompatActivity {
 
     private int GOOGLE_SIGN_IN_RESULT_CODE = 1;
+    CallbackManager callbackManager;
+    private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +79,17 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(signInIntent, GOOGLE_SIGN_IN_RESULT_CODE);
             }
         });
+        Button signInFacebook= findViewById(R.id.sign_in_facebook);
+        signInFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doFBLoginForProfile();
+            }
+        });
+        mAuth = FirebaseAuth.getInstance();
+
+
+
     }
 
     @Override
@@ -61,11 +97,85 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         //Checking if the user has already started session with our app
-        MainActivity.account = GoogleSignIn.getLastSignedInAccount(this);
-        if(MainActivity.account != null){//He/she did it
+        MainActivity.accountGoogle = GoogleSignIn.getLastSignedInAccount(this);
+        if(MainActivity.accountGoogle != null){//He/she did it
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("account_id", MainActivity.accountGoogle.getId());
+            editor.putString("account_email",MainActivity.accountGoogle.getEmail());
+            editor.putString("account_name", MainActivity.accountGoogle.getDisplayName());
+            editor.apply();
+            go_to_main_screen();
+        }
+        else if (  mAuth.getCurrentUser()!=null){
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("account_id",  mAuth.getCurrentUser().getUid());
+            editor.putString("account_email", mAuth.getCurrentUser().getEmail());
+            editor.putString("account_name",  mAuth.getCurrentUser().getDisplayName());
+            editor.apply();
+            MainActivity.accountFacebook=mAuth.getCurrentUser();
             go_to_main_screen();
         }
     }
+
+    protected void doFBLoginForProfile() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager loginManager = LoginManager.getInstance();
+        loginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"));
+        loginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+                System.out.println(error.getStackTrace());
+
+            }
+        });
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("account_id", user.getUid());
+                            editor.putString("account_email",user.getEmail());
+                            editor.putString("account_name", user.getDisplayName());
+                            editor.apply();
+                            MainActivity.accountFacebook= user;
+                            go_to_main_screen();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+    }
+
+
 
     private void go_to_main_screen(){
         //We detroy the current activity and launch the main one
@@ -84,10 +194,12 @@ public class LoginActivity extends AppCompatActivity {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                MainActivity.account = task.getResult(ApiException.class);
+                MainActivity.accountGoogle = task.getResult(ApiException.class);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("account_id", MainActivity.account.getId());
+                editor.putString("account_id", MainActivity.accountGoogle.getId());
+                editor.putString("account_email", MainActivity.accountGoogle.getDisplayName());
+                editor.putString("account_name", MainActivity.accountGoogle.getEmail());
                 editor.apply();
                 //User has properly logged in with google
                 go_to_main_screen();
@@ -95,6 +207,9 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
                 //TODO: VER CUANDO PUEDE FALLAR y GESTIONAR ERRORES
             }
+        }
+        else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

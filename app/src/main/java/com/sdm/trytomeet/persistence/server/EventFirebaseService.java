@@ -1,7 +1,13 @@
 package com.sdm.trytomeet.persistence.server;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -9,12 +15,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
 
@@ -55,6 +64,29 @@ public class EventFirebaseService extends FirebaseService{
     }
 
     public static void addVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+                for (Date d: event.possible_dates) {
+                    if(d.equals(date)){
+                        if(d.voted_users == null) d.voted_users = new ArrayList<String>();
+                        d.voted_users.add(user_id);
+                        break;
+                    }
+                }
+
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
+        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR
+        /*
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,9 +106,30 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+        */
     }
 
     public static void removeVote(final String event_id, final String user_id, final Date date){
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+                for (Date d: event.possible_dates) {
+                    if(d.equals(date)){
+                        d.voted_users.remove(user_id);
+                        break;
+                    }
+                }
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+            }
+        });
+        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR                                                                      }
+        /*
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,6 +148,7 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+        */
     }
 
     public static void AddComment(Comment c, String event_id){
@@ -116,6 +170,59 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+    }
+
+    public static void editEventDescription(final String event_id, final String description){
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                e.description= description;
+                getDatabaseReference().child("events").child(event_id).setValue(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+
+    }
+    public static void setEventImage(final String event_id, final Uri image) {
+        StorageReference path = getStorageReference().child("images").child("events").child(image.getLastPathSegment());
+        path.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                getDatabaseReference().child("events").child(event_id).child("image").setValue(taskSnapshot.getDownloadUrl().toString());
+
+            }
+        });
+    }
+
+
+    public static void uploadImage(final String event_id, Uri selectedImage) {
+        final StorageReference path = getStorageReference().child("images").child("event_images").child(selectedImage.getLastPathSegment());
+        path.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                String key = getDatabaseReference().child("events").child(event_id).child("images").push().getKey();
+                getDatabaseReference().child("events").child(event_id).child("images").child(key).setValue(taskSnapshot.getDownloadUrl().toString());
+            }
+        });
+    }
+
+
+    public static void addImageListener(String event_id, ChildEventListener listener) {
+        FirebaseDatabase.getInstance().getReference().child("events").child(event_id)
+                .child("images").addChildEventListener(listener);
+
+    }
+
+    public static void removeImageListener(String event_id, ChildEventListener listener) {
+        FirebaseDatabase.getInstance().getReference().child("events").child(event_id)
+                .child("images").removeEventListener(listener);
+
     }
 
     public static void getEventName(final String user_id, final EventListFragment eventListFragment){

@@ -154,30 +154,40 @@ public class CreateEventFragment extends Fragment {
         String state = Event.PENDING;
         Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
 
-        // We store the event in the DB
-        String event_id = EventFirebaseService.addEvent(event);
+        // We check that all the required fields are fulfilled
+        if(event.name.equals("")) Toast.makeText(getContext(),R.string.create_event_missing_title, Toast.LENGTH_SHORT).show();
+        else if(event.description.equals("")) Toast.makeText(getContext(),R.string.create_event_missing_description, Toast.LENGTH_SHORT).show();
+        else if(event.site == null) Toast.makeText(getContext(),R.string.create_event_missing_place, Toast.LENGTH_SHORT).show();
+        else if(event.possible_dates.isEmpty()) Toast.makeText(getContext(),R.string.create_event_missing_dates, Toast.LENGTH_SHORT).show();
+        else if(event.participants_id.isEmpty()) Toast.makeText(getContext(),R.string.create_event_missing_participants, Toast.LENGTH_SHORT).show();
 
-        // We link each participant (and the creator) with the new event
-        List<String> to_invite = new ArrayList<>(participants_id);
-        to_invite.add(user_id);
-        InvitedTo inv = new InvitedTo("PENDING");
-        for(String participant_id : to_invite){
-            EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
+        else { //Everything is fine
+
+            // We store the event in the DB
+            String event_id = EventFirebaseService.addEvent(event);
+
+            // We link each participant (and the creator) with the new event
+            List<String> to_invite = new ArrayList<>(participants_id);
+            to_invite.add(user_id);
+            InvitedTo inv = new InvitedTo("PENDING");
+            for (String participant_id : to_invite) {
+                EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
+            }
+
+            // We notify each user
+            to_invite.remove(user_id); // Not me
+            Notification notification = new Notification(
+                    NotificactionListener.ADDED_TO_AN_EVENT,
+                    getResources().getString(R.string.create_event_notification_title),
+                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name),
+                    event_id);
+
+            for (String participant_id : to_invite) {
+                NotificationFirebaseService.addNotification(notification, participant_id);
+            }
+
+            goToEventList();
         }
-
-        // We notify each user
-        to_invite.remove(user_id); // Not me
-        Notification notification = new Notification(
-                NotificactionListener.ADDED_TO_AN_EVENT,
-                getResources().getString(R.string.create_event_notification_title),
-                getResources().getString(R.string.create_event_notification_text, MainActivity.account.getDisplayName(), event.name),
-                event_id);
-
-        for(String participant_id : to_invite){
-            NotificationFirebaseService.addNotification(notification,participant_id);
-        }
-
-        goToEventList();
     }
 
     private void goToEventList() {
@@ -307,6 +317,6 @@ public class CreateEventFragment extends Fragment {
     private void addFavoriteSite() {
         UserFirebaseService.addUserFavoriteSite(user_id,site);
 
-        Toast.makeText(getActivity(),"Anyadido sITIO favorito",5).show();
+        Toast.makeText(getActivity(),"Anyadido sITIO favorito",Toast.LENGTH_LONG).show();
     }
 }

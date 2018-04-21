@@ -1,5 +1,11 @@
 package com.sdm.trytomeet.fragments.Profile;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
@@ -15,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,27 +182,20 @@ public class ProfileFragment extends Fragment {
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             Bitmap bitmap = null;
+
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
 
                 profileImage.setImageBitmap(bitmap);
+                CircularImageView userImage = getActivity().findViewById(R.id.drawer_user_image);
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream .toByteArray();
+                UserFirebaseService.setUserImage(user_id, selectedImage, getActivity());
 
-                currentImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                UserFirebaseService.setUserImage(user_id,currentImage);
-
-                ((MainActivity) getActivity()).setHeaderDrawer(new User(userName.getText().toString(),currentImage));
-
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
         }
         if (requestCode==ADD_FRIEND){
             String friend_email=data.getStringExtra("friend_id");
@@ -214,10 +214,8 @@ public class ProfileFragment extends Fragment {
         editName.setText(user.username);
 
         if( user.image != null){
-        currentImage = user.image;
-        byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-        Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        profileImage.setImageBitmap(image);}
+            Glide.with(this).load(user.image).into(profileImage);
+        }
     }
 
     public void addedFriendSuccessfully(boolean res){

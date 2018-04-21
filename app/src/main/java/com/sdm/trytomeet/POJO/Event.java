@@ -20,6 +20,8 @@ public class Event {
     public HashMap<String,Comment> comments;
     public String creator_id;
     public String state;
+    public String image;
+    public HashMap<String, String> images;
 
     // With this static properties the state of the event is set.
     // This is used to centralized the possible states of an event and
@@ -42,6 +44,23 @@ public class Event {
         this.state = state;
         this.site = site;
         this.comments = new HashMap<String,Comment>();
+    }
+
+    // TODO: Revisar si la fecha elegida para celebrar el evento se guarda aparte una vez la elige el
+    // creador del evento o gana la fecha con más votos.
+
+    public Date getWinningDate(){
+        if(possible_dates == null || possible_dates.size() == 0) return null;
+        Date winner = possible_dates.get(0);
+
+        for(int i = 1; i < possible_dates.size(); i++){
+            if(winner.voted_users == null ||
+                (possible_dates.get(i).voted_users != null &&
+                possible_dates.get(i).voted_users.size() > winner.voted_users.size()))
+                winner = possible_dates.get(i);
+        }
+
+        return winner;
     }
 
 

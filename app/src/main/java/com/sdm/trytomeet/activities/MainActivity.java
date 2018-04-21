@@ -19,13 +19,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.sdm.trytomeet.POJO.Event;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventAdapter;
@@ -50,7 +58,12 @@ public class MainActivity
 {
 
     public static GoogleSignInClient mGoogleSignInClient;
-    public static GoogleSignInAccount account;
+    public static GoogleSignInAccount accountGoogle;
+    public static FirebaseUser accountFacebook;
+
+    private String id;
+    private String email;
+    private String name;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private Intent service;
@@ -131,16 +144,15 @@ public class MainActivity
         rv.setAdapter(adapter);
     }
 
-    public void setHeaderDrawer(User user) {
+    public void setHeaderDrawer(final User user) {
         actualUser = user;
         TextView userName =  findViewById(R.id.drawer_user_name);
         userName.setText(user.username);
 
+
         if(user.image != null) {
             CircularImageView userImage = findViewById(R.id.drawer_user_image);
-            byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            userImage.setImageBitmap(image);
+            Glide.with(this).load(user.image).into(userImage);
         }
     }
 
@@ -158,9 +170,13 @@ public class MainActivity
 
         service = new Intent(this, NotificationService.class);
         this.startService(service);
+        if(accountFacebook!=null) { id=accountFacebook.getUid(); name=accountFacebook.getDisplayName(); email=accountFacebook.getEmail();}
+        else if(accountGoogle!=null) {id= accountGoogle.getId(); name=accountGoogle.getDisplayName(); email=accountGoogle.getEmail();}
 
-        UserFirebaseService.addGoogleUser(account, this);
-        UserFirebaseService.registerEmail(account.getId(), cleanEmail(account.getEmail()));
+        UserFirebaseService.addUser(id,name, this);
+        UserFirebaseService.registerEmail(id, cleanEmail(email));
+
+
     }
 
     @Override
@@ -194,8 +210,11 @@ public class MainActivity
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("account_id", "");
+                editor.putString("account_email", "");
+                editor.putString("account_name", "");
                 editor.apply();
-                mGoogleSignInClient.signOut();
+                if (accountGoogle!=null) {mGoogleSignInClient.signOut(); accountGoogle=null;}
+                else if (accountFacebook!=null){ FirebaseAuth.getInstance().signOut(); accountFacebook=null;}
                 finish();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
@@ -230,7 +249,7 @@ public class MainActivity
         GroupsFragment fragment = new GroupsFragment();
         // Insert the arguments
         Bundle args = new Bundle();
-        args.putString("user_id", account.getId());
+        args.putString("user_id", id);
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
@@ -240,7 +259,7 @@ public class MainActivity
         CreateEventFragment fragment = new CreateEventFragment();
         // Insert the arguments
         Bundle args = new Bundle();
-        args.putString("user_id", account.getId());
+        args.putString("user_id", id);
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
@@ -250,7 +269,7 @@ public class MainActivity
         FavoriteSitesFragment fragment = new FavoriteSitesFragment();
         // Insert the arguments
         Bundle args = new Bundle();
-        args.putString("user_id", account.getId());
+        args.putString("user_id",id);
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
@@ -260,7 +279,7 @@ public class MainActivity
         ProfileFragment fragment = new ProfileFragment();
         // Insert the arguments
         Bundle args = new Bundle();
-        args.putString("user_id", account.getId());
+        args.putString("user_id", id);
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();
@@ -270,7 +289,7 @@ public class MainActivity
         EventListFragment fragment = new EventListFragment();
         // Insert the arguments
         Bundle args = new Bundle();
-        args.putString("user_id", account.getId());
+        args.putString("user_id", id);
         fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();

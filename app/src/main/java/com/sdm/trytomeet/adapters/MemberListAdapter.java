@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
@@ -46,11 +51,10 @@ public class MemberListAdapter extends ArrayAdapter<User>{
         final User user = data.get(position);
         ((TextView) convertView.findViewById(R.id.memberName)).setText(user.username);
 
+        final View view = convertView;
         if(user.image!=null){
-            byte[] decodedString = Base64.decode(user.image, Base64.DEFAULT);
-            Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            CircularImageView profileImage =convertView.findViewById(R.id.circleImage);
-            profileImage.setImageBitmap(image);
+            CircularImageView profileImage = view.findViewById(R.id.circleImage);
+            Glide.with(context).load(user.image).into(profileImage);
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
