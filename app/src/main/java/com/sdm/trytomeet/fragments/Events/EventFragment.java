@@ -46,7 +46,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -80,6 +79,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private CircularImageView image;
 
     private Button cancel_event;
+    private Button delete_event;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
@@ -130,6 +130,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         add_comment = parent.findViewById(R.id.add_comment);
         confirm_event = parent.findViewById(R.id.confirm_event);
         cancel_event = parent.findViewById(R.id.cancel_event);
+        delete_event = parent.findViewById(R.id.delete_event);
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
 
@@ -259,7 +260,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants);
         event_participants.setAdapter(participantsAdapter);
 
-
+        setUpDeleteEvent();
 
         if(event.image!=null) Glide.with(this).load(event.image).into(image);
 
@@ -300,6 +301,67 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         });
 
         enable_show_images();
+    }
+
+    private void setUpDeleteEvent() {
+        if(shownEvent.state.equals(Event.PENDING)|| shownEvent.state.equals(Event.CONFIRMED))
+        {
+            if(shownEvent.creator_id.equals(user_id)){
+                delete_event.setVisibility(GONE);
+                return;
+            }
+
+            delete_event.setText(getString(R.string.leave_event));
+            delete_event.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getString(R.string.sure_Leave_Event));
+
+                    builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EventFirebaseService.deleteTakingPart(user_id,event_id);
+                            EventFirebaseService.deleteParticipant(user_id,event_id);
+
+                            goToEventList();
+                        }
+                    });
+
+                    builder.setNegativeButton(android.R.string.no, null);
+                    builder.show();
+                }
+            });
+        }
+        if(shownEvent.state.equals(Event.DONE)|| shownEvent.state.equals(Event.CANCELED))
+        {
+            delete_event.setText(getString(R.string.delete_history));
+            delete_event.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getString(R.string.sure_Delete_History));
+
+                    builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EventFirebaseService.deleteTakingPart(user_id,event_id);
+
+                            goToEventList();
+                        }
+                    });
+
+                    builder.setNegativeButton(android.R.string.no, null);
+                    builder.show();
+                }
+            });
+        }
+    }
+
+    private void goToEventList() {
+        EventListFragment fragment = new EventListFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void enableVoting() {
