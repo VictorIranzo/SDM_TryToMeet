@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.service.notification.NotificationListenerService;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -21,12 +22,14 @@ import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
+import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.TakingPart;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -157,7 +160,7 @@ public class EventFirebaseService extends FirebaseService{
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
     }
 
-    public static void confirmateEvent(final String event_id, final Date date){
+    public static void confirmateEvent(final String event_id, final Date date, String user_id, List<String> participant, String title, String text){
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,6 +175,16 @@ public class EventFirebaseService extends FirebaseService{
                 Log.e("Error", "Something bad");
             }
         });
+
+        // Notify the others users
+        for(String user : participant){
+            if(!user.equals(user_id)){
+                Notification not = new Notification(NotificactionListener.EVENT_CONFIRMATE, title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+            }
+        }
+
     }
 
     public static void editEventDescription(final String event_id, final String description){

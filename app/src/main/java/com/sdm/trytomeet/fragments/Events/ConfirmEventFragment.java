@@ -28,18 +28,26 @@ import java.util.List;
 public class ConfirmEventFragment extends DialogFragment {
 
     private View parent;
-    public static ArrayList<Date> dates;
-    public static String event_id;
+    private ArrayList<Date> dates;
+    private String event_id;
+    private String user_id;
+    private ArrayList<String> participants;
+    private String event_name;
 
 
     public ConfirmEventFragment() {
         // Required empty public constructor
     }
 
-    static ConfirmEventFragment newInstance(ArrayList<Date> possible_dates, String event){
-        dates=possible_dates;
-        event_id= event;
+    static ConfirmEventFragment newInstance(ArrayList<Date> possible_dates, String event, String user_id, ArrayList<String> participants, String event_name){
         ConfirmEventFragment res = new ConfirmEventFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("dates", possible_dates);
+        bundle.putString("event_id", event);
+        bundle.putString("user_id", user_id);
+        bundle.putStringArrayList("participants", participants);
+        bundle.putString("event_name", event_name);
+        res.setArguments(bundle);
         return res;
     }
 
@@ -63,9 +71,14 @@ public class ConfirmEventFragment extends DialogFragment {
                 return false;
             }
         });
+        dates = (ArrayList<Date>) getArguments().getSerializable("dates");
+        event_id = getArguments().getString("event_id");
+        user_id = getArguments().getString("user_id");
+        participants = getArguments().getStringArrayList("participants");
+        event_name = getArguments().getString("event_name");
 
         parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_confirmate_date, null);
-        final ConfirmDateListAdapter adapter = new ConfirmDateListAdapter(getContext(), R.id.listDates, dates,event_id,getFragmentManager(),this);
+        final ConfirmDateListAdapter adapter = new ConfirmDateListAdapter(getContext(), R.id.listDates, dates,event_id,getFragmentManager(),this, user_id, participants, event_name);
         ListView list= parent.findViewById(R.id.listDates);
         list.setAdapter(adapter);
         builder.setView(parent);

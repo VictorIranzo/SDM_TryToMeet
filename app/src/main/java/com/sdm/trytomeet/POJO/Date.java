@@ -1,5 +1,7 @@
 package com.sdm.trytomeet.POJO;
 
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
  */
 
 @IgnoreExtraProperties
-public class Date {
+public class Date{
     public int year;
     public int month;
     public int day;

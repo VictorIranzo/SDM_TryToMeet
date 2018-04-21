@@ -56,7 +56,7 @@ public class Event {
     // creador del evento o gana la fecha con más votos.
 
     public Date getWinningDate(){
-        if(possible_dates == null || possible_dates.size() == 0) return null;
+        if(possible_dates == null || possible_dates.size() == 0 || state.equals(PENDING)) return null;
         Date winner = possible_dates.get(0);
 
         for(int i = 1; i < possible_dates.size(); i++){

@@ -333,7 +333,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).commit();*/
-        ConfirmEventFragment fragment =ConfirmEventFragment.newInstance(dates,event_id);
+        ConfirmEventFragment fragment =ConfirmEventFragment.newInstance(dates,event_id, user_id, (ArrayList<String>) shownEvent.participants_id, shownEvent.name);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
         fragment.setTargetFragment(this,0);
