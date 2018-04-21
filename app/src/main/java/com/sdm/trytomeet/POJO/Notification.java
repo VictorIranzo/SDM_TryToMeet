@@ -8,14 +8,14 @@ public class Notification {
     public String title;
     public String text;
     public String event_id;
+    public String group_id;
 
 
     public Notification(){}
 
-    public Notification(int purpose, String title, String text, String event_id) {
+    public Notification(int purpose, String title, String text) {
         this.purpose = purpose;
         this.title = title;
         this.text = text;
-        this.event_id = event_id;
     }
 }

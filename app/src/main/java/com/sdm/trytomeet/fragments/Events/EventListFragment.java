@@ -1,7 +1,9 @@
 package com.sdm.trytomeet.fragments.Events;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Event;
+import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
@@ -30,7 +33,7 @@ public class EventListFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    private List<Event> events;
+    private List<EventWithKey> events;
 
     private RecyclerView rv;
     private EventListAdapter adapter;
@@ -55,8 +58,9 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_main, container, false);
-        user_id = getArguments().getString("user_id");
+        parent = inflater.inflate(R.layout.fragment_event_list, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         FloatingActionButton createButton = parent.findViewById(R.id.floatingActionButton);
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +74,7 @@ public class EventListFragment extends Fragment {
         llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
-        events = new ArrayList<Event>();
+        events = new ArrayList<EventWithKey>();
 
         //CardView evento = parent.findViewById(R.id.ev);
 
@@ -82,10 +86,9 @@ public class EventListFragment extends Fragment {
                 goToEvent();
             }
         });*/
-        //EventFirebaseService.updateEvent();
         initializeAdapter();
 
-        EventFirebaseService.getEventName(user_id,this);
+        EventFirebaseService.getUserEvents(user_id,this);
 
         return parent;
 
@@ -115,7 +118,7 @@ public class EventListFragment extends Fragment {
         args.putString("user_id", user_id);
         fragment.setArguments(args);
         getFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     public void goToPendingEvents() {
@@ -129,8 +132,7 @@ public class EventListFragment extends Fragment {
                 .replace(R.id.frameLayout, fragment).commit();
     }
 
-    private void goToEvent(){
-        String event_id= "-L9W90Dm39W5yGI6sevJ";
+    public void goToEvent(String event_id){
         EventFragment fragment = new EventFragment();
 
         // Insert the arguments
@@ -140,18 +142,18 @@ public class EventListFragment extends Fragment {
         fragment.setArguments(args);
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void initializeAdapter(){
-        adapter = new EventListAdapter(events);
+        adapter = new EventListAdapter(events, this);
         rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         rv.setAdapter(adapter);
     }
 
-    public void addEventToList(Event e){
+    public void addEventToList(String event_id, Event e){
         if(e.state.equals("CONFIRMED") || e.state.equals("VOTED")) {
-            events.add(e);
+            events.add(new EventWithKey(event_id,e));
             adapter.notifyDataSetChanged();
         }
     }

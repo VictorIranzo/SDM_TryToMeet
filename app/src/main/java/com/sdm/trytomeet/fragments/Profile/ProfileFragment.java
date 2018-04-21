@@ -8,16 +8,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -70,7 +73,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_profile, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         profileImage = parent.findViewById(R.id.circleImage);
 
@@ -216,6 +220,10 @@ public class ProfileFragment extends Fragment {
         if( user.image != null){
             Glide.with(this).load(user.image).into(profileImage);
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("account_name", user.username);
+        editor.apply();
     }
 
     public void addedFriendSuccessfully(boolean res){

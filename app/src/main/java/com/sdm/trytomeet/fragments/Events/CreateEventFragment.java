@@ -1,6 +1,8 @@
 package com.sdm.trytomeet.fragments.Events;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,7 +71,8 @@ public class CreateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_create_event, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         Button add_partcipant = parent.findViewById(R.id.button_add_participant);
         add_partcipant.setOnClickListener(new View.OnClickListener() {
@@ -179,9 +182,8 @@ public class CreateEventFragment extends Fragment {
             Notification notification = new Notification(
                     NotificactionListener.ADDED_TO_AN_EVENT,
                     getResources().getString(R.string.create_event_notification_title),
-                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name),
-                    event_id);
-
+                    getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name));
+            notification.event_id = event_id;
             for (String participant_id : to_invite) {
                 NotificationFirebaseService.addNotification(notification, participant_id);
             }
@@ -233,20 +235,11 @@ public class CreateEventFragment extends Fragment {
 
     private boolean firstime = true;
     private void find_place(View v) {
-        FindPlaceFragment fragment = new FindPlaceFragment();
+        FindPlaceFragment fragment;
+
+        fragment = new FindPlaceFragment();
         fragment.setTargetFragment(this,0);
-
-        // TODO: Revisar esta solución. Ahora, cuando se abre el fragment de elegir sitio, este se oculta. Una vez elegido,
-        // el mapa se elimina desde el gestor de fragments de create event y se vuelve a mostrar este.
-        getView().setVisibility(View.GONE);
-
-        if(firstime) {
-            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frameLayout, fragment, "Find_Place").addToBackStack(null).commit();
-            firstime = false;
-        } else {
-            fragment = (FindPlaceFragment) getActivity().getSupportFragmentManager().findFragmentByTag("Find_Place");
-            fragment.make_visible();
-        }
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack("Find_Place").commit();
     }
 
     // Method to be called from the AddParticipantFragmentDialog
@@ -298,25 +291,26 @@ public class CreateEventFragment extends Fragment {
 
     public void add_site(Site site){
         this.site = site;
-        //TODO: Change UI when the site is selected.
-        ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
-        ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
-
-        make_visible();
-
-        Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
-        findPlaceButton.setText(getString(R.string.create_event_change_place_button));
-
-        // TODO: Allow add favorite place after check that it's not one of the favorite places.
-    }
-
-    public void make_visible(){
-        getView().setVisibility(View.VISIBLE);
     }
 
     private void addFavoriteSite() {
         UserFirebaseService.addUserFavoriteSite(user_id,site);
 
         Toast.makeText(getActivity(),"Anyadido sITIO favorito",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(this.site != null){
+            //TODO: Change UI when the site is selected.
+            ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
+            ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
+
+            Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
+            findPlaceButton.setText(getString(R.string.create_event_change_place_button));
+
+            // TODO: Allow add favorite place after check that it's not one of the favorite places.
+        }
     }
 }

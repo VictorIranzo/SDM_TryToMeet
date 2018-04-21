@@ -2,7 +2,9 @@ package com.sdm.trytomeet.fragments.Sites;
 
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -51,7 +53,8 @@ public class FavoriteSitesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_favorite_sites, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         listViewSites = parent.findViewById(R.id.list_sites);
         adapter = new SimpleAdapter(getActivity(), sitesList, R.layout.site_list_row,

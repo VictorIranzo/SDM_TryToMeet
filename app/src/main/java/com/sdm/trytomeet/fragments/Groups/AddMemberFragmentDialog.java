@@ -3,7 +3,9 @@ package com.sdm.trytomeet.fragments.Groups;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +38,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
     private ArrayList<User> my_friends;
     private ArrayList<String> already_on_group;
     private String group_name;
+    private String username;
     private String group_identifier;
     private ListView list_view;
     private TextView noFriends;
@@ -69,7 +72,8 @@ public class AddMemberFragmentDialog extends DialogFragment {
         already_on_group= getArguments().getStringArrayList("group");
         group_identifier= getArguments().getString("group_identifier");
         group_name= getArguments().getString("group_name");
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        username = prefs.getString("account_name", "");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -104,6 +108,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
                         final Friends friends = dataSnapshot.getValue(Friends.class);
                         if(friends != null){
                             for(String friend : friends.friends){
+                                if(friend == null) continue;
                                 if(already_on_group.contains(friend)) continue; // If that friend has been added skip it// For each one of my friends
                                 FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                         .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name
@@ -148,7 +153,9 @@ public class AddMemberFragmentDialog extends DialogFragment {
                     Group group = new Group(already_on_group, group_name);
                     group.uniqueIdentifier = group_identifier;
                     for (User f : my_friends) {
-                        UserFirebaseService.addFriendToGroup(f.id, group);
+                        UserFirebaseService.addFriendToGroup(f.id, group,
+                                getResources().getString(R.string.added_to_a_group_notification_title),
+                                getResources().getString(R.string.added_to_a_group_notification_text, username, group.name));
 
                     }
                     getActivity().getIntent().putExtra("new",my_friends);

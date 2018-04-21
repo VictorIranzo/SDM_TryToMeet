@@ -1,28 +1,27 @@
 package com.sdm.trytomeet.fragments.Events;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,11 +36,9 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
-import com.sdm.trytomeet.components.ListViewInScrollView;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -70,13 +67,16 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private RecyclerView event_dates;
     private TextView confirmed_date;
 
+    private ArrayList<Date> dates;
     private ListView event_participants;
     private ListView event_comments;
     private EditText comment_write;
     private Button edit_description;
     private Button add_comment;
-    private Button confirmate;
+    private Button confirm_event;
     private CircularImageView image;
+
+    private Button cancel_event;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
@@ -125,7 +125,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_comments = parent.findViewById(R.id.event_comments);
         comment_write = parent.findViewById(R.id.comment_write);
         add_comment = parent.findViewById(R.id.add_comment);
-        confirmate = parent.findViewById(R.id.confirm_event);
+        confirm_event = parent.findViewById(R.id.confirm_event);
+        cancel_event = parent.findViewById(R.id.cancel_event);
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
 
@@ -145,10 +146,17 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        confirmate.setOnClickListener(new View.OnClickListener() {
+        confirm_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 confirmate_event();
+            }
+        });
+
+        cancel_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelEventClick();
             }
         });
 
@@ -178,6 +186,21 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         EventFirebaseService.getEvent(event_id, this);
 
         return parent;
+    }
+
+    private void cancelEventClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.dialog_cancel_event));
+
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            EventFirebaseService.cancelEvent(event_id);
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, null);
+        builder.show();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -222,10 +245,15 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         voteDateListAdapter = new VoteDateListAdapter(event.possible_dates, user_id, event_id);
         event_dates.setAdapter(voteDateListAdapter);
 
+        dates= new ArrayList<Date>(event.possible_dates);
+
         participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants);
         event_participants.setAdapter(participantsAdapter);
 
         if(event.image!=null) Glide.with(this).load(event.image).into(image);
+
+        // Adds the creator to the participants list.
+        UserFirebaseService.getUser(event.creator_id, this);
 
         if (event.participants_id != null)
             for (String user : event.participants_id) {
@@ -237,9 +265,14 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                 getEventComment(c);
             }
 
-        if (event.creator_id.equals(user_id) && allVoted(event.possible_dates, event.participants_id)) {
-            confirmate.setVisibility(VISIBLE);
+        if (event.creator_id.equals(user_id) && event.state.equals(Event.PENDING)) {
+            confirm_event.setVisibility(VISIBLE);
         }
+
+        if (event.creator_id.equals(user_id) && !event.state.equals(Event.DONE) && !event.state.equals(Event.CANCELED)) {
+            cancel_event.setVisibility(VISIBLE);
+        }
+
         event_description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,7 +295,19 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         if(!shownEvent.state.equals(Event.PENDING)){
             event_dates.setVisibility(GONE);
             confirmed_date.setVisibility(VISIBLE);
-            confirmed_date.setText(shownEvent.getWinningDate().toString());
+            if(shownEvent.confirmed_date!=null)
+                confirmed_date.setText(shownEvent.confirmed_date.toString());
+
+        }
+
+        if(user_id.equals(shownEvent.creator_id)) {
+            event_dates.setVisibility(GONE);
+
+            // Shows the resume of date voting.
+            confirmed_date.setVisibility(VISIBLE);
+
+           if(shownEvent.confirmed_date==null)
+               confirmed_date.setText(shownEvent.getPossibleDatesResume());
         }
     }
 
@@ -271,24 +316,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         commentsAdapter.notifyDataSetChanged();
     }
 
-    private boolean allVoted(List<Date> possible_dates, List<String> participants_id) {
-        ArrayList<String> users = new ArrayList<String>();
-        for (Date date : possible_dates) {
-            if (date.voted_users != null) {
-                for (String user : date.voted_users) {
-                    if (!users.contains(user)) users.add(user);
-                }
-            }
-        }
-        System.out.println(users.size());
-        System.out.println(participants_id.size());
-        if (users.size() == participants_id.size()) return true;
-        else return false;
-
-    }
-
     private void enable_show_images(){
-        if(shownEvent.state.equals(Event.CONFIRMED)){
+        if(shownEvent.state.equals(Event.DONE)){
             final Button show_images = parent.findViewById(R.id.show_images);
             show_images.setVisibility(View.VISIBLE);
             show_images.setOnClickListener(new View.OnClickListener() {
@@ -297,7 +326,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                     Fragment fragment = new Event_image_gallery();
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", event_id);
-                    //bundle.putStringArrayList("images", (ArrayList<String>)shownEvent.images);
                     fragment.setArguments(bundle);
                     getFragmentManager().beginTransaction().replace(R.id.frameLayout,
                             fragment).addToBackStack("gallery").commit();
@@ -322,7 +350,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void confirmate_event() {
-        EventFirebaseService.confirmateEvent(event_id);
+        /*EventFirebaseService.confirmateEvent(event_id);
         EventListFragment fragment = new EventListFragment();
         Toast.makeText(getActivity(), getResources().getString(R.string.event_confimed), Toast.LENGTH_LONG).show();
         // Insert the arguments
@@ -330,14 +358,18 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         args.putString("user_id", user_id);
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).commit();*/
+        ConfirmEventFragment fragment =ConfirmEventFragment.newInstance(dates,event_id, user_id, (ArrayList<String>) shownEvent.participants_id, shownEvent.name);
+        fragment.setCancelable(false);
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
     private void edit_description() {
         event_description.setVisibility(GONE);
         edit_description.setVisibility(VISIBLE);
         event_description_edit.setVisibility(VISIBLE);
-
     }
 
     private void change_description() {
@@ -348,8 +380,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_description.setText(newDescription);
         event_description_edit.setText("");
         EventFirebaseService.editEventDescription(event_id, newDescription);
-
-
     }
 
     private void setImage() {

@@ -24,6 +24,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.Group;
+import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
@@ -32,6 +33,8 @@ import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Groups.MembersFragment;
 import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
+import com.sdm.trytomeet.notifications.NotificactionListener;
+import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -93,6 +96,26 @@ public class UserFirebaseService extends FirebaseService {
                     favouriteSites.add(s);
                 }
                 favoriteSitesFragment.addSitesToList(favouriteSites);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+    }
+
+    public static void getUserFavoriteSites(String user_id, final FindPlaceFragment findPlaceFragment) {
+        getDatabaseReference().child("users").child(user_id).child("favorite_sites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                List<Site> favouriteSites = new ArrayList<Site>();
+                while (iterator.hasNext()) {
+                    Site s = iterator.next().getValue(Site.class);
+                    favouriteSites.add(s);
+                }
+                findPlaceFragment.addSitesToList(favouriteSites);
             }
 
             @Override
@@ -260,12 +283,20 @@ public class UserFirebaseService extends FirebaseService {
                 });
     }
 
-    public static void createGroup(final Group group) {
+    public static void createGroup(final Group group, String user_id, String notification_title, String notification_text) {
 
         String key = getDatabaseReference().child("groups").child(group.members.get(0)).push().getKey();
         group.uniqueIdentifier=key;
         for (String u : group.members) {
             getDatabaseReference().child("groups").child(u).child(key).setValue(group);
+
+            // Create the notifications for the others users
+            if(!user_id.equals(u)){
+                Notification not = new Notification(NotificactionListener.ADDED_TO_AN_EVENT,
+                        notification_title, notification_text);
+                not.group_id = key;
+                NotificationFirebaseService.addNotification(not, u);
+            }
         }
     }
 
@@ -289,7 +320,7 @@ public class UserFirebaseService extends FirebaseService {
         });
     }
 
-    public static void addFriendToGroup(final String friend,  final Group group ) {
+    public static void addFriendToGroup(final String friend,  final Group group, String title, String text) {
 
 
             getDatabaseReference().child("groups").child(friend).child(group.uniqueIdentifier).runTransaction(new Transaction.Handler() {
@@ -336,6 +367,11 @@ public class UserFirebaseService extends FirebaseService {
                     }
                 });
             }
+
+            // Notify that user
+            Notification not = new Notification(NotificactionListener.ADDED_TO_A_GROUP, title, text);
+            not.group_id = group.uniqueIdentifier;
+            NotificationFirebaseService.addNotification(not, friend);
 
     }
     public static void exitFromGroup(final String user_id,final Group group) {

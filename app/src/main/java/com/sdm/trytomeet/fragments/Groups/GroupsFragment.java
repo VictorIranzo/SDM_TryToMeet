@@ -1,7 +1,9 @@
 package com.sdm.trytomeet.fragments.Groups;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +28,7 @@ public class GroupsFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    public ArrayList<Group> groupList = new ArrayList<>();
+    public ArrayList<Group> groupList;
     public ListView listViewGroups;
     public GroupsListAdapter adapter;
 
@@ -46,8 +48,10 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_groups, container, false);
-        user_id = getArguments().getString("user_id");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
+        groupList = new ArrayList<>();
         listViewGroups = parent.findViewById(R.id.list_groups);
         adapter = new GroupsListAdapter(getActivity(),R.id.list_groups,groupList);
 
@@ -67,7 +71,7 @@ public class GroupsFragment extends Fragment {
                 args.putString("group_identifier", groupList.get(position).uniqueIdentifier);
                 fragment.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, fragment).commit();
+                        .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
 
             }
         });

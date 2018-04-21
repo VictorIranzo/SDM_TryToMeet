@@ -31,8 +31,14 @@ public class Event {
     public final static String VOTED = "VOTED";
     public final static String CONFIRMED = "CONFIRMED";
     public final static String DONE = "DONE";
+    public final static String CANCELED = "CANCELED";
 
     public Event(){}
+
+    public Event(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 
     // This method should be properly adapted when using it
     public Event(String name, String description, List<Date> possible_dates,
@@ -51,7 +57,7 @@ public class Event {
     // creador del evento o gana la fecha con más votos.
 
     public Date getWinningDate(){
-        if(possible_dates == null || possible_dates.size() == 0) return null;
+        if(possible_dates == null || possible_dates.size() == 0 || state.equals(PENDING)) return null;
         Date winner = possible_dates.get(0);
 
         for(int i = 1; i < possible_dates.size(); i++){
@@ -64,9 +70,27 @@ public class Event {
         return winner;
     }
 
+    public boolean allVoted() {
+        ArrayList<String> users = new ArrayList<String>();
+        for (Date date : possible_dates) {
+            if (date.voted_users != null) {
+                for (String user : date.voted_users) {
+                    if (!users.contains(user)) users.add(user);
+                }
+            }
+        }
 
-    public Event(String name, String description){
-        this.name = name;
-        this.description = description;
+        if (users.size() == participants_id.size()) return true;
+        else return false;
+
+    }
+
+    public String getPossibleDatesResume(){
+        String result = "";
+        for (Date date: possible_dates) {
+            result += date.toString() + '\n';
+        }
+
+        return result;
     }
 }

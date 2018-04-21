@@ -1,5 +1,7 @@
 package com.sdm.trytomeet.POJO;
 
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
  */
 
 @IgnoreExtraProperties
-public class Date {
+public class Date{
     public int year;
     public int month;
     public int day;
@@ -44,6 +46,9 @@ public class Date {
     public String toString(){
         int votes = 0;
         if(voted_users != null) votes = voted_users.size();
-        return day + "/" + month + "/" + year + " " + hour +":" + minute + "\n" + "Votes: " + votes;
+        String res = day + "/" + month + "/" + year + " " + hour +":";
+        if(minute < 10) res += "0";
+        res+= minute + "\n" + "Votes: " + votes;
+        return res;
     }
 }

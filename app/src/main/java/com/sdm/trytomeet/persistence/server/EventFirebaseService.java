@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.service.notification.NotificationListenerService;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -21,12 +22,14 @@ import com.sdm.trytomeet.POJO.Comment;
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
+import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.TakingPart;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.notifications.NotificactionListener;
 import com.sdm.trytomeet.fragments.Events.HistoricEvents;
 import com.sdm.trytomeet.fragments.Events.PendingEvents;
 
@@ -161,12 +164,39 @@ public class EventFirebaseService extends FirebaseService{
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
     }
 
-    public static void confirmateEvent(final String event_id){
+    public static void confirmateEvent(final String event_id, final Date date, String user_id, List<String> participant, String title, String text){
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event e = dataSnapshot.getValue(Event.class);
-                e.state="CONFIRMED";
+                e.state=Event.CONFIRMED;
+                e.confirmed_date= date;
+                getDatabaseReference().child("events").child(event_id).setValue(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
+
+        // Notify the others users
+        for(String user : participant){
+            if(!user.equals(user_id)){
+                Notification not = new Notification(NotificactionListener.EVENT_CONFIRMATE, title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+            }
+        }
+
+    }
+
+    public static void cancelEvent(final String event_id) {
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                e.state= Event.CANCELED;
                 getDatabaseReference().child("events").child(event_id).setValue(e);
             }
 
@@ -230,7 +260,7 @@ public class EventFirebaseService extends FirebaseService{
 
     }
 
-    public static void getEventName(final String user_id, final EventListFragment eventListFragment) {
+    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -243,7 +273,8 @@ public class EventFirebaseService extends FirebaseService{
                                     Event e = dataSnapshot.getValue(Event.class);
 
                                     // In this way, deleted events are added to the list.
-                                    if (e != null) eventListFragment.addEventToList(e);
+                                    if (e != null)
+                                        eventListFragment.addEventToList(dataSnapshot.getKey(), e);
                                 }
 
                                 @Override
@@ -262,71 +293,10 @@ public class EventFirebaseService extends FirebaseService{
                 });
     }
 
-    public static void getPendingEvent(final String user_id, final PendingEvents eventListFragment){
-        getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        for (String event_id: takingPart.invitedTo.keySet()) {
-                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Event e = dataSnapshot.getValue(Event.class);
 
-                                    // In this way, deleted events are added to the list.
-                                    if(e != null) eventListFragment.addEventToList(e);
-                                }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e("Error", "Something bad");
-                                }
-                            });
 
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                });
-    }
-
-    public static void getHistoricEvent(final String user_id, final HistoricEvents eventListFragment){
-        getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        for (String event_id: takingPart.invitedTo.keySet()) {
-                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Event e = dataSnapshot.getValue(Event.class);
-
-                                    // In this way, deleted events are added to the list.
-                                    if(e != null) eventListFragment.addEventToList(e);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e("Error", "Something bad");
-                                }
-                            });
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                });
-
-    }
-    /*public static void updateEvent(){
+    public static void updateEvent(){
         getDatabaseReference().child("events").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -334,34 +304,17 @@ public class EventFirebaseService extends FirebaseService{
                 java.util.Date d = new java.util.Date();
                 Calendar c = new GregorianCalendar();
                 c.setTime(d);
-                if(e.confirmed_date != null && e.confirmed_date.year >= c.get(Calendar.YEAR){
-                        if (e.confirmed_date.month >= c.get(Calendar.MONTH))
+                if(e.confirmed_date != null && e.confirmed_date.year >= c.get(Calendar.YEAR) &&
+                        e.confirmed_date.month >= c.get(Calendar.MONTH) &&
                         e.confirmed_date.day >= c.get(Calendar.DATE) &&
                         e.confirmed_date.hour >= c.get(Calendar.HOUR) &&
                         e.confirmed_date.minute > c.get(Calendar.MINUTE)){
                     e.state = "DONE";
 
                 }
-                /*Event e = dataSnapshot.getValue(Event.class);
-                for (String event_id: e.) {
-                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Event e = dataSnapshot.getValue(Event.class);
 
-                            // In this way, deleted events are added to the list.
-                            if(e != null) eventListFragment.addEventToList(e);
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.e("Error", "Something bad");
-                        }
-                    });
-
-                }*/
-
-          /*  }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -369,7 +322,7 @@ public class EventFirebaseService extends FirebaseService{
             }
         });
 
-    }*/
+    }
 
 
 }

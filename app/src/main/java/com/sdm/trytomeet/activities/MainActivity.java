@@ -62,10 +62,6 @@ public class MainActivity
     private List<Event> events;
     private List<Event> evento;
 
-    private RecyclerView rv;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager llm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,11 +124,6 @@ public class MainActivity
         //events.add(new Event("Lillie Watts", "35 years old"));
     }*/
 
-    private void initializeAdapter(){
-        adapter = new EventListAdapter(events);
-        rv.setAdapter(adapter);
-    }
-
     public void setHeaderDrawer(final User user) {
         actualUser = user;
         TextView userName =  findViewById(R.id.drawer_user_name);
@@ -156,10 +147,16 @@ public class MainActivity
     protected void onStart() {
         super.onStart();
 
+
         service = new Intent(this, NotificationService.class);
         this.startService(service);
         if(accountFacebook!=null) { id=accountFacebook.getUid(); name=accountFacebook.getDisplayName(); email=accountFacebook.getEmail();}
         else if(accountGoogle!=null) {id= accountGoogle.getId(); name=accountGoogle.getDisplayName(); email=accountGoogle.getEmail();}
+
+        // Default fragment
+        EventListFragment fragment = new EventListFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frameLayout, fragment).commit();
 
         UserFirebaseService.addUser(id,name, this);
         UserFirebaseService.registerEmail(id, cleanEmail(email));
@@ -239,62 +236,39 @@ public class MainActivity
 
     private void goToGroups() {
         GroupsFragment fragment = new GroupsFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToCreateEvent() {
         CreateEventFragment fragment = new CreateEventFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToFavoriteSites() {
         FavoriteSitesFragment fragment = new FavoriteSitesFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id",id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToProfile() {
         ProfileFragment fragment = new ProfileFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     private void goToHistoric() {
         HistoricEvents fragment = new HistoricEvents();
         // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", id);
-        fragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     public static String cleanEmail(String string) {

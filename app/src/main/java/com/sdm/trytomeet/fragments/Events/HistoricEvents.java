@@ -1,6 +1,8 @@
 package com.sdm.trytomeet.fragments.Events;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Event;
+import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
@@ -24,12 +27,12 @@ import java.util.List;
 
 // TODO: Redireccionar a evento en el click.
 
-public class HistoricEvents extends Fragment{
+public class HistoricEvents extends EventListFragment{
 
     private View parent;
     private String user_id;
 
-    private List<Event> events;
+    private List<EventWithKey> events;
 
     private RecyclerView recyclerView;
     private EventListAdapter adapter;
@@ -55,15 +58,15 @@ public class HistoricEvents extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_pending_events, container, false);
-        user_id = getArguments().getString("user_id");
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
 
         recyclerView = parent.findViewById(R.id.recyclerView);
 
         llm = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(llm);
 
-        events = new ArrayList<Event>();
+        events = new ArrayList<EventWithKey>();
 
         //CardView evento = parent.findViewById(R.id.ev);
 
@@ -77,7 +80,7 @@ public class HistoricEvents extends Fragment{
         });*/
         initializeAdapter();
 
-        EventFirebaseService.getHistoricEvent(user_id,this);
+        EventFirebaseService.getUserEvents(user_id,this);
 
         return parent;
 
@@ -99,16 +102,16 @@ public class HistoricEvents extends Fragment{
 
 
     private void initializeAdapter(){
-        adapter = new EventListAdapter(events);
+        adapter = new EventListAdapter(events, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(adapter);
     }
 
-    public void addEventToList(Event e){
+
+    public void addEventToList(String event_id, Event e){
         if (e.state.equals("CANCELLED") || e.state.equals("DONE")){
-            events.add(e);
+            events.add(new EventWithKey(event_id,e));
             adapter.notifyDataSetChanged();
         }
-
     }
 }
