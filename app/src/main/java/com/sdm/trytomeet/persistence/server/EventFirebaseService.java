@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -148,4 +149,27 @@ public class EventFirebaseService extends FirebaseService{
     }
 
 
+    public static void uploadImage(final String event_id, Uri selectedImage) {
+        final StorageReference path = getStorageReference().child("images").child("event_images").child(selectedImage.getLastPathSegment());
+        path.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                String key = getDatabaseReference().child("events").child(event_id).child("images").push().getKey();
+                getDatabaseReference().child("events").child(event_id).child("images").child(key).setValue(taskSnapshot.getDownloadUrl().toString());
+            }
+        });
+    }
+
+
+    public static void addImageListener(String event_id, ChildEventListener listener) {
+        FirebaseDatabase.getInstance().getReference().child("events").child(event_id)
+                .child("images").addChildEventListener(listener);
+
+    }
+
+    public static void removeImageListener(String event_id, ChildEventListener listener) {
+        FirebaseDatabase.getInstance().getReference().child("events").child(event_id)
+                .child("images").removeEventListener(listener);
+
+    }
 }

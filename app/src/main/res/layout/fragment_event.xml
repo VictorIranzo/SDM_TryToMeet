@@ -182,7 +182,14 @@
                 android:id="@+id/add_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="AnyaDIR Comentario"/>
+                android:text="@string/add_comment"/>
+
+            <Button
+                android:id="@+id/show_images"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/show_images"/>
 
             <Button
                 android:id="@+id/confirm_event"
