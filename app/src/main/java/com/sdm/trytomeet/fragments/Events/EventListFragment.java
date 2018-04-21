@@ -4,7 +4,6 @@ package com.sdm.trytomeet.fragments.Events;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,24 +17,23 @@ import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.EventAdapter;
-import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
-import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
+import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Hacer visible botón de añadir evento.
+// TODO: Redireccionar a evento en el click.
 public class EventListFragment extends Fragment {
 
     private View parent;
     private String user_id;
 
     private List<Event> events;
-    //private List<Event> evento;
 
     private RecyclerView rv;
-    private RecyclerView.Adapter adapter;
+    private EventListAdapter adapter;
     private RecyclerView.LayoutManager llm;
 
 
@@ -142,7 +140,8 @@ public class EventListFragment extends Fragment {
     }
 
     private void initializeAdapter(){
-        adapter = new EventAdapter(events);
+        adapter = new EventListAdapter(events);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         rv.setAdapter(adapter);
     }
 
