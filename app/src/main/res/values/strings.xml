@@ -41,6 +41,8 @@
     <string name="add_friend_filter">Friend\'s email:</string>
     <string name="add_participant_filter">Friend\'s name:</string>
     <string name="add_participant_filter_hint">Insert your friend\'s name to filter</string>
+    <string name="confirm_date">Select one date to confirm</string>
+
 
     <string name="add_group_filter">Group\'s name:</string>
     <string name="add_group_filter_hint">Insert the group\'s name to filter</string>
@@ -70,6 +72,8 @@
     <string name="ok">Ok</string>
     <string name="edit">Edit</string>
     <string name="alert">Alert</string>
+    <string name="confirm">Confirm</string>
+
 
 
     <!-->Map activity<-->

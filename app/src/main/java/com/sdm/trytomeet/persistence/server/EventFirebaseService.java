@@ -157,12 +157,13 @@ public class EventFirebaseService extends FirebaseService{
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
     }
 
-    public static void confirmateEvent(final String event_id){
+    public static void confirmateEvent(final String event_id, final Date date){
         getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event e = dataSnapshot.getValue(Event.class);
                 e.state="CONFIRMED";
+                e.confirmed_date= date;
                 getDatabaseReference().child("events").child(event_id).setValue(e);
             }
 

@@ -42,6 +42,7 @@ import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.components.ListViewInScrollView;
+import com.sdm.trytomeet.fragments.Profile.RemoveFriendFragmentDialog;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -70,6 +71,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private RecyclerView event_dates;
     private TextView confirmed_date;
 
+    private ArrayList<Date> dates;
     private ListView event_participants;
     private ListView event_comments;
     private EditText comment_write;
@@ -216,11 +218,14 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_description_edit.setText(event.description);
         event_site_name.setText(event.site.name);
         event_site_description.setText(event.site.description);
-
+        if(event.confirmed_date!=null)
+        confirmed_date.setText(event.confirmed_date.toString());
         enableVoting();
 
         voteDateListAdapter = new VoteDateListAdapter(event.possible_dates, user_id, event_id);
         event_dates.setAdapter(voteDateListAdapter);
+
+        dates= new ArrayList<Date>(event.possible_dates);
 
         participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants);
         event_participants.setAdapter(participantsAdapter);
@@ -240,7 +245,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                 getEventComment(c);
             }
 
-        if (event.creator_id.equals(user_id) && event.allVoted()) {
+        if (event.creator_id.equals(user_id) && event.state.equals("PENDING")) {
             confirmate.setVisibility(VISIBLE);
         }
         event_description.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +270,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         if(!shownEvent.state.equals(Event.PENDING)){
             event_dates.setVisibility(GONE);
             confirmed_date.setVisibility(VISIBLE);
-            confirmed_date.setText(shownEvent.getWinningDate().toString());
+
         }
 
         if(user_id.equals(shownEvent.creator_id)) {
@@ -317,7 +322,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void confirmate_event() {
-        EventFirebaseService.confirmateEvent(event_id);
+        /*EventFirebaseService.confirmateEvent(event_id);
         EventListFragment fragment = new EventListFragment();
         Toast.makeText(getActivity(), getResources().getString(R.string.event_confimed), Toast.LENGTH_LONG).show();
         // Insert the arguments
@@ -325,7 +330,12 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         args.putString("user_id", user_id);
         fragment.setArguments(args);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+                .replace(R.id.frameLayout, fragment).commit();*/
+        ConfirmEventFragment fragment =ConfirmEventFragment.newInstance(dates,event_id);
+        fragment.setCancelable(false);
+        // In order that the Dialog is able to use methods from this class
+        fragment.setTargetFragment(this,0);
+        fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
     private void edit_description() {

@@ -21,6 +21,7 @@ public class Event {
     public String creator_id;
     public String state;
     public String image;
+    public Date confirmed_date;
     public HashMap<String, String> images;
 
     // With this static properties the state of the event is set.
