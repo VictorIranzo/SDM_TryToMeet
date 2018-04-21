@@ -10,6 +10,12 @@ public class Notification {
     public String event_id;
     public String group_id;
 
+    public static final int ADDED_TO_AN_EVENT = 1;
+    public static final int ADDED_TO_A_GROUP = 2;
+    public static final int EVENT_CONFIRMATE = 3;
+    public static final int COMMENT_ADDED = 4;
+    public static final int IMAGE_UPLOADED = 5;
+
 
     public Notification(){}
 

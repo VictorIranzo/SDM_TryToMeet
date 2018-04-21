@@ -86,6 +86,10 @@
     <string name="added_to_a_group_notification_text">%1$s has added you to the group %2$s</string>
     <string name="event_confirmate_notification_title">An event has been confirmated</string>
     <string name="event_confirmate_notification_text">The event %1$s has been confirmated</string>
+    <string name="comment_added_notification_title">A new comment has been made</string>
+    <string name="comment_added_notification_text">The user %1$s has commented on the event %2$s</string>
+    <string name="image_uploaded_notification_title">A new image has been uploaded</string>
+    <string name="image_uploaded_notification_text">The user %1$s has uploaded an image to the event %2$s</string>
 
     <!-->Map activity<-->
     <string name="title_activity_maps">Current Place Details</string>

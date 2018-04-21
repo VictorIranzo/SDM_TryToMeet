@@ -14,9 +14,6 @@ import com.sdm.trytomeet.POJO.Notification;
 
 public class NotificactionListener implements ValueEventListener{
 
-    public static final int ADDED_TO_AN_EVENT = 1;
-    public static final int ADDED_TO_A_GROUP = 2;
-    public static final int EVENT_CONFIRMATE = 3;
     int id;
     Context context;
 

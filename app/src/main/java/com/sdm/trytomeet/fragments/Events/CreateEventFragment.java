@@ -180,7 +180,7 @@ public class CreateEventFragment extends Fragment {
             // We notify each user
             to_invite.remove(user_id); // Not me
             Notification notification = new Notification(
-                    NotificactionListener.ADDED_TO_AN_EVENT,
+                    Notification.ADDED_TO_AN_EVENT,
                     getResources().getString(R.string.create_event_notification_title),
                     getResources().getString(R.string.create_event_notification_text, MainActivity.accountGoogle.getDisplayName(), event.name));
             notification.event_id = event_id;
