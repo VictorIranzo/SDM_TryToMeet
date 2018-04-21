@@ -63,4 +63,9 @@ public class Event {
         return winner;
     }
 
+
+    public Event(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 }

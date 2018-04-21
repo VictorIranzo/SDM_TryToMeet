@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,15 +22,22 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Site;
+import com.sdm.trytomeet.POJO.TakingPart;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
+import com.sdm.trytomeet.fragments.Events.EventListFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{
+
+    private static ArrayList<Event> name = new ArrayList<Event>();
+    final String names = new String();
+
+
     public static String addEvent(Event event){
         String key = getDatabaseReference().child("events").push().getKey();
         getDatabaseReference().child("events").child(key).setValue(event);
@@ -215,6 +223,40 @@ public class EventFirebaseService extends FirebaseService{
     public static void removeImageListener(String event_id, ChildEventListener listener) {
         FirebaseDatabase.getInstance().getReference().child("events").child(event_id)
                 .child("images").removeEventListener(listener);
+
+    }
+
+    public static void getEventName(final String user_id, final EventListFragment eventListFragment){
+        getDatabaseReference().child("taking_part").child(user_id)
+        .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                for (String event_id: takingPart.invitedTo.keySet()) {
+                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Event e = dataSnapshot.getValue(Event.class);
+
+                            // In this way, deleted events are added to the list.
+                            if(e != null) eventListFragment.addEventToList(e);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("Error", "Something bad");
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
 
     }
 }
