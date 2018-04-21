@@ -165,7 +165,7 @@ public class EventFirebaseService extends FirebaseService{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event e = dataSnapshot.getValue(Event.class);
-                e.state="CONFIRMED";
+                e.state=Event.CONFIRMED;
                 e.confirmed_date= date;
                 getDatabaseReference().child("events").child(event_id).setValue(e);
             }
@@ -185,6 +185,22 @@ public class EventFirebaseService extends FirebaseService{
             }
         }
 
+    }
+
+    public static void cancelEvent(final String event_id) {
+        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Event e = dataSnapshot.getValue(Event.class);
+                e.state= Event.CANCELED;
+                getDatabaseReference().child("events").child(event_id).setValue(e);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Error", "Something bad");
+            }
+        });
     }
 
     public static void editEventDescription(final String event_id, final String description){

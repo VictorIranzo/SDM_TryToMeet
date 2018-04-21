@@ -1,28 +1,27 @@
 package com.sdm.trytomeet.fragments.Events;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,12 +36,9 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.adapters.VoteDateListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
-import com.sdm.trytomeet.components.ListViewInScrollView;
-import com.sdm.trytomeet.fragments.Profile.RemoveFriendFragmentDialog;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -77,8 +73,10 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private EditText comment_write;
     private Button edit_description;
     private Button add_comment;
-    private Button confirmate;
+    private Button confirm_event;
     private CircularImageView image;
+
+    private Button cancel_event;
 
     private MemberListAdapter participantsAdapter;
     private VoteDateListAdapter voteDateListAdapter;
@@ -127,7 +125,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_comments = parent.findViewById(R.id.event_comments);
         comment_write = parent.findViewById(R.id.comment_write);
         add_comment = parent.findViewById(R.id.add_comment);
-        confirmate = parent.findViewById(R.id.confirm_event);
+        confirm_event = parent.findViewById(R.id.confirm_event);
+        cancel_event = parent.findViewById(R.id.cancel_event);
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
 
@@ -147,10 +146,17 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        confirmate.setOnClickListener(new View.OnClickListener() {
+        confirm_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 confirmate_event();
+            }
+        });
+
+        cancel_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelEventClick();
             }
         });
 
@@ -180,6 +186,21 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         EventFirebaseService.getEvent(event_id, this);
 
         return parent;
+    }
+
+    private void cancelEventClick() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.dialog_cancel_event));
+
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            EventFirebaseService.cancelEvent(event_id);
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, null);
+        builder.show();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -244,9 +265,14 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
                 getEventComment(c);
             }
 
-        if (event.creator_id.equals(user_id) && event.state.equals("PENDING")) {
-            confirmate.setVisibility(VISIBLE);
+        if (event.creator_id.equals(user_id) && event.state.equals(Event.PENDING)) {
+            confirm_event.setVisibility(VISIBLE);
         }
+
+        if (event.creator_id.equals(user_id) && !event.state.equals(Event.DONE) && !event.state.equals(Event.CANCELED)) {
+            cancel_event.setVisibility(VISIBLE);
+        }
+
         event_description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -344,7 +370,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_description.setVisibility(GONE);
         edit_description.setVisibility(VISIBLE);
         event_description_edit.setVisibility(VISIBLE);
-
     }
 
     private void change_description() {
@@ -355,8 +380,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_description.setText(newDescription);
         event_description_edit.setText("");
         EventFirebaseService.editEventDescription(event_id, newDescription);
-
-
     }
 
     private void setImage() {

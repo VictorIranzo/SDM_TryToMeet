@@ -112,6 +112,8 @@
     <string name="add_comment">Add comment</string>
     <string name="show_images">Show images</string>
     <string name="add_image">Add image</string>
+    <string name="cancel_event">Cancel event</string>
+    <string name="dialog_cancel_event">Are you sure you want to cancel this event?</string>
 
 
 </resources>

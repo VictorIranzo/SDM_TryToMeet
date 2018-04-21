@@ -31,6 +31,7 @@ public class Event {
     public final static String VOTED = "VOTED";
     public final static String CONFIRMED = "CONFIRMED";
     public final static String DONE = "DONE";
+    public final static String CANCELED = "CANCELED";
 
     public Event(){}
 
