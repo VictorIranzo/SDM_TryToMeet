@@ -219,7 +219,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         event_site_name.setText(event.site.name);
         event_site_description.setText(event.site.description);
 
-        enableVoting(event);
+        enableVoting();
 
         voteDateListAdapter = new VoteDateListAdapter(event.possible_dates, user_id, event_id);
         event_dates.setAdapter(voteDateListAdapter);
@@ -265,12 +265,12 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         enable_show_images();
     }
 
-    private void enableVoting(Event event) {
+    private void enableVoting() {
         if(!shownEvent.state.equals(Event.PENDING)){
             event_dates.setVisibility(GONE);
             confirmed_date.setVisibility(VISIBLE);
-            if(event.confirmed_date!=null)
-                confirmed_date.setText(event.confirmed_date.toString());
+            if(shownEvent.confirmed_date!=null)
+                confirmed_date.setText(shownEvent.confirmed_date.toString());
 
         }
 
@@ -280,7 +280,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             // Shows the resume of date voting.
             confirmed_date.setVisibility(VISIBLE);
 
-           if(event.confirmed_date==null)
+           if(shownEvent.confirmed_date==null)
                confirmed_date.setText(shownEvent.getPossibleDatesResume());
         }
     }
