@@ -325,4 +325,42 @@ public class EventFirebaseService extends FirebaseService{
             }
         });
     }
+
+    public static void deleteTakingPart(String user_id, String event_id) {
+        getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getRef().removeValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void deleteParticipant(final String user_id, String event_id) {
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
+
+                if(event == null) return Transaction.success(mutableData);
+
+                event.participants_id.remove(user_id);
+                for (Date date: event.possible_dates) {
+                    date.voted_users.remove(user_id);
+                }
+
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+            }
+        });
+    }
 }
