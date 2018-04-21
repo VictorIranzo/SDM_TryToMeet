@@ -229,7 +229,9 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
 
         if (currentUser != null) {
             Comment c = new Comment(currentUser.username, comment_write.getText().toString(), dateString, currentUser.image);
-            EventFirebaseService.AddComment(c,event_id);
+            EventFirebaseService.AddComment(c,event_id, user_id, shownEvent.participants_id,
+                    getResources().getString(R.string.comment_added_notification_title),
+                    getResources().getString(R.string.comment_added_notification_text, currentUser.username, shownEvent.name));
 
             putEventComment(c);
 
@@ -333,15 +335,25 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             show_images.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fragment = new Event_image_gallery();
+                    Fragment fragment = new EventImageGallery();
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", event_id);
+                    bundle.putString("event_name", shownEvent.name);
+                    bundle.putString("username", currentUser.username);
+                    bundle.putStringArrayList("participants", (ArrayList<String>) shownEvent.participants_id);
                     fragment.setArguments(bundle);
                     getFragmentManager().beginTransaction().replace(R.id.frameLayout,
                             fragment).addToBackStack("gallery").commit();
                 }
             });
         }
+    }
+
+    private HashMap<String, String> getCommentHashMap(String user, String comment) {
+        HashMap<String, String> item = new HashMap<String, String>();
+        item.put("user", user);
+        item.put("comment", comment);
+        return item;
     }
 
     User currentUser;

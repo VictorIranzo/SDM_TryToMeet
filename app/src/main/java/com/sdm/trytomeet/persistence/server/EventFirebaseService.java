@@ -176,9 +176,17 @@ public class EventFirebaseService extends FirebaseService{
         */
     }
 
-    public static void AddComment(Comment c, String event_id){
+    public static void AddComment(Comment c, String event_id, String user_id, List<String> participants, String title, String text){
         String key = getDatabaseReference().child("events").child(event_id).child("comments").push().getKey();
         getDatabaseReference().child("events").child(event_id).child("comments").child(key).setValue(c);
+
+        // Notify the other users
+        for(String user : participants){
+            if(!user.equals(user_id));
+                Notification not = new Notification(Notification.COMMENT_ADDED,title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+        }
     }
 
     public static void confirmateEvent(final String event_id, final Date date, String user_id, List<String> participant, String title, String text){
@@ -200,7 +208,7 @@ public class EventFirebaseService extends FirebaseService{
         // Notify the others users
         for(String user : participant){
             if(!user.equals(user_id)){
-                Notification not = new Notification(NotificactionListener.EVENT_CONFIRMATE, title, text);
+                Notification not = new Notification(Notification.EVENT_CONFIRMATE, title, text);
                 not.event_id = event_id;
                 NotificationFirebaseService.addNotification(not, user);
             }
@@ -253,7 +261,7 @@ public class EventFirebaseService extends FirebaseService{
     }
 
 
-    public static void uploadImage(final String event_id, Uri selectedImage) {
+    public static void uploadImage(final String event_id, Uri selectedImage, ArrayList<String> participants, String user_id, String title, String text) {
         final StorageReference path = getStorageReference().child("images").child("event_images").child(selectedImage.getLastPathSegment());
         path.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -262,6 +270,15 @@ public class EventFirebaseService extends FirebaseService{
                 getDatabaseReference().child("events").child(event_id).child("images").child(key).setValue(taskSnapshot.getDownloadUrl().toString());
             }
         });
+
+        // Notify users
+        for(String user : participants){
+            if(!user_id.equals(user)){
+                Notification not = new Notification(Notification.IMAGE_UPLOADED, title, text);
+                not.event_id = event_id;
+                NotificationFirebaseService.addNotification(not, user);
+            }
+        }
     }
 
 

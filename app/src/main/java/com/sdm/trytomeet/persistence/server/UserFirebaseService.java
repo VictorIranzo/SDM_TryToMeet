@@ -292,7 +292,7 @@ public class UserFirebaseService extends FirebaseService {
 
             // Create the notifications for the others users
             if(!user_id.equals(u)){
-                Notification not = new Notification(NotificactionListener.ADDED_TO_AN_EVENT,
+                Notification not = new Notification(Notification.ADDED_TO_AN_EVENT,
                         notification_title, notification_text);
                 not.group_id = key;
                 NotificationFirebaseService.addNotification(not, u);
@@ -369,7 +369,7 @@ public class UserFirebaseService extends FirebaseService {
             }
 
             // Notify that user
-            Notification not = new Notification(NotificactionListener.ADDED_TO_A_GROUP, title, text);
+            Notification not = new Notification(Notification.ADDED_TO_A_GROUP, title, text);
             not.group_id = group.uniqueIdentifier;
             NotificationFirebaseService.addNotification(not, friend);
 

@@ -3,9 +3,11 @@ package com.sdm.trytomeet.fragments.Events;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,15 +25,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.adapters.GalleryAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Event_image_gallery extends Fragment {
+public class EventImageGallery extends Fragment {
 
     String event_id;
+    String event_name;
+    String username;
+    String user_id;
+    ArrayList<String> participants;
     ArrayList<String> images;
     View parent;
     RecyclerView gallery;
@@ -39,7 +46,7 @@ public class Event_image_gallery extends Fragment {
     private final int GET_FROM_GALLERY = 1;
     ChildEventListener listener;
 
-    public Event_image_gallery() {
+    public EventImageGallery() {
         // Required empty public constructor
     }
 
@@ -53,8 +60,12 @@ public class Event_image_gallery extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.fragment_event_image_gallery, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        user_id = prefs.getString("account_id", "");
         event_id = getArguments().getString("event_id");
-        //images = getArguments().getStringArrayList("images");
+        event_name = getArguments().getString("event_name");
+        username = getArguments().getString("username");
+        participants = getArguments().getStringArrayList("participants");
 
         // Set up the gallery
         images = new ArrayList<String>();
@@ -124,7 +135,9 @@ public class Event_image_gallery extends Fragment {
         //Detects request codes
         if (requestCode == GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
-            EventFirebaseService.uploadImage(event_id, selectedImage);
+            EventFirebaseService.uploadImage(event_id, selectedImage, participants, user_id,
+                    getResources().getString(R.string.image_uploaded_notification_title),
+                    getResources().getString(R.string.image_uploaded_notification_text, username, event_name));
         }
     }
 
