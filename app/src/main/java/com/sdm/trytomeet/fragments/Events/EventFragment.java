@@ -347,13 +347,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private HashMap<String, String> getCommentHashMap(String user, String comment) {
-        HashMap<String, String> item = new HashMap<String, String>();
-        item.put("user", user);
-        item.put("comment", comment);
-        return item;
-    }
-
     User currentUser;
 
     public void addUser(User user) {

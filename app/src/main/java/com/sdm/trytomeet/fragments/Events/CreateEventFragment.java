@@ -296,21 +296,25 @@ public class CreateEventFragment extends Fragment {
     private void addFavoriteSite() {
         UserFirebaseService.addUserFavoriteSite(user_id,site);
 
-        Toast.makeText(getActivity(),"Anyadido sITIO favorito",Toast.LENGTH_LONG).show();
+        ((ImageButton)parent.findViewById(R.id.button_favorite_site)).setVisibility(View.GONE);
+        Toast.makeText(getActivity(),getString(R.string.added_favorite),Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if(this.site != null){
-            //TODO: Change UI when the site is selected.
             ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
             ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
 
             Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
             findPlaceButton.setText(getString(R.string.create_event_change_place_button));
 
-            // TODO: Allow add favorite place after check that it's not one of the favorite places.
+            UserFirebaseService.checkIfFavouriteSite(this.site,user_id,this);
         }
+    }
+
+    public void showAddFavourite() {
+        ((ImageButton)parent.findViewById(R.id.button_favorite_site)).setVisibility(View.VISIBLE);
     }
 }

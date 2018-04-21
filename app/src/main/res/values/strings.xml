@@ -22,6 +22,7 @@
     <string name="places_filter">Filter</string>
     <string name="places_placeHint">Introduce a name for the place</string>
     <string name="delete_site">Are you sure you want to delete this site?</string>
+    <string name="added_favorite">Added favourite site.</string>
 
     <string name="confirm_event">Confirm event</string>
     <string name="event_confimed">The event is now confirmed</string>
