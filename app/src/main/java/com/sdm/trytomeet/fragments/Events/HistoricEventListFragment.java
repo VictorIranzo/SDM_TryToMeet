@@ -25,11 +25,16 @@ import java.util.List;
 // TODO: Redireccionar a evento en el click.
 
 public class HistoricEventListFragment extends EventListFragment{
-
+    @Override
     public void addEventToList(String event_id, Event e){
         if (e.state.equals(Event.CANCELED) || e.state.equals(Event.VOTED)){
             events.add(new EventWithKey(event_id,e));
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void getUserEvents(){
+        EventFirebaseService.getUserEventsHistoric(user_id,this);
     }
 }
