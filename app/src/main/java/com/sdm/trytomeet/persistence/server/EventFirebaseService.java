@@ -31,11 +31,6 @@ import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{
 
-    private static ArrayList<Event> name = new ArrayList<Event>();
-    final String names = new String();
-    final java.util.Date d = new java.util.Date();
-
-
     public static String addEvent(Event event){
         String key = getDatabaseReference().child("events").push().getKey();
         getDatabaseReference().child("events").child(key).setValue(event);
@@ -433,158 +428,66 @@ public class EventFirebaseService extends FirebaseService{
         });
     }
 
-    public static void updatePastConfirmedEvents(final String user_id, final EventListFragment eventListFragment) {
-        getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final Calendar calendar = Calendar.getInstance();
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        for (final String event_id : takingPart.invitedTo.keySet()) {
-                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Event e = dataSnapshot.getValue(Event.class);
-                                    String  evento = event_id;
+    public static void removePastVotedDate(String event_id, final Date date) {
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
 
-                                    if (e != null && e.state.equals("CONFIRMED")){
-                                        if (e.confirmed_date != null){
-                                            if (e.confirmed_date.year <= calendar.get(Calendar.YEAR)){
-                                                if (e.confirmed_date.year == calendar.get(Calendar.YEAR)){
+                if(event == null) return Transaction.success(mutableData);
 
-                                                    if(e.confirmed_date.month <= calendar.get(Calendar.MONTH)){
-                                                        e.state= Event.DONE;
-                                                        getDatabaseReference().child("events").child(evento).setValue(e);
-                                                    }
-                                                    else if (e.confirmed_date.month == (calendar.get(Calendar.MONTH)+1)){
+                event.possible_dates.remove(date);
 
-                                                        if(e.confirmed_date.day <= calendar.get(Calendar.DATE)){
-                                                            e.state= Event.DONE;
-                                                            getDatabaseReference().child("events").child(evento).setValue(e);
-                                                        }
-                                                        else if(e.confirmed_date.day == calendar.get(Calendar.DATE)){
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
 
-                                                            if (e.confirmed_date.hour < calendar.get(Calendar.HOUR)){
-                                                                e.state= Event.DONE;
-                                                                getDatabaseReference().child("events").child(evento).setValue(e);
-                                                            }
-                                                            else if (e.confirmed_date.hour == calendar.get(Calendar.HOUR)){
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
 
-                                                                if (e.confirmed_date.minute <= calendar.get(Calendar.MINUTE)){
-                                                                    e.state= Event.DONE;
-                                                                    getDatabaseReference().child("events").child(evento).setValue(e);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else if (e.confirmed_date.year < calendar.get(Calendar.YEAR)){
-                                                    e.state= Event.DONE;
-                                                    getDatabaseReference().child("events").child(evento).setValue(e);
-                                                }
-
-
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e("Error", "Something bad");
-                                }
-                            });
-                        }
-                    }
-
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                });
+            }
+        });
     }
 
-    /*public static void updatePastPendingEvents(final String user_id, final EventListFragment eventListFragment) {
-        final String user = user_id;
-        final EventListFragment fragment = eventListFragment;
-        getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final Calendar calendar = Calendar.getInstance();
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        for (final String event_id : takingPart.invitedTo.keySet()) {
-                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Event e = dataSnapshot.getValue(Event.class);
-                                    String  evento = event_id;
+    public static void passEventConfirmedToDone(String event_id) {
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
 
-                                    if (e != null && e.state.equals("PENDING")){
-                                        if (e.getPreviousPossibleDate() != null){
-                                            if (e.getPreviousPossibleDate().year <= calendar.get(Calendar.YEAR)){
-                                                if (e.getPreviousPossibleDate().year == calendar.get(Calendar.YEAR)){
+                if(event == null) return Transaction.success(mutableData);
 
-                                                    if(e.getPreviousPossibleDate().month <= calendar.get(Calendar.MONTH)){
-                                                        //e.removePastDate(e.getPreviousPossibleDate());
-                                                        String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
-                                                        getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
-                                                        updatePastPendingEvents(user, fragment);
-                                                    }
-                                                    else if (e.getPreviousPossibleDate().month == (calendar.get(Calendar.MONTH)+1)){
+                event.state = Event.DONE;
 
-                                                        if(e.getPreviousPossibleDate().day <= calendar.get(Calendar.DATE)){
-                                                            String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
-                                                            getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
-                                                            updatePastPendingEvents(user, fragment);
-                                                        }
-                                                        else if(e.getPreviousPossibleDate().day == calendar.get(Calendar.DATE)){
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
 
-                                                            if (e.getPreviousPossibleDate().hour < calendar.get(Calendar.HOUR)){
-                                                                String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
-                                                                getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
-                                                                updatePastPendingEvents(user, fragment);
-                                                            }
-                                                            else if (e.getPreviousPossibleDate().hour == calendar.get(Calendar.HOUR)){
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
 
-                                                                if (e.getPreviousPossibleDate().minute <= calendar.get(Calendar.MINUTE)){
-                                                                    String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
-                                                                    getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
-                                                                    updatePastPendingEvents(user, fragment);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else if (e.getPreviousPossibleDate().year < calendar.get(Calendar.YEAR)){
-                                                    String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
-                                                    getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
-                                                    updatePastPendingEvents(user, fragment);
-                                                }
+            }
+        });
+    }
 
+    public static void passEventPendingToCancel(String event_id) {
+        getDatabaseReference().child("events").child(event_id).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event event = mutableData.getValue(Event.class);
 
-                                            }
-                                        }
-                                        else getDatabaseReference().child("events").child(evento).removeValue();
-                                    }
+                if(event == null) return Transaction.success(mutableData);
 
-                                }
+                event.state = Event.CANCELED;
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e("Error", "Something bad");
-                                }
-                            });
-                        }
-                    }
+                mutableData.setValue(event);
+                return Transaction.success(mutableData);
+            }
 
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
-                    }
-                });
-    }*/
-
+            }
+        });
+    }
 }

@@ -53,21 +53,15 @@ public class Event {
         this.comments = new HashMap<String,Comment>();
     }
 
-    // TODO: Revisar si la fecha elegida para celebrar el evento se guarda aparte una vez la elige el
-    // creador del evento o gana la fecha con más votos.
-
-    public Date getWinningDate(){
-        if(possible_dates == null || possible_dates.size() == 0 || state.equals(PENDING)) return null;
-        Date winner = possible_dates.get(0);
-
-        for(int i = 1; i < possible_dates.size(); i++){
-            if(winner.voted_users == null ||
-                (possible_dates.get(i).voted_users != null &&
-                possible_dates.get(i).voted_users.size() > winner.voted_users.size()))
-                winner = possible_dates.get(i);
-        }
-
-        return winner;
+    public Event(String name, String description, Site site, List<Date> possible_dates, List<String> participants_id, String creator_id, String state, Date confirmed_date) {
+        this.name = name;
+        this.description = description;
+        this.site = site;
+        this.possible_dates = possible_dates;
+        this.participants_id = participants_id;
+        this.creator_id = creator_id;
+        this.state = state;
+        this.confirmed_date = confirmed_date;
     }
 
     public boolean allVoted() {
@@ -95,60 +89,5 @@ public class Event {
         }
 
         return result;
-    }
-
-    public Date getPreviousPossibleDate() {
-        Date minDate = null;
-        if (possible_dates == null) return minDate;
-        for (Date date : possible_dates) {
-            if (minDate == null) {
-                minDate = date;
-            } else if (date.year <= minDate.year) {
-                if (date.year == minDate.year) {
-
-                    if (date.month <= minDate.month) {
-                        minDate = date;
-                    }
-                    else if (date.month == minDate.month) {
-
-                        if (date.day <= minDate.day) {
-                            minDate = date;
-                        }
-                        else if (date.day == minDate.day) {
-
-                            if (date.hour < minDate.hour) {
-                                minDate = date;
-                            }
-                            else if (date.hour == minDate.hour) {
-
-                                if (date.minute <= minDate.minute) {
-                                    minDate = date;
-                                }
-                            }
-                        }
-                    }
-                } else if (date.year < minDate.year) {
-                    minDate = date;
-                }
-
-
-            }
-        }
-        return  minDate;
-    }
-
-    public int posPastDate(Date d){
-        int size = 0;
-        for (Date date: possible_dates){
-            if (date.equals(d)){
-                return size;
-            }
-            size ++;
-        }
-        return size;
-    }
-    public String toStringPos(int i){
-        String res= ""+i;
-        return  res;
     }
 }

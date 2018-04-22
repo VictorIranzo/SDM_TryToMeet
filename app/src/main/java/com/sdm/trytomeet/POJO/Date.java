@@ -41,6 +41,21 @@ public class Date{
                 && hour == aux.hour && minute == aux.minute;
     }
 
+    // <0 if date1 < date2
+    // =0 if date1 = date2
+    // >0 if date1 > date2
+    public int compareTo(Date date){
+        if (this.year != date.year)
+            return (this.year - date.year);
+        if (this.month != date.month)
+            return (this.month - date.month);
+        if (this.day != date.day)
+            return (this.day - date.day);
+        if (this.hour != date.hour)
+            return (this.hour - date.hour);
+        return (this.minute - date.minute);
+    }
+
     // TODO: Internacionalización de toString.
     @Override
     public String toString(){

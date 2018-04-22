@@ -21,6 +21,8 @@ import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.EventListAdapter;
+import com.sdm.trytomeet.helpers.EventTransactionConfirmedDone;
+import com.sdm.trytomeet.helpers.EventTransactionPendingToCanceled;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
@@ -70,20 +72,6 @@ public class EventListFragment extends Fragment {
         rv.setLayoutManager(llm);
 
         events = new ArrayList<EventWithKey>();
-
-        //CardView evento = parent.findViewById(R.id.ev);
-
-        //pruebas = parent.findViewById(R.id.pruebas);
-
-        /*pruebas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToEvent();
-            }
-        });*/
-        EventFirebaseService.updatePastConfirmedEvents(user_id,this);
-        //EventFirebaseService.updatePastPendingEvents(user_id,this);
-
 
         initializeAdapter();
 
@@ -158,7 +146,14 @@ public class EventListFragment extends Fragment {
 
     public void addEventToList(String event_id, Event e){
         if(e.state.equals(Event.CONFIRMED) || e.state.equals(Event.VOTED) || e.state.equals(Event.PENDING)) {
-            events.add(new EventWithKey(event_id,e));
+            EventWithKey eventWithKey = new EventWithKey(event_id,e);
+
+            boolean notAdd = EventTransactionConfirmedDone.checkConfirmedDate(eventWithKey);
+            notAdd = notAdd || EventTransactionPendingToCanceled.checkIfPassedDate(eventWithKey);
+
+            if(notAdd) return;
+
+            events.add(eventWithKey);
             adapter.notifyDataSetChanged();
         }
     }
