@@ -35,10 +35,13 @@ public class Event {
 
     public Event(){}
 
-    public Event(String name, String description, String image){
+    public Event(String name, String description, List<Date> possible_dates, String state, String image, Date confirmed_date) {
         this.name = name;
         this.description = description;
+        this.possible_dates = possible_dates;
+        this.state = state;
         this.image = image;
+        this.confirmed_date = confirmed_date;
     }
 
     // This method should be properly adapted when using it

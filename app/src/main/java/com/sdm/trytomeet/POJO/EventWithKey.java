@@ -5,7 +5,7 @@ public class EventWithKey extends Event{
 
     public EventWithKey(String event_id, Event event)
     {
-        super(event.name,event.description, event.image);
+        super(event.name,event.description,event.possible_dates, event.state, event.image, event.confirmed_date);
         this.event_id = event_id;
     }
 }
