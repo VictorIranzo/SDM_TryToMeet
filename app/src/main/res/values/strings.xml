@@ -120,8 +120,8 @@
     <string name="site_type">Place type:</string>
 
     <!--Facebook-->
-    <string name="facebook_app_id">615456122132608</string>
-    <string name="fb_login_protocol_scheme">fb615456122132608</string>
+    <string name="facebook_app_id" translatable="false">615456122132608</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb615456122132608</string>
 
     <!--Event-->
     <string name="event_show_map">Show map</string>
