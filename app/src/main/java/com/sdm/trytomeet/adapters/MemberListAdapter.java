@@ -25,12 +25,14 @@ public class MemberListAdapter extends ArrayAdapter<User>{
     Context context;
     int resource;
     private List<User> data;
+    private boolean show_remove;
 
-    public MemberListAdapter(Context context, int resource, List<User> data){
+    public MemberListAdapter(Context context, int resource, List<User> data, boolean show_remove){
         super(context, resource, data);
         this.context = context;
         this.resource = resource;
         this.data = data;
+        this.show_remove = show_remove;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -50,7 +52,7 @@ public class MemberListAdapter extends ArrayAdapter<User>{
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View_external_user external_user = View_external_user.newInstance(user);
+                View_external_user external_user = View_external_user.newInstance(user, show_remove);
                 external_user.show(((FragmentActivity)context).getSupportFragmentManager(), "dialog");
             }
         });

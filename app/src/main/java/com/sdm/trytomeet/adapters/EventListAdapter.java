@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
@@ -36,6 +38,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         eventViewHolder.eventName.setText(events.get(position).name);
         eventViewHolder.eventDescription.setText(events.get(position).description);
 
+        if(events.get(position).image != null){
+            Glide.with(eventViewHolder.itemView).load(events.get(position).image).into(eventViewHolder.image);
+            eventViewHolder.image.setVisibility(View.VISIBLE);
+        }
+
         eventViewHolder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +61,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         CardView cv;
         TextView eventName;
         TextView eventDescription;
+        ImageView image;
         View itemView;
 
         public EventViewHolder(View itemView) {
@@ -62,6 +70,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             this.cv = (CardView)itemView.findViewById(R.id.cv);
             this.eventName = (TextView)itemView.findViewById(R.id.name);
             this.eventDescription = (TextView)itemView.findViewById(R.id.description);
+            this.image = itemView.findViewById(R.id.image);
         }
     }
 }

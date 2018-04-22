@@ -322,4 +322,8 @@ public class MainActivity
     public static String cleanEmail(String string) {
         return string.replace(".", ",");
     }
+
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
 }

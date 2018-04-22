@@ -32,16 +32,18 @@ public class View_external_user extends DialogFragment {
 
     private User user;
     private View view;
+    private boolean view_remove;
 
     public View_external_user() {
         // Required empty public constructor
     }
 
-    public static View_external_user newInstance(User user) {
+    public static View_external_user newInstance(User user, boolean view_remove) {
         View_external_user fragment = new View_external_user();
 
         Bundle args = new Bundle();
         args.putSerializable("user", user);
+        args.putBoolean("view_remove", view_remove);
         fragment.setArguments(args);
 
         return fragment;
@@ -56,6 +58,7 @@ public class View_external_user extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         user = (User) getArguments().getSerializable("user");
+        view_remove = getArguments().getBoolean("view_remove");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         final String user_id = prefs.getString("account_id","");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -71,7 +74,7 @@ public class View_external_user extends DialogFragment {
             }
         });
 
-        view = getActivity().getLayoutInflater().inflate(R.layout.view_create_event_add_participant_external, null);
+        view = getActivity().getLayoutInflater().inflate(R.layout.dlg_show_external_user, null);
         builder.setView(view);
 
         if(user.image != null){
@@ -93,7 +96,7 @@ public class View_external_user extends DialogFragment {
                 if((friends==null || !friends.friends.contains(user.id)) && !user_id.equals(user.id)){
                     add_as_a_friend.setVisibility(View.VISIBLE);
                 }
-                if(friends!=null && friends.friends.contains(user.id)){
+                if(friends!=null && friends.friends.contains(user.id) && view_remove){
                     remove_friend.setVisibility(View.VISIBLE);
                 }
             }
@@ -134,16 +137,19 @@ public class View_external_user extends DialogFragment {
                 dismiss();
             }
         });
-        remove_friend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<User> toDelete= new ArrayList<User>();
-                toDelete.add(user);
-                UserFirebaseService.removeFriend(user_id,toDelete );
+        if(view_remove){
+            remove_friend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<User> toDelete= new ArrayList<User>();
+                    toDelete.add(user);
+                    UserFirebaseService.removeFriend(user_id,toDelete );
 
-                dismiss();
-            }
-        });
+                    dismiss();
+                }
+            });
+        }
+
 
         return builder.create();
     }

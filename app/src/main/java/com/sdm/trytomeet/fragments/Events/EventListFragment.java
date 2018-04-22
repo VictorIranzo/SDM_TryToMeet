@@ -19,6 +19,7 @@ import android.widget.Button;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
@@ -30,7 +31,7 @@ import java.util.List;
 public class EventListFragment extends Fragment {
 
     private View parent;
-    private String user_id;
+    protected String user_id;
 
     protected List<EventWithKey> events;
 
@@ -86,7 +87,9 @@ public class EventListFragment extends Fragment {
 
         initializeAdapter();
 
-        EventFirebaseService.getUserEvents(user_id,this);
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Events_title));
+
+        getUserEvents();
 
         // Used when coming from a notification
         if(getArguments() != null){
@@ -97,6 +100,16 @@ public class EventListFragment extends Fragment {
 
     }
 
+    protected void getUserEvents() {
+        EventFirebaseService.getUserEvents(user_id,this);
+    }
+
+    public void goToPendingEvents() {
+        PendingVoteEventListFragment fragment = new PendingVoteEventListFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameLayout, fragment).commit();
+    }
+    
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -107,9 +120,10 @@ public class EventListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.alertTitle:
+                goToPendingEvents();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 

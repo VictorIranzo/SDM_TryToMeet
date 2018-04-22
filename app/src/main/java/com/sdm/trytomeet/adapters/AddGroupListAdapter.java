@@ -71,7 +71,7 @@ public class AddGroupListAdapter extends ArrayAdapter<Group> implements Filterab
 
         // Populate the group's member list
         final ArrayList<User> members = new ArrayList<>();
-        final MemberListAdapter adapter = new MemberListAdapter(getContext(), R.id.list_view, members);
+        final MemberListAdapter adapter = new MemberListAdapter(getContext(), R.id.list_view, members, false);
         listView.setAdapter(adapter);
         for(String member : group.members){
             FirebaseDatabase.getInstance().getReference().child("users").child(member)

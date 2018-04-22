@@ -10,8 +10,8 @@
 
     <com.sdm.trytomeet.components.CircularImageView
         android:id="@+id/circleImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
         android:src="@drawable/common_full_open_on_phone" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="@dimen/drawer_header_text" />
+        android:textSize="@dimen/user_name_size" />
 
     <LinearLayout
         android:id="@+id/editNamePanel"
@@ -37,25 +37,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button_cancel"
+                android:background="@drawable/my_button"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/default_button_size"
                 android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/button_ok"
+                android:background="@drawable/my_button"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/default_button_size"
                 android:text="@string/ok" />
         </LinearLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/button_edit_name"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/default_button_size"
         android:text="@string/edit" />
 
 </LinearLayout>

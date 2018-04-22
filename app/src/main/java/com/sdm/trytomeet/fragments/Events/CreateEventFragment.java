@@ -3,6 +3,7 @@ package com.sdm.trytomeet.fragments.Events;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -125,6 +127,8 @@ public class CreateEventFragment extends Fragment {
         participant_adapter = new CreateEventParticipantListAdapter(getContext(), R.id.participant_list, participants);
         list_view_participant.setAdapter(participant_adapter);
 
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Create_an_event_title));
+
         return parent;
     }
 
@@ -136,7 +140,7 @@ public class CreateEventFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.create_event_header_confirm:
                 confirmEvent();
                 break;
@@ -149,19 +153,24 @@ public class CreateEventFragment extends Fragment {
         String name = ((TextView) parent.findViewById(R.id.create_event_title)).getText().toString();
         String description = ((TextView) parent.findViewById(R.id.create_event_description)).getText().toString();
         List<Date> possible_dates = new ArrayList<>();
-        for(Date date : dates) possible_dates.add(date);
+        for (Date date : dates) possible_dates.add(date);
         List<String> participants_id = new ArrayList<>();
-        for(User user : participants) participants_id.add(user.id);
+        for (User user : participants) participants_id.add(user.id);
         String creator_id = user_id;
         String state = Event.PENDING;
         Event event = new Event(name, description, possible_dates, participants_id, creator_id, state, site);
 
         // We check that all the required fields are fulfilled
-        if(event.name.equals("")) Toast.makeText(getContext(),R.string.create_event_missing_title, Toast.LENGTH_SHORT).show();
-        else if(event.description.equals("")) Toast.makeText(getContext(),R.string.create_event_missing_description, Toast.LENGTH_SHORT).show();
-        else if(event.site == null) Toast.makeText(getContext(),R.string.create_event_missing_place, Toast.LENGTH_SHORT).show();
-        else if(event.possible_dates.isEmpty()) Toast.makeText(getContext(),R.string.create_event_missing_dates, Toast.LENGTH_SHORT).show();
-        else if(event.participants_id.isEmpty()) Toast.makeText(getContext(),R.string.create_event_missing_participants, Toast.LENGTH_SHORT).show();
+        if (event.name.equals(""))
+            Toast.makeText(getContext(), R.string.create_event_missing_title, Toast.LENGTH_SHORT).show();
+        else if (event.description.equals(""))
+            Toast.makeText(getContext(), R.string.create_event_missing_description, Toast.LENGTH_SHORT).show();
+        else if (event.site == null)
+            Toast.makeText(getContext(), R.string.create_event_missing_place, Toast.LENGTH_SHORT).show();
+        else if (event.possible_dates.isEmpty())
+            Toast.makeText(getContext(), R.string.create_event_missing_dates, Toast.LENGTH_SHORT).show();
+        else if (event.participants_id.isEmpty())
+            Toast.makeText(getContext(), R.string.create_event_missing_participants, Toast.LENGTH_SHORT).show();
 
         else { //Everything is fine
 
@@ -170,11 +179,13 @@ public class CreateEventFragment extends Fragment {
 
             // We link each participant (and the creator) with the new event
             List<String> to_invite = new ArrayList<>(participants_id);
-            to_invite.add(user_id);
-            InvitedTo inv = new InvitedTo("PENDING");
+            InvitedTo inv = new InvitedTo(InvitedTo.PENDING);
             for (String participant_id : to_invite) {
                 EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
             }
+
+            // The creator is added with VOTED state.
+            EventFirebaseService.addParticipantToEvent(new InvitedTo(InvitedTo.VOTED), user_id, event_id);
 
             // We notify each user
             to_invite.remove(user_id); // Not me
@@ -193,76 +204,74 @@ public class CreateEventFragment extends Fragment {
 
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this)
                 .replace(R.id.frameLayout, fragment).commit();
+        site = null;
     }
 
-    private void add_participant(View view){
+    private void add_participant(View view) {
         // Show a pop-up to select among your friends
         ArrayList<String> current_id_participants = new ArrayList<>();
-        for(User participant : participants) current_id_participants.add(participant.id);
+        for (User participant : participants) current_id_participants.add(participant.id);
         AddParticipantFragmentDialog fragment = AddParticipantFragmentDialog.newInstance(user_id, current_id_participants);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
+        fragment.setTargetFragment(this, 0);
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
-    private void add_group(View view){
+    private void add_group(View view) {
         //Show a pop-up to select among your groups
         ArrayList<String> current_id_participants = new ArrayList<>();
-        for(User participant : participants) current_id_participants.add(participant.id);
+        for (User participant : participants) current_id_participants.add(participant.id);
         AddGroupFragmentDialog fragment = AddGroupFragmentDialog.newInstance(user_id, current_id_participants);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
+        fragment.setTargetFragment(this, 0);
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
-    private void add_date(View view){
+    private void add_date(View view) {
         // Show a pop-up to select a date
         AddDateFragmentDialog fragment = AddDateFragmentDialog.newInstance();
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class
-        fragment.setTargetFragment(this,0);
+        fragment.setTargetFragment(this, 0);
         fragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
     private boolean firstime = true;
+
     private void find_place(View v) {
         FindPlaceFragment fragment;
 
         fragment = new FindPlaceFragment();
-        fragment.setTargetFragment(this,0);
+        fragment.setTargetFragment(this, 0);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack("Find_Place").commit();
     }
 
     // Method to be called from the AddParticipantFragmentDialog
-    public void add_participants(ArrayList<User> to_add){
+    public void add_participants(ArrayList<User> to_add) {
         participants.addAll(to_add);
         participant_adapter.notifyDataSetChanged();
     }
 
     // Method to be called from the AddGroupFragmentDialog
     public void add_group(ArrayList<Group> toAdd) {
-        for(Group group : toAdd){
-            for(String member : group.members){
-                if(member.equals(user_id)) continue;
+        for (Group group : toAdd) {
+            for (String member : group.members) {
+                if (member.equals(user_id)) continue;
 
                 boolean add = true;
-                for(User participant : participants){
-                    if(participant.id.equals(member)){
+                for (User participant : participants) {
+                    if (participant.id.equals(member)) {
                         add = false;
-                        Log.e("Got","it");
+                        Log.e("Got", "it");
                         break;
                     }
                 }
 
-                if(add){
+                if (add) {
                     FirebaseDatabase.getInstance().getReference().child("users").child(member)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -283,37 +292,37 @@ public class CreateEventFragment extends Fragment {
     }
 
     // Method to be called from AddDateFragmentDialog
-    public void add_date(Date date){
-        if(!dates.contains(date)) dates.add(date);
+    public void add_date(Date date) {
+        if (!dates.contains(date)) dates.add(date);
         date_adapter.notifyDataSetChanged();
     }
 
-    public void add_site(Site site){
+    public void add_site(Site site) {
         this.site = site;
     }
 
     private void addFavoriteSite() {
-        UserFirebaseService.addUserFavoriteSite(user_id,site);
+        UserFirebaseService.addUserFavoriteSite(user_id, site);
 
-        ((ImageButton)parent.findViewById(R.id.button_favorite_site)).setVisibility(View.GONE);
-        Toast.makeText(getActivity(),getString(R.string.added_favorite),Toast.LENGTH_LONG).show();
+        ((ImageButton) parent.findViewById(R.id.button_favorite_site)).setVisibility(View.GONE);
+        Toast.makeText(getActivity(), getString(R.string.added_favorite), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(this.site != null){
+        if (this.site != null) {
             ((TextView) parent.findViewById(R.id.selectedPlace)).setText(site.name);
             ((LinearLayout) parent.findViewById(R.id.layoutSelectedPlace)).setVisibility(View.VISIBLE);
 
-            Button findPlaceButton = (Button)parent.findViewById(R.id.button_find_place);
+            Button findPlaceButton = (Button) parent.findViewById(R.id.button_find_place);
             findPlaceButton.setText(getString(R.string.create_event_change_place_button));
 
-            UserFirebaseService.checkIfFavouriteSite(this.site,user_id,this);
+            UserFirebaseService.checkIfFavouriteSite(this.site, user_id, this);
         }
     }
 
     public void showAddFavourite() {
-        ((ImageButton)parent.findViewById(R.id.button_favorite_site)).setVisibility(View.VISIBLE);
+        ((ImageButton) parent.findViewById(R.id.button_favorite_site)).setVisibility(View.VISIBLE);
     }
 }

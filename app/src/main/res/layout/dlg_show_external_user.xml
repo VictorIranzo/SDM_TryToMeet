@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="top|center"
     android:orientation="vertical"
     tools:context=".fragments.Profile.View_external_user">
@@ -11,8 +11,9 @@
 
     <com.sdm.trytomeet.components.CircularImageView
         android:id="@+id/user_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
         android:layout_weight="1"
         android:src="@drawable/common_full_open_on_phone" />
 
@@ -20,19 +21,30 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="TextView"
+        android:textSize="@dimen/user_name_size" />
 
     <Button
         android:id="@+id/add_as_a_friend"
         android:layout_width="match_parent"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/add_as_a_friend" />
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/add_as_a_friend"
+        android:textSize="@dimen/default_button_size"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/remove_friend"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/remove_friend" />
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/remove_friend"
+        android:textSize="@dimen/default_button_size"
+        android:visibility="gone" />
 
 </LinearLayout>

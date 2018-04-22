@@ -33,7 +33,7 @@ public class MembersFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    public ArrayList<User> members = new ArrayList<>();
+    public ArrayList<User> members;
     private ArrayList<String> ids;
     private String group_name;
     private String group_identifier;
@@ -61,9 +61,10 @@ public class MembersFragment extends Fragment {
         group_name = getArguments().getString("group_name");
         group_identifier = getArguments().getString("group_identifier");
 
+        members = new ArrayList<>();
 
         listViewMembers = parent.findViewById(R.id.list_Members);
-        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,members);
+        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,members, true);
 
 
         ids= getArguments().getStringArrayList("group");
