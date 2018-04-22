@@ -1,15 +1,10 @@
 package com.sdm.trytomeet.persistence.server;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.service.notification.NotificationListenerService;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,20 +18,11 @@ import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Notification;
-import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.POJO.TakingPart;
-import com.sdm.trytomeet.POJO.User;
-import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
-import com.sdm.trytomeet.notifications.NotificactionListener;
-import com.sdm.trytomeet.fragments.Events.HistoricEvents;
-import com.sdm.trytomeet.fragments.Events.PendingEvents;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{

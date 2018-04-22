@@ -87,6 +87,9 @@ public class Event {
 
     public String getPossibleDatesResume(){
         String result = "";
+
+        if(possible_dates == null) return result;
+
         for (Date date: possible_dates) {
             result += date.toString() + '\n';
         }

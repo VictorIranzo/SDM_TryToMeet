@@ -7,13 +7,10 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,13 +25,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
-import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
+import com.sdm.trytomeet.fragments.Events.HistoricEventListFragment;
 import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
-import com.sdm.trytomeet.fragments.Events.HistoricEvents;
 import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
@@ -297,7 +292,7 @@ public class MainActivity
     }
 
     private void goToHistoric() {
-        HistoricEvents fragment = new HistoricEvents();
+        HistoricEventListFragment fragment = new HistoricEventListFragment();
         // Insert the arguments
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();

@@ -32,16 +32,11 @@ public class EventListFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    private List<EventWithKey> events;
+    protected List<EventWithKey> events;
 
     private RecyclerView rv;
-    private EventListAdapter adapter;
+    protected EventListAdapter adapter;
     private RecyclerView.LayoutManager llm;
-
-
-    // TODO: Remove this.
-    private Button pruebas;
-
 
     public EventListFragment() {
         // Required empty public constructor
@@ -107,7 +102,6 @@ public class EventListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.alertTitle:
-                goToPendingEvents();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -122,17 +116,6 @@ public class EventListFragment extends Fragment {
         fragment.setArguments(args);
         getFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
-    }
-
-    public void goToPendingEvents() {
-        PendingEvents fragment = new PendingEvents();
-
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
     }
 
     public void goToEvent(String event_id){
@@ -155,7 +138,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void addEventToList(String event_id, Event e){
-        if(e.state.equals("CONFIRMED") || e.state.equals("VOTED")) {
+        if(e.state.equals(Event.CONFIRMED) || e.state.equals(Event.VOTED) || e.state.equals(Event.PENDING)) {
             events.add(new EventWithKey(event_id,e));
             adapter.notifyDataSetChanged();
         }

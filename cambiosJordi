@@ -1,0 +1,582 @@
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+index 2972982..6c489c1 100644
+--- a/.idea/modules.xml
++++ b/.idea/modules.xml
+@@ -3,8 +3,8 @@
+   <component name="ProjectModuleManager">
+     <modules>
+       <module fileurl="file://$PROJECT_DIR$/SDM_TryToMeet.iml" filepath="$PROJECT_DIR$/SDM_TryToMeet.iml" />
+-      <module fileurl="file://C:/Users/Adrian/Documents/Android clase/SDM_TryToMeet2/SDM_TryToMeet.iml" filepath="C:/Users/Adrian/Documents/Android clase/SDM_TryToMeet2/SDM_TryToMeet.iml" />
+-      <module fileurl="file://C:/Users/Adrian/Documents/Android clase/SDM_TryToMeet/.idea/SDM_TryToMeet2.iml" filepath="C:/Users/Adrian/Documents/Android clase/SDM_TryToMeet/.idea/SDM_TryToMeet2.iml" />
++      <module fileurl="file://C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet2\SDM_TryToMeet.iml" filepath="C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet2\SDM_TryToMeet.iml" />
++      <module fileurl="file://C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet\.idea\SDM_TryToMeet2.iml" filepath="C:\Users\Adrian\Documents\Android clase\SDM_TryToMeet\.idea\SDM_TryToMeet2.iml" />
+       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+     </modules>
+   </component>
+diff --git a/app/src/main/java/com/sdm/trytomeet/POJO/Event.java b/app/src/main/java/com/sdm/trytomeet/POJO/Event.java
+index 8429bdc..eb715af 100644
+--- a/app/src/main/java/com/sdm/trytomeet/POJO/Event.java
++++ b/app/src/main/java/com/sdm/trytomeet/POJO/Event.java
+@@ -21,8 +21,8 @@ public class Event {
+     public String creator_id;
+     public String state;
+     public String image;
+-    public Date confirmed_date;
+     public HashMap<String, String> images;
++    public Date confirmed_date;
+ 
+     // With this static properties the state of the event is set.
+     // This is used to centralized the possible states of an event and
+diff --git a/app/src/main/java/com/sdm/trytomeet/activities/MainActivity.java b/app/src/main/java/com/sdm/trytomeet/activities/MainActivity.java
+index 3d49e8a..5e93119 100644
+--- a/app/src/main/java/com/sdm/trytomeet/activities/MainActivity.java
++++ b/app/src/main/java/com/sdm/trytomeet/activities/MainActivity.java
+@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
+ import android.support.annotation.NonNull;
+ import android.support.annotation.Nullable;
+ import android.support.design.widget.NavigationView;
++import android.support.v4.app.FragmentManager;
++import android.support.v4.app.FragmentTransaction;
+ import android.support.v4.widget.DrawerLayout;
+ import android.support.v7.app.ActionBarDrawerToggle;
+ import android.support.v7.app.AppCompatActivity;
+@@ -32,6 +34,7 @@ import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+ import com.sdm.trytomeet.fragments.Events.EventFragment;
+ import com.sdm.trytomeet.fragments.Events.EventListFragment;
+ import com.sdm.trytomeet.fragments.Friends.FriendsFragment;
++import com.sdm.trytomeet.fragments.Events.HistoricEventListFragment;
+ import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
+ 
+ import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
+@@ -155,6 +158,12 @@ public class MainActivity
+     }
+ 
+ 
++    @Override
++    public boolean onCreateOptionsMenu(Menu menu) {
++        return true;
++    }
++
++
+     @Override
+     protected void onStart() {
+         super.onStart();
+@@ -243,6 +252,10 @@ public class MainActivity
+             case R.id.drawer_menu_groups:
+                 goToGroups();
+                 break;
++
++            case R.id.drawer_menu_hystoric:
++                goToHistoric();
++                break;
+         }
+         drawerLayout.closeDrawers();
+         return true;
+@@ -283,6 +296,13 @@ public class MainActivity
+                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+     }
+ 
++    private void goToHistoric() {
++        HistoricEvents fragment = new HistoricEvents();
++        // Insert the arguments
++        getSupportFragmentManager().beginTransaction()
++                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
++    }
++
+     public static String cleanEmail(String string) {
+         return string.replace(".", ",");
+     }
+diff --git a/app/src/main/java/com/sdm/trytomeet/fragments/Events/EventListFragment.java b/app/src/main/java/com/sdm/trytomeet/fragments/Events/EventListFragment.java
+index 9d2dacd..d85dc2a 100644
+--- a/app/src/main/java/com/sdm/trytomeet/fragments/Events/EventListFragment.java
++++ b/app/src/main/java/com/sdm/trytomeet/fragments/Events/EventListFragment.java
+@@ -109,7 +109,7 @@ public class EventListFragment extends Fragment {
+     public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()){
+             case R.id.alertTitle:
+-                nothing();
++                goToPendingEvents();
+                 break;
+         }
+         return super.onOptionsItemSelected(item);
+@@ -126,12 +126,15 @@ public class EventListFragment extends Fragment {
+                 .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+     }
+ 
+-    public void nothing() {
+-        Toast toast1 =
+-                Toast.makeText(getContext(),
+-                        "No hay notificaciones", Toast.LENGTH_SHORT);
++    public void goToPendingEvents() {
++        PendingEvents fragment = new PendingEvents();
+ 
+-        toast1.show();
++        // Insert the arguments
++        Bundle args = new Bundle();
++        args.putString("user_id", user_id);
++        fragment.setArguments(args);
++        getActivity().getSupportFragmentManager().beginTransaction()
++                .replace(R.id.frameLayout, fragment).commit();
+     }
+ 
+     public void goToEvent(String event_id){
+@@ -154,7 +157,9 @@ public class EventListFragment extends Fragment {
+     }
+ 
+     public void addEventToList(String event_id, Event e){
+-        events.add(new EventWithKey(event_id,e));
+-        adapter.notifyDataSetChanged();
++        if(e.state.equals("CONFIRMED") || e.state.equals("VOTED")) {
++            events.add(new EventWithKey(event_id,e));
++            adapter.notifyDataSetChanged();
++        }
+     }
+ }
+diff --git a/app/src/main/java/com/sdm/trytomeet/fragments/Events/HistoricEvents.java b/app/src/main/java/com/sdm/trytomeet/fragments/Events/HistoricEvents.java
+new file mode 100644
+index 0000000..a911c8c
+--- /dev/null
++++ b/app/src/main/java/com/sdm/trytomeet/fragments/Events/HistoricEvents.java
+@@ -0,0 +1,117 @@
++package com.sdm.trytomeet.fragments.Events;
++
++import android.content.SharedPreferences;
++import android.os.Bundle;
++import android.preference.PreferenceManager;
++import android.support.design.widget.FloatingActionButton;
++import android.support.v4.app.Fragment;
++import android.support.v7.widget.LinearLayoutManager;
++import android.support.v7.widget.RecyclerView;
++import android.view.LayoutInflater;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.Button;
++import android.widget.Toast;
++
++import com.sdm.trytomeet.POJO.Event;
++import com.sdm.trytomeet.POJO.EventWithKey;
++import com.sdm.trytomeet.R;
++import com.sdm.trytomeet.adapters.EventListAdapter;
++import com.sdm.trytomeet.persistence.server.EventFirebaseService;
++
++import java.util.ArrayList;
++import java.util.List;
++
++// TODO: Redireccionar a evento en el click.
++
++public class HistoricEvents extends EventListFragment{
++
++    private View parent;
++    private String user_id;
++
++    private List<EventWithKey> events;
++
++    private RecyclerView recyclerView;
++    private EventListAdapter adapter;
++    private RecyclerView.LayoutManager llm;
++
++
++    // TODO: Remove this.
++    private Button pruebas;
++
++
++    public HistoricEvents() {
++        // Required empty public constructor
++    }
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setHasOptionsMenu(true);
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++        // Inflate the layout for this fragment
++        parent = inflater.inflate(R.layout.fragment_pending_events, container, false);
++        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
++        user_id = prefs.getString("account_id", "");
++
++        recyclerView = parent.findViewById(R.id.recyclerView);
++
++        llm = new LinearLayoutManager(getContext());
++        recyclerView.setLayoutManager(llm);
++
++        events = new ArrayList<EventWithKey>();
++
++        //CardView evento = parent.findViewById(R.id.ev);
++
++        //pruebas = parent.findViewById(R.id.pruebas);
++
++        /*pruebas.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                goToEvent();
++            }
++        });*/
++        initializeAdapter();
++
++        EventFirebaseService.getUserEvents(user_id,this);
++
++        return parent;
++
++    }
++
++    @Override
++    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
++        super.onCreateOptionsMenu(menu, inflater);
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        return super.onOptionsItemSelected(item);
++    }
++
++
++
++
++
++
++    private void initializeAdapter(){
++        adapter = new EventListAdapter(events, this);
++        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
++        recyclerView.setAdapter(adapter);
++    }
++
++
++    public void addEventToList(String event_id, Event e){
++        if (e.state.equals("CANCELLED") || e.state.equals("DONE")){
++            events.add(new EventWithKey(event_id,e));
++            adapter.notifyDataSetChanged();
++        }
++    }
++}
+diff --git a/app/src/main/java/com/sdm/trytomeet/fragments/Events/PendingEvents.java b/app/src/main/java/com/sdm/trytomeet/fragments/Events/PendingEvents.java
+new file mode 100644
+index 0000000..5027ee0
+--- /dev/null
++++ b/app/src/main/java/com/sdm/trytomeet/fragments/Events/PendingEvents.java
+@@ -0,0 +1,128 @@
++package com.sdm.trytomeet.fragments.Events;
++
++
++
++import android.content.SharedPreferences;
++import android.os.Bundle;
++import android.preference.PreferenceManager;
++import android.support.design.widget.FloatingActionButton;
++import android.support.v4.app.Fragment;
++import android.support.v7.widget.LinearLayoutManager;
++import android.support.v7.widget.RecyclerView;
++import android.view.LayoutInflater;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.Button;
++import android.widget.Toast;
++
++import com.sdm.trytomeet.POJO.Event;
++import com.sdm.trytomeet.POJO.EventWithKey;
++import com.sdm.trytomeet.R;
++import com.sdm.trytomeet.adapters.EventListAdapter;
++import com.sdm.trytomeet.persistence.server.EventFirebaseService;
++
++import java.util.ArrayList;
++import java.util.List;
++
++// TODO: Hacer visible botón de añadir evento.
++// TODO: Redireccionar a evento en el click.
++public class PendingEvents extends EventListFragment  {
++
++    private View parent;
++    private String user_id;
++
++    private List<EventWithKey> events;
++
++    private RecyclerView recyclerView;
++    private EventListAdapter adapter;
++    private RecyclerView.LayoutManager llm;
++
++
++    // TODO: Remove this.
++    private Button pruebas;
++
++
++    public PendingEvents() {
++        // Required empty public constructor
++    }
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setHasOptionsMenu(true);
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++        // Inflate the layout for this fragment
++        parent = inflater.inflate(R.layout.fragment_pending_events, container, false);
++        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
++        user_id = prefs.getString("account_id", "");
++
++        recyclerView = parent.findViewById(R.id.recyclerView);
++
++        llm = new LinearLayoutManager(getContext());
++        recyclerView.setLayoutManager(llm);
++
++        events = new ArrayList<EventWithKey>();
++
++        //CardView evento = parent.findViewById(R.id.ev);
++
++        //pruebas = parent.findViewById(R.id.pruebas);
++
++        /*pruebas.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                goToEvent();
++            }
++        });*/
++        initializeAdapter();
++
++        EventFirebaseService.getUserEvents(user_id,this);
++
++        return parent;
++
++    }
++
++    @Override
++    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
++        super.onCreateOptionsMenu(menu, inflater);
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        return super.onOptionsItemSelected(item);
++    }
++
++
++    private void goToCreateEvent() {
++        CreateEventFragment fragment = new CreateEventFragment();
++        // Insert the arguments
++        Bundle args = new Bundle();
++        args.putString("user_id", user_id);
++        fragment.setArguments(args);
++        getFragmentManager().beginTransaction()
++                .replace(R.id.frameLayout, fragment).commit();
++    }
++
++
++
++
++    private void initializeAdapter(){
++        adapter = new EventListAdapter(events, this);
++        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
++        recyclerView.setAdapter(adapter);
++    }
++
++
++    public void addEventToList(String event_id, Event e){
++        if(e.state.equals("PENDING") || !e.creator_id.equals(user_id)) {
++            events.add(new EventWithKey(event_id,e));
++            adapter.notifyDataSetChanged();
++        }
++    }
++}
+diff --git a/app/src/main/java/com/sdm/trytomeet/persistence/server/EventFirebaseService.java b/app/src/main/java/com/sdm/trytomeet/persistence/server/EventFirebaseService.java
+index f31c75a..c2b4a45 100644
+--- a/app/src/main/java/com/sdm/trytomeet/persistence/server/EventFirebaseService.java
++++ b/app/src/main/java/com/sdm/trytomeet/persistence/server/EventFirebaseService.java
+@@ -30,8 +30,12 @@ import com.sdm.trytomeet.activities.MainActivity;
+ import com.sdm.trytomeet.fragments.Events.EventFragment;
+ import com.sdm.trytomeet.fragments.Events.EventListFragment;
+ import com.sdm.trytomeet.notifications.NotificactionListener;
++import com.sdm.trytomeet.fragments.Events.HistoricEventListFragment;
++import com.sdm.trytomeet.fragments.Events.PendingEvents;
+ 
+ import java.util.ArrayList;
++import java.util.Calendar;
++import java.util.GregorianCalendar;
+ import java.util.Iterator;
+ import java.util.List;
+ 
+@@ -294,30 +298,31 @@ public class EventFirebaseService extends FirebaseService{
+ 
+     }
+ 
+-    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment){
++    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment) {
+         getDatabaseReference().child("taking_part").child(user_id)
+-        .addValueEventListener(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+-                for (String event_id: takingPart.invitedTo.keySet()) {
+-                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+-                        @Override
+-                        public void onDataChange(DataSnapshot dataSnapshot) {
+-                            Event e = dataSnapshot.getValue(Event.class);
+-
+-                            // In this way, deleted events are added to the list.
+-                            if(e != null) eventListFragment.addEventToList(dataSnapshot.getKey(),e);
+-                        }
++                .addValueEventListener(new ValueEventListener() {
++                    @Override
++                    public void onDataChange(DataSnapshot dataSnapshot) {
++                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
++                        for (String event_id : takingPart.invitedTo.keySet()) {
++                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
++                                @Override
++                                public void onDataChange(DataSnapshot dataSnapshot) {
++                                    Event e = dataSnapshot.getValue(Event.class);
++
++                                    // In this way, deleted events are added to the list.
++                                    if (e != null)
++                                        eventListFragment.addEventToList(dataSnapshot.getKey(), e);
++                                }
++
++                                @Override
++                                public void onCancelled(DatabaseError databaseError) {
++                                    Log.e("Error", "Something bad");
++                                }
++                            });
+ 
+-                        @Override
+-                        public void onCancelled(DatabaseError databaseError) {
+-                            Log.e("Error", "Something bad");
+                         }
+-                    });
+-
+-                }
+-            }
++                    }
+ 
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+@@ -326,6 +331,8 @@ public class EventFirebaseService extends FirebaseService{
+         });
+     }
+ 
++    
++
+     public static void deleteTakingPart(String user_id, String event_id) {
+         getDatabaseReference().child("taking_part").child(user_id).child("invitedTo").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+@@ -363,4 +370,6 @@ public class EventFirebaseService extends FirebaseService{
+             }
+         });
+     }
++
++
+ }
+diff --git a/app/src/main/res/layout/fragment_event_pending.xml b/app/src/main/res/layout/fragment_event_pending.xml
+new file mode 100644
+index 0000000..aedd456
+--- /dev/null
++++ b/app/src/main/res/layout/fragment_event_pending.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:gravity="top|center"
++    android:padding="5dp"
++    tools:context="com.sdm.trytomeet.fragments.Events.EventListFragment">
++
++
++</LinearLayout>
+diff --git a/app/src/main/res/layout/fragment_pending_events.xml b/app/src/main/res/layout/fragment_pending_events.xml
+new file mode 100644
+index 0000000..6b47708
+--- /dev/null
++++ b/app/src/main/res/layout/fragment_pending_events.xml
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:gravity="top|center"
++    android:orientation="vertical"
++    android:padding="5dp"
++    tools:context="com.sdm.trytomeet.fragments.Events.EventListFragment">
++
++    <android.support.v7.widget.RecyclerView
++        android:id="@+id/recyclerView"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:clipToPadding="false" />
++
++
++</LinearLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/menu/event_menu.xml b/app/src/main/res/menu/event_menu.xml
+index 3384288..5cddf00 100644
+--- a/app/src/main/res/menu/event_menu.xml
++++ b/app/src/main/res/menu/event_menu.xml
+@@ -1,10 +1,11 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <menu xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:android="http://schemas.android.com/apk/res/android">
+-        <item android:id="@+id/alertTitle"
+-            android:icon="@android:drawable/ic_dialog_alert"
+-            android:title="@string/alert"
++        <item
++            android:id="@+id/alertTitle"
++            android:icon="@android:drawable/ic_dialog_email"
+             android:orderInCategory="1"
++            android:title="@string/alert"
+             app:showAsAction="ifRoom" />
+ 
+ </menu>
+\ No newline at end of file
+diff --git a/app/src/main/res/menu/navigation_drawer_menu.xml b/app/src/main/res/menu/navigation_drawer_menu.xml
+index 3e4c2b0..8677969 100644
+--- a/app/src/main/res/menu/navigation_drawer_menu.xml
++++ b/app/src/main/res/menu/navigation_drawer_menu.xml
+@@ -1,6 +1,13 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <menu xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
++
++    <item
++        android:id="@+id/drawer_menu_events"
++        android:icon="@android:drawable/ic_menu_my_calendar"
++        android:title="@string/drawer_menu_event"
++        app:showAsAction="always" />
++
+     <item
+         android:id="@+id/drawer_menu_profile"
+         android:icon="@drawable/ic_action_name"
+@@ -28,11 +35,10 @@
+         android:title="@string/groups_title"
+         app:showAsAction="always" />
+ 
+-
+     <item
+-        android:id="@+id/drawer_menu_events"
+-        android:icon="@android:drawable/ic_menu_my_calendar"
+-        android:title="@string/drawer_menu_event"
++        android:id="@+id/drawer_menu_hystoric"
++        android:icon="@android:drawable/ic_menu_view"
++        android:title="@string/drawer_menu_historic"
+         app:showAsAction="always" />
+ 
+     <item
+@@ -41,4 +47,6 @@
+         android:title="@string/log_out"
+         app:showAsAction="always" />
+ 
++
++
+ </menu>
+\ No newline at end of file
