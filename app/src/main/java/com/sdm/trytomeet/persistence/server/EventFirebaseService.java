@@ -296,24 +296,26 @@ public class EventFirebaseService extends FirebaseService{
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        for (String event_id : takingPart.invitedTo.keySet()) {
-                            // We check that the event state is PENDING, the user has to vote there.
-                            if(takingPart.invitedTo.get(event_id).state.equals(InvitedTo.VOTED)) {
-                                getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Event e = dataSnapshot.getValue(Event.class);
+                        if(takingPart!=null) {
+                            for (String event_id : takingPart.invitedTo.keySet()) {
+                                // We check that the event state is PENDING, the user has to vote there.
+                                if (takingPart.invitedTo.get(event_id).state.equals(InvitedTo.VOTED)) {
+                                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Event e = dataSnapshot.getValue(Event.class);
 
-                                        // In this way, deleted events are added to the list.
-                                        if (e != null)
-                                            eventListFragment.addEventToList(dataSnapshot.getKey(), e);
-                                    }
+                                            // In this way, deleted events are added to the list.
+                                            if (e != null)
+                                                eventListFragment.addEventToList(dataSnapshot.getKey(), e);
+                                        }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.e("Error", "Something bad");
-                                    }
-                                });
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.e("Error", "Something bad");
+                                        }
+                                    });
+                                }
                             }
                         }
                     }
