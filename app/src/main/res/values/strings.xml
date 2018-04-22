@@ -37,6 +37,7 @@
     <string name="create_event_participants_title">Participants</string>
     <string name="create_event_add_a_participant_button">Add a participant</string>
     <string name="create_event_friend_title">Friend</string>
+    <string name="create_event_image">Image</string>
     <string name="create_event_add_a_friend_button">Add a friend</string>
     <string name="create_event_add_a_group_button">Add a group</string>
     <string name="create_event_missing_title">A title is needed</string>

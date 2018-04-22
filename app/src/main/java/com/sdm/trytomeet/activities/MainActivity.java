@@ -326,4 +326,9 @@ public class MainActivity
     public void setActionBarTitle(String title){
         getSupportActionBar().setTitle(title);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

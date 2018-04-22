@@ -41,8 +41,8 @@
 
                         <com.sdm.trytomeet.components.CircularImageView
                             android:id="@+id/image"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
+                            android:layout_width="@dimen/event_photo"
+                            android:layout_height="@dimen/event_photo"
                             android:src="@drawable/common_full_open_on_phone" />
 
                         <LinearLayout
@@ -93,7 +93,7 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
                                 <EditText
