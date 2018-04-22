@@ -58,7 +58,7 @@ public class MainActivity
     private String name;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private Intent service;
+    public static Intent service;
 
     private User actualUser;
 
@@ -179,14 +179,16 @@ public class MainActivity
         return true;
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
 
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         service = new Intent(this, NotificationService.class);
-        this.startService(service);
+
+        if(prefs.getBoolean("notificactions",true)){
+        this.startService(service);}
+
         if(accountFacebook!=null) { id=accountFacebook.getUid(); name=accountFacebook.getDisplayName(); email=accountFacebook.getEmail();}
         else if(accountGoogle!=null) {id= accountGoogle.getId(); name=accountGoogle.getDisplayName(); email=accountGoogle.getEmail();}
 

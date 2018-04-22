@@ -118,4 +118,6 @@
     <string name="event_confirmate_notification_text">El evento %1$s ha sido confirmado</string>
     <string name="comment_added_notification_text">El usuario %1$s ha comentado en el evento %2$s</string>
     <string name="image_uploaded_notification_text">El usuario %1$s ha subido una imágen al evento %2$s</string>
+    <string name="enable_notifications">Activar notificaciones</string>
+
 </resources>

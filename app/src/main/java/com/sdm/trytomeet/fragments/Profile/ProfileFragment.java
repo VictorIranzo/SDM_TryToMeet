@@ -20,9 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class ProfileFragment extends Fragment {
 
@@ -41,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private Button cancelButton;
     private Button okButton;
     private EditText editName;
+    ToggleButton toggle;
 
     private String currentImage;
 
@@ -54,10 +57,15 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parent = inflater.inflate(R.layout.frg_profile, container, false);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 
         profileImage = parent.findViewById(R.id.circleImage);
+        toggle= (ToggleButton) parent.findViewById(R.id.toggleButton);
+
+        if(prefs.getBoolean("notifications",true))
+            toggle.setChecked(true);
+        else toggle.setChecked(false);
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +93,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
         cancelButton = parent.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +107,21 @@ public class ProfileFragment extends Fragment {
 
         UserFirebaseService.getUserFromProfile(user_id,this);
 
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putBoolean("notifications",true);
+                    edit.commit();
+                    getActivity().startService(MainActivity.service);
+                } else {
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putBoolean("notifications",false);
+                    edit.commit();
+                    getActivity().stopService(MainActivity.service);
+                }
+            }
+        });
         return parent;
     }
 

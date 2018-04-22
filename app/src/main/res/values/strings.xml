@@ -96,6 +96,8 @@
     <string name="comment_added_notification_text">The user %1$s has commented on the event %2$s</string>
     <string name="image_uploaded_notification_title">A new image has been uploaded</string>
     <string name="image_uploaded_notification_text">The user %1$s has uploaded an image to the event %2$s</string>
+    <string name="enable_notifications">Enable notifications</string>
+
 
     <!-->Map activity<-->
     <string name="title_activity_maps">Current Place Details</string>
