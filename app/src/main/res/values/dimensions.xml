@@ -8,6 +8,7 @@
     <dimen name="list_row_site_description_text_size">24sp</dimen>
     <dimen name="list_row_site_name_text_size">18sp</dimen>
 
+    <dimen name="event_photo">150dp</dimen>
 
     <!--> Card view events <-->
     <dimen name="card_view_title">30sp</dimen>

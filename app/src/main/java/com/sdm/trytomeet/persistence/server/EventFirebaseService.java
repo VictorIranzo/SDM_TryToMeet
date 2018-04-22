@@ -31,9 +31,22 @@ import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{
 
-    public static String addEvent(Event event){
-        String key = getDatabaseReference().child("events").push().getKey();
-        getDatabaseReference().child("events").child(key).setValue(event);
+    private static ArrayList<Event> name = new ArrayList<Event>();
+    final String names = new String();
+    final java.util.Date d = new java.util.Date();
+
+
+    public static String addEvent(final Event event, Uri image){
+        final String key = getDatabaseReference().child("events").push().getKey();
+
+        StorageReference image_key = getStorageReference().child("images").child(image.getLastPathSegment());
+        image_key.putFile(image).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                event.image = taskSnapshot.getDownloadUrl().toString();
+                getDatabaseReference().child("events").child(key).setValue(event);
+            }
+        });
 
         return key;
     }
@@ -287,7 +300,7 @@ public class EventFirebaseService extends FirebaseService{
 
     public static void getUserEvents(final String user_id, final EventListFragment eventListFragment) {
         getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);

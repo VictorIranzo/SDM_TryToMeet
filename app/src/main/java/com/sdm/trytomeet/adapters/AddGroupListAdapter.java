@@ -67,36 +67,6 @@ public class AddGroupListAdapter extends ArrayAdapter<Group> implements Filterab
                 }
             }
         });
-        final ListView listView = ((ListView) convertView.findViewById(R.id.list_view));
-
-        // Populate the group's member list
-        final ArrayList<User> members = new ArrayList<>();
-        final MemberListAdapter adapter = new MemberListAdapter(getContext(), R.id.list_view, members, false);
-        listView.setAdapter(adapter);
-        for(String member : group.members){
-            FirebaseDatabase.getInstance().getReference().child("users").child(member)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    User user = dataSnapshot.getValue(User.class);
-                    members.add(user);
-                    adapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        ((ImageButton) convertView.findViewById(R.id.dropdown_button)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(listView.getVisibility() == View.GONE) listView.setVisibility(View.VISIBLE);
-                else listView.setVisibility(View.GONE);
-            }
-        });
 
         return convertView;
     }
