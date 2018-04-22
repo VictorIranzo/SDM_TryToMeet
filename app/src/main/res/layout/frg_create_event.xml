@@ -34,100 +34,111 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <TextView
+                        <ScrollView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/create_event_title"
-                            android:textSize="@dimen/default_small_text_size_in_row" />
-
-                        <EditText
-                            android:id="@+id/create_event_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/create_event_title_hint"
-                            android:inputType="textPersonName" />
-
-                        <EditText
-                            android:id="@+id/create_event_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/create_event_description_hint"
-                            android:inputType="textMultiLine" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <Button
-                                android:id="@+id/button_find_place"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/create_event_find_place_button"
-                                android:textColor="@android:color/white"
-                                android:textSize="@dimen/default_button_size"
-                                android:theme="@style/AppTheme.Button" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layoutSelectedPlace"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
+                            android:layout_height="match_parent">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="horizontal">
-
-                                <ImageButton
-                                    android:id="@+id/button_favorite_site"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@android:drawable/btn_star_big_on"
-                                    android:visibility="gone" />
+                                android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/selectedPlace"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="AQUI IRA EL NOMBRE DEL SITIO" />
+                                    android:gravity="center"
+                                    android:text="@string/create_event_title"
+                                    android:textSize="@dimen/default_small_text_size_in_row" />
 
+                                <EditText
+                                    android:id="@+id/create_event_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/create_event_title_hint"
+                                    android:inputType="textPersonName" />
+
+                                <EditText
+                                    android:id="@+id/create_event_description"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/create_event_description_hint"
+                                    android:inputType="textMultiLine" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <Button
+                                        android:id="@+id/button_find_place"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/create_event_find_place_button"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="@dimen/default_button_size"
+                                        android:theme="@style/AppTheme.Button" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/layoutSelectedPlace"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal">
+
+                                        <ImageButton
+                                            android:id="@+id/button_favorite_site"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@android:drawable/btn_star_big_on"
+                                            android:visibility="gone" />
+
+                                        <TextView
+                                            android:id="@+id/selectedPlace"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="AQUI IRA EL NOMBRE DEL SITIO" />
+
+                                    </LinearLayout>
+
+
+
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@android:color/darker_gray" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="vertical"
+                                    android:gravity="center"
+                                    android:layout_height="wrap_content">
+                                    <TextView
+                                        android:id="@+id/textView6"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="@string/create_event_image"
+                                        android:textSize="@dimen/default_small_text_size_in_row" />
+
+                                    <com.sdm.trytomeet.components.CircularImageView
+                                        android:id="@+id/image"
+                                        android:layout_width="@dimen/event_photo"
+                                        android:layout_height="@dimen/event_photo"
+                                        android:src="@drawable/pajaro" />
+                                </LinearLayout>
                             </LinearLayout>
+                        </ScrollView>
 
-
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@android:color/darker_gray" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:id="@+id/textView6"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/create_event_image"
-                                android:textSize="@dimen/default_small_text_size_in_row" />
-
-                            <com.sdm.trytomeet.components.CircularImageView
-                                android:id="@+id/image"
-                                android:layout_width="@dimen/event_photo"
-                                android:layout_height="@dimen/event_photo"
-                                android:src="@drawable/pajaro" />
-                        </LinearLayout>
 
                     </LinearLayout>
 

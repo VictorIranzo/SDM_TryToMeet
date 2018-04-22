@@ -32,7 +32,7 @@ public class FavoriteSitesFragment extends Fragment {
     private View parent;
     private String user_id;
 
-    public ArrayList<HashMap<String,String>> sitesList = new ArrayList<>();
+    public ArrayList<HashMap<String,String>> sitesList;
     public ListView listViewSites;
     public SimpleAdapter adapter;
 
@@ -56,6 +56,8 @@ public class FavoriteSitesFragment extends Fragment {
         parent = inflater.inflate(R.layout.frg_favorite_sites, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
+
+        sitesList = new ArrayList<HashMap<String,String>>();
 
         listViewSites = parent.findViewById(R.id.list_sites);
         adapter = new SimpleAdapter(getActivity(), sitesList, R.layout.row_favorite_sites,

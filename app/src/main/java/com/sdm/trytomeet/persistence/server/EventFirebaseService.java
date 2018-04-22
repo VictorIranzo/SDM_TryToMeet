@@ -300,39 +300,36 @@ public class EventFirebaseService extends FirebaseService{
 
     public static void getUserEvents(final String user_id, final EventListFragment eventListFragment) {
         getDatabaseReference().child("taking_part").child(user_id)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        if(takingPart!=null) {
-                            for (String event_id : takingPart.invitedTo.keySet()) {
-                                // We check that the event state is PENDING, the user has to vote there.
-                                if (takingPart.invitedTo.get(event_id).state.equals(InvitedTo.VOTED)) {
-                                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            Event e = dataSnapshot.getValue(Event.class);
-                                            // In this way, deleted events are added to the list.
-                                            if (e != null)
-                                                eventListFragment.addEventToList(dataSnapshot.getKey(), e);
-                                        }
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            Log.e("Error", "Something bad");
-                                        }
-                                    });
-                                }
-                            }
-                        }
                     }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
+
+
+
 
     public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment) {
         getDatabaseReference().child("taking_part").child(user_id)

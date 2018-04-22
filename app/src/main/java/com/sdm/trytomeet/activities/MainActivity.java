@@ -61,6 +61,7 @@ public class MainActivity
     public static Intent service;
 
     private User actualUser;
+    private int action;
 
     private List<Event> events;
     private List<Event> evento;
@@ -104,8 +105,11 @@ public class MainActivity
         // Associates the toogle to receive events from the drawer.
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*initializeData();
-        initializeAdapter();*/
+        action = getIntent().getIntExtra("action", 0); // Used to behave properly to the notifications
+
+        if(action == 0 && getSupportFragmentManager().getBackStackEntryCount() == 0){
+            goToEventList();
+        }
     }
 
     private void answer_to_notification(int action) {
@@ -196,13 +200,8 @@ public class MainActivity
         UserFirebaseService.addUser(id,name, this);
         UserFirebaseService.registerEmail(id, cleanEmail(email));
 
-        int action = getIntent().getIntExtra("action", 0); // Used to behave properly to the notifications
+
         if(action != 0) answer_to_notification(action); // If coming from notification
-        else{ // Default fragment
-            EventListFragment fragment = new EventListFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frameLayout, fragment, "event_list").commit();
-        }
     }
 
     @Override
@@ -280,45 +279,52 @@ public class MainActivity
     }
 
     private void goToGroups() {
-        GroupsFragment fragment = new GroupsFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("groups");
+        if(fragment == null) fragment = new GroupsFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("groups").commit();
     }
     private void goToFriends() {
-        FriendsFragment fragment = new FriendsFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("friends");
+        if(fragment == null) fragment = new FriendsFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("friends").commit();
     }
 
     private void goToCreateEvent() {
-        CreateEventFragment fragment = new CreateEventFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("create_events");
+        if(fragment == null) fragment = new CreateEventFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("create_events").commit();
     }
 
     private void goToFavoriteSites() {
-        FavoriteSitesFragment fragment = new FavoriteSitesFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("favorite");
+        if(fragment == null) fragment = new FavoriteSitesFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("favorite").commit();
     }
 
     private void goToProfile() {
-        ProfileFragment fragment = new ProfileFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("profile");
+        if(fragment == null) fragment = new ProfileFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("profile").commit();
     }
 
     private void goToEventList() {
-        EventListFragment fragment = new EventListFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("event_list");
+        if(fragment == null) fragment = new EventListFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frameLayout, fragment, "event_list").addToBackStack(null).commit();
     }
 
     private void goToHistoric() {
-        HistoricEventListFragment fragment = new HistoricEventListFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("historic");
+        if(fragment == null) fragment = new HistoricEventListFragment();
         // Insert the arguments
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment).addToBackStack("historic").commit();
     }
 
     public static String cleanEmail(String string) {

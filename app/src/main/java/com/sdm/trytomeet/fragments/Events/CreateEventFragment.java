@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -169,6 +170,15 @@ public class CreateEventFragment extends Fragment {
                 setImage();
             }
         });
+
+        if(savedInstanceState != null){
+            image_path = savedInstanceState.getParcelable("image");
+            image.setImageURI(image_path);
+            dates.addAll((ArrayList<Date>) savedInstanceState.getSerializable("dates"));
+            date_adapter.notifyDataSetChanged();
+            participants.addAll((ArrayList<User>) savedInstanceState.getSerializable("participants"));
+            participant_adapter.notifyDataSetChanged();
+        }
 
         return parent;
     }
@@ -371,7 +381,8 @@ public class CreateEventFragment extends Fragment {
     }
 
     public void setImage(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, GET_FROM_GALLERY);
     }
 
@@ -391,5 +402,13 @@ public class CreateEventFragment extends Fragment {
             }
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("image", image_path);
+        outState.putSerializable("dates", dates);
+        outState.putSerializable("participants", participants);
     }
 }
