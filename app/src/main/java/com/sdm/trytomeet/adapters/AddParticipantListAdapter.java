@@ -73,7 +73,7 @@ public class AddParticipantListAdapter extends ArrayAdapter<User> implements Fil
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View_external_user external_user = View_external_user.newInstance(user);
+                View_external_user external_user = View_external_user.newInstance(user, false);
                 external_user.show(((FragmentActivity)context).getSupportFragmentManager(), "dialog");
             }
         });

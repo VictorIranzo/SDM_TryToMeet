@@ -62,7 +62,7 @@ public class FriendsFragment extends Fragment {
         user_id = prefs.getString("account_id","");
 
         listViewFriends = parent.findViewById(R.id.list_Members);
-        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,friends);
+        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,friends, true);
         listViewFriends.setAdapter(adapter);
 
         progressBar = ((ProgressBar)parent.findViewById(R.id.progressBarMembers));
