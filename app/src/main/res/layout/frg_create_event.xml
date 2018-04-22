@@ -46,7 +46,7 @@
 
                 <Button
                     android:id="@+id/button_find_place"
-                    android:background="@drawable/my_button"
+                    android:theme="@style/AppTheme.Button"
                     android:textColor="@android:color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
 
             <Button
                 android:id="@+id/button_add_date"
-                android:background="@drawable/my_button"
+                android:theme="@style/AppTheme.Button"
                 android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,14 +136,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:background="@drawable/my_button"
+                android:theme="@style/AppTheme.Button"
                 android:text="@string/create_event_add_a_participant_button"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/default_button_size" />
 
             <Button
                 android:id="@+id/button_add_group"
-                android:background="@drawable/my_button"
+                android:theme="@style/AppTheme.Button"
                 android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

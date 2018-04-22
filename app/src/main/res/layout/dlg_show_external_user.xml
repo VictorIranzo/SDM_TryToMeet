@@ -28,7 +28,7 @@
     <Button
         android:id="@+id/add_as_a_friend"
         android:layout_width="match_parent"
-        android:background="@drawable/my_button"
+        android:theme="@style/AppTheme.Button"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
@@ -38,7 +38,7 @@
 
     <Button
         android:id="@+id/remove_friend"
-        android:background="@drawable/my_button"
+        android:theme="@style/AppTheme.Button"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

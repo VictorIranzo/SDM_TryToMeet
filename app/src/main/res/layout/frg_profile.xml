@@ -65,7 +65,7 @@
 
             <Button
                 android:id="@+id/button_cancel"
-                android:background="@drawable/my_button"
+                android:theme="@style/AppTheme.Button"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
 
             <Button
                 android:id="@+id/button_ok"
-                android:background="@drawable/my_button"
+                android:theme="@style/AppTheme.Button"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,15 +85,15 @@
 
     <Button
         android:id="@+id/button_edit_name"
-        android:background="@drawable/my_button"
-        android:textColor="@android:color/white"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:text="@string/edit"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/default_button_size"
+        android:theme="@style/AppTheme.Button"
         app:layout_constraintBottom_toTopOf="@+id/editNamePanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
