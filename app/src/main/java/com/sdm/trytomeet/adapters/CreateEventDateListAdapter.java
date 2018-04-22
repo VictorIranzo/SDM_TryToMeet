@@ -34,7 +34,7 @@ public class CreateEventDateListAdapter extends ArrayAdapter<Date>{
     public View getView(final int position, View convertView, ViewGroup parent){
         if(convertView == null){
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.create_event_date_layout, null);
+                    .inflate(R.layout.row_create_event_date_added, null);
         }
         final Date date = data.get(position);
         ((TextView) convertView.findViewById(R.id.date_text)).setText(getDateText(date));

@@ -72,7 +72,7 @@ public class AddParticipantFragmentDialog extends DialogFragment {
                 return false;
             }
         });
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_participant_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_participant, null);
 
         // We configure the list view
         my_friends = new ArrayList<>();

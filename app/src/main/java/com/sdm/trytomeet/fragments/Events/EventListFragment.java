@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
@@ -59,7 +57,7 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_event_list, container, false);
+        parent = inflater.inflate(R.layout.frg_event_list, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 

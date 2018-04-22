@@ -17,12 +17,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.sdm.trytomeet.POJO.Friends;
 import com.sdm.trytomeet.POJO.Group;
-import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.AddGroupListAdapter;
-import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
 
 import java.util.ArrayList;
 
@@ -73,7 +70,7 @@ public class AddGroupFragmentDialog extends DialogFragment {
                 return false;
             }
         });
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_group_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_group, null);
 
         // We configure the list view
         my_groups = new ArrayList<>();

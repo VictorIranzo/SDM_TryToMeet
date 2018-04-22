@@ -38,7 +38,7 @@ public class CreateEventParticipantListAdapter extends ArrayAdapter<User>{
     public View getView(final int position, View convertView, ViewGroup parent){
         if(convertView == null){
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.create_event_participant_layout, null);
+                    .inflate(R.layout.row_create_event_participant_added, null);
         }
         final User user = data.get(position);
         if(user.image != null){

@@ -1,15 +1,11 @@
 package com.sdm.trytomeet.fragments.Friends;
 
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,18 +21,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.POJO.Friends;
-import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
-import com.sdm.trytomeet.fragments.Groups.AddMemberFragmentDialog;
-import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.view.View.GONE;
 import static com.google.android.gms.internal.zzahn.runOnUiThread;
@@ -66,7 +57,7 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_members, container, false);
+        parent = inflater.inflate(R.layout.frg_members, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id","");
 

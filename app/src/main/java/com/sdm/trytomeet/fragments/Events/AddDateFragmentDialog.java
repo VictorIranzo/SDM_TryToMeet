@@ -51,7 +51,7 @@ public class AddDateFragmentDialog extends DialogFragment {
             }
         });
 
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_date_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_date, null);
 
         builder.setView(parent);
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){

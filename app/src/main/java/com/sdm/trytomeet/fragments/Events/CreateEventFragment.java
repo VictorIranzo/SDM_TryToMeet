@@ -28,7 +28,6 @@ import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
 import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
-import com.sdm.trytomeet.notifications.NotificactionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class CreateEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_create_event, container, false);
+        parent = inflater.inflate(R.layout.frg_create_event, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 

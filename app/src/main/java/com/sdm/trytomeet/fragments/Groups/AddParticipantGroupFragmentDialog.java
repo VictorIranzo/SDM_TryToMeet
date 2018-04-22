@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -72,7 +71,7 @@ public class AddParticipantGroupFragmentDialog extends DialogFragment {
                 return false;
             }
         });
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_participant_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_participant, null);
 
         // We configure the list view
         my_friends = new ArrayList<>();

@@ -87,7 +87,7 @@ public class AddMemberFragmentDialog extends DialogFragment {
                 return false;
             }
         });
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_remove_friend_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_friends_remove_friend, null);
 
         // We configure the list view
         my_friends = new ArrayList<>();

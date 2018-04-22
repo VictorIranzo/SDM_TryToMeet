@@ -56,7 +56,7 @@ public class AddFriendFragmentDialog  extends DialogFragment {
             }
         });
 
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_add_friend_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_add_friend, null);
         final EditText editText= parent.findViewById(R.id.editTextAddFriend);
         editText.setHint(getResources().getString(R.string.add_friend_filter));
         final TextView tv= parent.findViewById(R.id.textViewAddFriend);

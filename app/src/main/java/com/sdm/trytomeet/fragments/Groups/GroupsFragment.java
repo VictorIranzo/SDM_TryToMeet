@@ -47,7 +47,7 @@ public class GroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_groups, container, false);
+        parent = inflater.inflate(R.layout.frg_groups, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 

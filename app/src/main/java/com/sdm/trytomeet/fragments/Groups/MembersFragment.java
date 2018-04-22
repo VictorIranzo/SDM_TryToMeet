@@ -22,8 +22,6 @@ import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
-import com.sdm.trytomeet.fragments.Groups.AddMemberFragmentDialog;
-import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class MembersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_members, container, false);
+        parent = inflater.inflate(R.layout.frg_members, container, false);
         user_id = getArguments().getString("user_id");
         group_name = getArguments().getString("group_name");
         group_identifier = getArguments().getString("group_identifier");

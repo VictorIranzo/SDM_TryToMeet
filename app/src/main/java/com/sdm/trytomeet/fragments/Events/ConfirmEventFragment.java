@@ -1,6 +1,5 @@
 package com.sdm.trytomeet.fragments.Events;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,17 +8,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.adapters.AddParticipantListAdapter;
 import com.sdm.trytomeet.adapters.ConfirmDateListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Adrian on 09/04/2018.
@@ -77,7 +72,7 @@ public class ConfirmEventFragment extends DialogFragment {
         participants = getArguments().getStringArrayList("participants");
         event_name = getArguments().getString("event_name");
 
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_confirmate_date, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_event_confirm_date, null);
         final ConfirmDateListAdapter adapter = new ConfirmDateListAdapter(getContext(), R.id.listDates, dates,event_id,getFragmentManager(),this, user_id, participants, event_name);
         ListView list= parent.findViewById(R.id.listDates);
         list.setAdapter(adapter);

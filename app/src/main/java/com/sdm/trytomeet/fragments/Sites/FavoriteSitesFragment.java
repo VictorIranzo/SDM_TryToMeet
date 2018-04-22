@@ -52,12 +52,12 @@ public class FavoriteSitesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_favorite_sites, container, false);
+        parent = inflater.inflate(R.layout.frg_favorite_sites, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
 
         listViewSites = parent.findViewById(R.id.list_sites);
-        adapter = new SimpleAdapter(getActivity(), sitesList, R.layout.site_list_row,
+        adapter = new SimpleAdapter(getActivity(), sitesList, R.layout.row_favorite_sites,
                 new String[]{"name","description"}, new int[]{R.id.siteName, R.id.siteDescription});
         listViewSites.setAdapter(adapter);
 

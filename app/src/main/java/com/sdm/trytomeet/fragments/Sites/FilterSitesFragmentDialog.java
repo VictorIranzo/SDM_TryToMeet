@@ -62,7 +62,7 @@ public class FilterSitesFragmentDialog extends DialogFragment {
             }
         });
 
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_filter_site_dialog, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_place_filter_site, null);
 
         builder.setView(parent);
         builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){

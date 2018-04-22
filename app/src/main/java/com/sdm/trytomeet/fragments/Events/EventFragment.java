@@ -106,7 +106,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_event, container, false);
+        parent = inflater.inflate(R.layout.frg_event, container, false);
         user_id = getArguments().getString("user_id");
         event_id = getArguments().getString("event_id");
 

@@ -2,7 +2,6 @@ package com.sdm.trytomeet.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by adrymc96 on 30/03/18.
@@ -54,7 +52,7 @@ public class AddGroupListAdapter extends ArrayAdapter<Group> implements Filterab
     public View getView(final int position, View convertView, ViewGroup parent){
         if(convertView == null){
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.add_group_layout, null);
+                    .inflate(R.layout.row_create_event_add_group, null);
         }
         final Group group = to_show.get(position);
         ((TextView) convertView.findViewById(R.id.group_name)).setText(group.name);

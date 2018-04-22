@@ -1,6 +1,5 @@
 package com.sdm.trytomeet.adapters;
 
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
 
 import java.util.List;
@@ -28,7 +25,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_event_list_card, viewGroup, false);
         EventViewHolder holder = new EventViewHolder(v);
 
         return holder;

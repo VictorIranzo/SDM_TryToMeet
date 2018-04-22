@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.components.CircularImageView;
@@ -51,7 +50,7 @@ public class AddParticipantListAdapter extends ArrayAdapter<User> implements Fil
     public View getView(final int position, View convertView, ViewGroup parent){
         if(convertView == null){
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.add_participant_friend_layout, null);
+                    .inflate(R.layout.row_create_event_add_participant, null);
         }
         final User user = to_show.get(position);
         if(user.image != null){

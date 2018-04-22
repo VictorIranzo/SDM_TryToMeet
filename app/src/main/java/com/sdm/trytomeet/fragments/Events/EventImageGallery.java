@@ -1,36 +1,27 @@
 package com.sdm.trytomeet.fragments.Events;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 
-import com.firebase.client.FirebaseError;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.sdm.trytomeet.R;
-import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.adapters.GalleryAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class EventImageGallery extends Fragment {
 
@@ -59,7 +50,7 @@ public class EventImageGallery extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parent = inflater.inflate(R.layout.fragment_event_image_gallery, container, false);
+        parent = inflater.inflate(R.layout.frg_event_image_gallery, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         user_id = prefs.getString("account_id", "");
         event_id = getArguments().getString("event_id");

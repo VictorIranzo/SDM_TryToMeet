@@ -8,12 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.TimePicker;
 
 import com.bumptech.glide.Glide;
-import com.sdm.trytomeet.POJO.Date;
 import com.sdm.trytomeet.R;
 
 public class GalleyImageDialog extends DialogFragment {
@@ -52,7 +49,7 @@ public class GalleyImageDialog extends DialogFragment {
             }
         });
 
-        parent = getActivity().getLayoutInflater().inflate(R.layout.fragment_gallery_image, null);
+        parent = getActivity().getLayoutInflater().inflate(R.layout.view_event_image_gallery, null);
         ImageView imageView = parent.findViewById(R.id.image_gallery);
         Glide.with(parent).load(getArguments().getString("image")).into(imageView);
 

@@ -49,7 +49,6 @@ import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
@@ -108,7 +107,7 @@ public class FindPlaceFragment extends Fragment
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
-        parent = inflater.inflate(R.layout.fragment_add_place, container, false);
+        parent = inflater.inflate(R.layout.frg_create_event_add_place, container, false);
 
         // Construct a GeoDataClient.
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
@@ -237,7 +236,7 @@ public class FindPlaceFragment extends Fragment
                 if(marker.getTitle() == null) return null;
 
                 // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
+                View infoWindow = getLayoutInflater().inflate(R.layout.row_create_event_add_place_snippet,
                         (FrameLayout) getActivity().findViewById(R.id.map), false);
 
                 TextView title = ((TextView) infoWindow.findViewById(R.id.title));
