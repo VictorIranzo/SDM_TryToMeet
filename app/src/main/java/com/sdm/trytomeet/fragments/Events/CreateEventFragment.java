@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,6 +129,26 @@ public class CreateEventFragment extends Fragment {
         list_view_participant.setAdapter(participant_adapter);
 
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Create_an_event_title));
+
+        TabHost host = parent.findViewById(R.id.tabHost_Event);
+        host.setup();
+
+        TabHost.TabSpec spec1 = host.newTabSpec(getResources().getString(R.string.event_description));
+        spec1.setIndicator(getResources().getString(R.string.event_description));
+        spec1.setContent(R.id.tab1);
+        host.addTab(spec1);
+
+        TabHost.TabSpec spec2 = host.newTabSpec(getResources().getString(R.string.event_participants));
+        spec2.setIndicator(getResources().getString(R.string.event_dates));
+        spec2.setContent(R.id.tab2);
+        host.addTab(spec2);
+
+        TabHost.TabSpec spec3 = host.newTabSpec(getResources().getString(R.string.event_comments));
+        spec3.setIndicator(getResources().getString(R.string.event_participants));
+        spec3.setContent(R.id.tab3);
+        host.addTab(spec3);
+
+        host.setCurrentTab(0);
 
         return parent;
     }

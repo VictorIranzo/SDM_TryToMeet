@@ -198,12 +198,16 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/confirm_event"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/default_button_size"
                                 android:visibility="gone" />
 
                             <Button
                                 android:id="@+id/cancel_event"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/default_button_size"
                                 android:text="@string/cancel_event"
                                 android:visibility="gone" />
 

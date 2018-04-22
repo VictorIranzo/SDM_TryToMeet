@@ -1,152 +1,184 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:padding="15dp"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <TabHost
+        android:id="@+id/tabHost_Event"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/create_event_title"
-            android:textSize="@dimen/default_small_text_size_in_row" />
-
-        <EditText
-            android:id="@+id/create_event_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/create_event_title_hint"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/create_event_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/create_event_description_hint"
-            android:inputType="textMultiLine" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button_find_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_event_find_place_button"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/default_button_size"
-                android:theme="@style/AppTheme.Button" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutSelectedPlace"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <TabWidget
+                android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
+            </TabWidget>
 
-                <ImageButton
-                    android:id="@+id/button_favorite_site"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/btn_star_big_on"
-                    android:visibility="gone" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:id="@android:id/tabcontent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/selectedPlace"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="AQUI IRA EL NOMBRE DEL SITIO" />
-            </LinearLayout>
+                    <!--> Tab1 -->
+                    <LinearLayout
+                        android:id="@+id/tab1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/create_event_title"
+                            android:textSize="@dimen/default_small_text_size_in_row" />
+
+                        <EditText
+                            android:id="@+id/create_event_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/create_event_title_hint"
+                            android:inputType="textPersonName" />
+
+                        <EditText
+                            android:id="@+id/create_event_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/create_event_description_hint"
+                            android:inputType="textMultiLine" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/button_find_place"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/create_event_find_place_button"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/default_button_size"
+                                android:theme="@style/AppTheme.Button" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutSelectedPlace"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/button_favorite_site"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@android:drawable/btn_star_big_on"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/selectedPlace"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="AQUI IRA EL NOMBRE DEL SITIO" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--> Tab2 -->
+                    <LinearLayout
+                        android:id="@+id/tab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/button_add_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/create_event_add_a_date_button"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/default_button_size"
+                            android:theme="@style/AppTheme.Button" />
+
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/create_event_possible_dates_title"
+                            android:textSize="@dimen/default_small_text_size_in_row" />
+
+                        <ListView
+                            android:id="@+id/date_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fadeScrollbars="false" />
+
+                    </LinearLayout>
+
+                    <!--> Tab3 -->
+                    <LinearLayout
+                        android:id="@+id/tab3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/button_add_participant"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:text="@string/create_event_add_a_participant_button"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/default_button_size"
+                            android:theme="@style/AppTheme.Button" />
+
+                        <Button
+                            android:id="@+id/button_add_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/create_event_add_a_group_button"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/default_button_size"
+                            android:theme="@style/AppTheme.Button" />
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/create_event_participants_title"
+                            android:textSize="@dimen/default_small_text_size_in_row" />
+
+                        <ListView
+                            android:id="@+id/participant_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fadeScrollbars="false"
+                            android:isScrollContainer="false"
+                            android:minHeight="0dp" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/darker_gray" />
+    </TabHost>
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/create_event_possible_dates_title"
-            android:textSize="@dimen/default_small_text_size_in_row" />
-
-        <ListView
-            android:id="@+id/date_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fadeScrollbars="false" />
-
-        <Button
-            android:id="@+id/button_add_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_event_add_a_date_button"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/default_button_size"
-            android:theme="@style/AppTheme.Button" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@android:color/darker_gray" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/create_event_participants_title"
-            android:textSize="@dimen/default_small_text_size_in_row" />
-
-        <ListView
-            android:id="@+id/participant_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fadeScrollbars="false"
-            android:isScrollContainer="false"
-            android:minHeight="0dp" />
-
-        <Button
-            android:id="@+id/button_add_participant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/create_event_add_a_participant_button"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/default_button_size"
-            android:theme="@style/AppTheme.Button" />
-
-        <Button
-            android:id="@+id/button_add_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_event_add_a_group_button"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/default_button_size"
-            android:theme="@style/AppTheme.Button" />
-
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

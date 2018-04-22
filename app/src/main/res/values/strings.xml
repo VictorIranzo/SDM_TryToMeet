@@ -137,6 +137,7 @@
     <string name="sure_Leave_Event">Are you sure you want to leave this event?</string>
     <string name="event_description">Description</string>
     <string name="event_participants">Participants</string>
+    <string name="event_dates">Dates</string>
     <string name="event_comments">Comments</string>
     <string name="event_no_comments">There are no comments.</string>
 
