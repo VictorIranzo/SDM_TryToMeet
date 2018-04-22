@@ -7,6 +7,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
@@ -23,12 +24,14 @@ import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EventFirebaseService extends FirebaseService{
 
     private static ArrayList<Event> name = new ArrayList<Event>();
     final String names = new String();
+    final java.util.Date d = new java.util.Date();
 
 
     public static String addEvent(Event event){
@@ -357,5 +360,158 @@ public class EventFirebaseService extends FirebaseService{
         });
     }
 
+    public static void updatePastConfirmedEvents(final String user_id, final EventListFragment eventListFragment) {
+        getDatabaseReference().child("taking_part").child(user_id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final Calendar calendar = Calendar.getInstance();
+                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                        for (final String event_id : takingPart.invitedTo.keySet()) {
+                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Event e = dataSnapshot.getValue(Event.class);
+                                    String  evento = event_id;
+
+                                    if (e != null && e.state.equals("CONFIRMED")){
+                                        if (e.confirmed_date != null){
+                                            if (e.confirmed_date.year <= calendar.get(Calendar.YEAR)){
+                                                if (e.confirmed_date.year == calendar.get(Calendar.YEAR)){
+
+                                                    if(e.confirmed_date.month <= calendar.get(Calendar.MONTH)){
+                                                        e.state= Event.DONE;
+                                                        getDatabaseReference().child("events").child(evento).setValue(e);
+                                                    }
+                                                    else if (e.confirmed_date.month == (calendar.get(Calendar.MONTH)+1)){
+
+                                                        if(e.confirmed_date.day <= calendar.get(Calendar.DATE)){
+                                                            e.state= Event.DONE;
+                                                            getDatabaseReference().child("events").child(evento).setValue(e);
+                                                        }
+                                                        else if(e.confirmed_date.day == calendar.get(Calendar.DATE)){
+
+                                                            if (e.confirmed_date.hour < calendar.get(Calendar.HOUR)){
+                                                                e.state= Event.DONE;
+                                                                getDatabaseReference().child("events").child(evento).setValue(e);
+                                                            }
+                                                            else if (e.confirmed_date.hour == calendar.get(Calendar.HOUR)){
+
+                                                                if (e.confirmed_date.minute <= calendar.get(Calendar.MINUTE)){
+                                                                    e.state= Event.DONE;
+                                                                    getDatabaseReference().child("events").child(evento).setValue(e);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else if (e.confirmed_date.year < calendar.get(Calendar.YEAR)){
+                                                    e.state= Event.DONE;
+                                                    getDatabaseReference().child("events").child(evento).setValue(e);
+                                                }
+
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.e("Error", "Something bad");
+                                }
+                            });
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+                });
+    }
+
+    /*public static void updatePastPendingEvents(final String user_id, final EventListFragment eventListFragment) {
+        final String user = user_id;
+        final EventListFragment fragment = eventListFragment;
+        getDatabaseReference().child("taking_part").child(user_id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final Calendar calendar = Calendar.getInstance();
+                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                        for (final String event_id : takingPart.invitedTo.keySet()) {
+                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Event e = dataSnapshot.getValue(Event.class);
+                                    String  evento = event_id;
+
+                                    if (e != null && e.state.equals("PENDING")){
+                                        if (e.getPreviousPossibleDate() != null){
+                                            if (e.getPreviousPossibleDate().year <= calendar.get(Calendar.YEAR)){
+                                                if (e.getPreviousPossibleDate().year == calendar.get(Calendar.YEAR)){
+
+                                                    if(e.getPreviousPossibleDate().month <= calendar.get(Calendar.MONTH)){
+                                                        //e.removePastDate(e.getPreviousPossibleDate());
+                                                        String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
+                                                        getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
+                                                        updatePastPendingEvents(user, fragment);
+                                                    }
+                                                    else if (e.getPreviousPossibleDate().month == (calendar.get(Calendar.MONTH)+1)){
+
+                                                        if(e.getPreviousPossibleDate().day <= calendar.get(Calendar.DATE)){
+                                                            String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
+                                                            getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
+                                                            updatePastPendingEvents(user, fragment);
+                                                        }
+                                                        else if(e.getPreviousPossibleDate().day == calendar.get(Calendar.DATE)){
+
+                                                            if (e.getPreviousPossibleDate().hour < calendar.get(Calendar.HOUR)){
+                                                                String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
+                                                                getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
+                                                                updatePastPendingEvents(user, fragment);
+                                                            }
+                                                            else if (e.getPreviousPossibleDate().hour == calendar.get(Calendar.HOUR)){
+
+                                                                if (e.getPreviousPossibleDate().minute <= calendar.get(Calendar.MINUTE)){
+                                                                    String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
+                                                                    getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
+                                                                    updatePastPendingEvents(user, fragment);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else if (e.getPreviousPossibleDate().year < calendar.get(Calendar.YEAR)){
+                                                    String datePos = e.toStringPos(e.posPastDate(e.getPreviousPossibleDate()));
+                                                    getDatabaseReference().child("events").child(evento).child("possible_dates").child(datePos).removeValue();
+                                                    updatePastPendingEvents(user, fragment);
+                                                }
+
+
+                                            }
+                                        }
+                                        else getDatabaseReference().child("events").child(evento).removeValue();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.e("Error", "Something bad");
+                                }
+                            });
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+                });
+    }*/
 
 }

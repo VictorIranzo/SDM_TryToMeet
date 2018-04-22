@@ -80,6 +80,10 @@ public class EventListFragment extends Fragment {
                 goToEvent();
             }
         });*/
+        EventFirebaseService.updatePastConfirmedEvents(user_id,this);
+        //EventFirebaseService.updatePastPendingEvents(user_id,this);
+
+
         initializeAdapter();
 
         EventFirebaseService.getUserEvents(user_id,this);

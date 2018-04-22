@@ -27,7 +27,7 @@ import java.util.List;
 public class HistoricEventListFragment extends EventListFragment{
 
     public void addEventToList(String event_id, Event e){
-        if (e.state.equals(Event.CANCELED) || e.state.equals(Event.VOTED)){
+        if (e.state.equals(Event.CANCELED) || e.state.equals(Event.DONE)){
             events.add(new EventWithKey(event_id,e));
             adapter.notifyDataSetChanged();
         }
