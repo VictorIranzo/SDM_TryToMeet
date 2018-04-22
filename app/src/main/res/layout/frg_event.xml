@@ -245,24 +245,6 @@
                     android:orientation="vertical"
                     android:padding="15dp">
 
-                    <ListView
-                        android:id="@+id/event_comments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:choiceMode="none"
-                        android:nestedScrollingEnabled="true" />
-
-                    <TextView
-                        android:id="@+id/no_comments"
-                        android:text="@string/event_no_comments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"/>
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp" />
-
                     <EditText
                         android:id="@+id/comment_write"
                         android:layout_width="match_parent"
@@ -277,6 +259,24 @@
                         android:text="@string/add_comment"
                         android:textColor="@color/White"
                         android:theme="@style/AppTheme.Button" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp" />
+
+                    <ListView
+                        android:id="@+id/event_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:choiceMode="none"
+                        android:nestedScrollingEnabled="true" />
+
+                    <TextView
+                        android:id="@+id/no_comments"
+                        android:text="@string/event_no_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"/>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
