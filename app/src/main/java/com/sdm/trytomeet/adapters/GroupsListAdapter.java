@@ -5,11 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Group;
-import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class GroupsListAdapter extends ArrayAdapter<Group>{
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.groups_layout, null);
+                    .inflate(R.layout.row_groups, null);
         }
         final Group group = data.get(position);
         ((TextView) convertView.findViewById(R.id.group_name)).setText(group.name);

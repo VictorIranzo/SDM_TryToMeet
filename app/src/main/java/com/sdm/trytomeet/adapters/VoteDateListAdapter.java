@@ -1,17 +1,13 @@
 package com.sdm.trytomeet.adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Date;
-import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
@@ -31,7 +27,7 @@ public class VoteDateListAdapter extends RecyclerView.Adapter<VoteDateListAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_date_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_event_date_vote,parent,false);
         VoteDateListAdapter.ViewHolder holder = new ViewHolder(view, this);
 
         return holder;
