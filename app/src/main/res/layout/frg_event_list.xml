@@ -24,7 +24,7 @@
         android:layout_marginRight="@dimen/floating_button_marging"
         android:clickable="true"
         android:visibility="visible"
-        app:backgroundTint="@color/login"
+        app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
 </android.support.design.widget.CoordinatorLayout>

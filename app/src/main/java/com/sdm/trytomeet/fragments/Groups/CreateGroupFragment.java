@@ -29,6 +29,7 @@ public class CreateGroupFragment extends Fragment {
     private View parent;
     private String user_id;
     private String username;
+    ListView list_view_participant;
 
     private ArrayList<User> participants;
     private CreateEventParticipantListAdapter participant_adapter;
@@ -62,7 +63,7 @@ public class CreateGroupFragment extends Fragment {
 
         // We configure the list view for participants
         participants = new ArrayList<>();
-        final ListView list_view_participant = parent.findViewById(R.id.participant_list);
+        list_view_participant = parent.findViewById(R.id.participant_list);
         participant_adapter = new CreateEventParticipantListAdapter(getContext(), R.id.participant_list, participants);
         list_view_participant.setAdapter(participant_adapter);
 

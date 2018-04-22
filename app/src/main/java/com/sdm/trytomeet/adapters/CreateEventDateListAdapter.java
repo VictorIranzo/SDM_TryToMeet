@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sdm.trytomeet.R;
@@ -38,7 +39,7 @@ public class CreateEventDateListAdapter extends ArrayAdapter<Date>{
         }
         final Date date = data.get(position);
         ((TextView) convertView.findViewById(R.id.date_text)).setText(getDateText(date));
-        ((Button) convertView.findViewById(R.id.delete_date_button)).setOnClickListener(new View.OnClickListener() {
+        ((ImageButton) convertView.findViewById(R.id.delete_date_button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 data.remove(date);
