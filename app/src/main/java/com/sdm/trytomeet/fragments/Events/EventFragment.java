@@ -395,6 +395,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             if(shownEvent.confirmed_date!=null)
                 confirmed_date.setText(shownEvent.confirmed_date.toString());
 
+            return;
         }
 
         if(user_id.equals(shownEvent.creator_id)) {
