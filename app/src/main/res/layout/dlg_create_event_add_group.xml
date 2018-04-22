@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="com.sdm.trytomeet.fragments.Events.AddParticipantFragmentDialog">
@@ -15,7 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/add_group_filter" />
+            android:text="@string/add_group_filter"
+            android:textSize="@dimen/default_small_text_size_in_row" />
 
         <EditText
             android:id="@+id/editTextAddGroup"
@@ -24,12 +25,20 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/add_group_filter"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="@dimen/default_small_text_size_in_row" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/darker_gray" />
 
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

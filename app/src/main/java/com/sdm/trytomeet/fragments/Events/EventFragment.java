@@ -257,7 +257,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
 
         dates= new ArrayList<Date>(event.possible_dates);
 
-        participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants);
+        participantsAdapter = new MemberListAdapter(getActivity(), R.id.event_participants, participants, false);
         event_participants.setAdapter(participantsAdapter);
 
         setUpDeleteEvent();

@@ -63,7 +63,7 @@ public class MembersFragment extends Fragment {
 
 
         listViewMembers = parent.findViewById(R.id.list_Members);
-        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,members);
+        adapter = new MemberListAdapter(getActivity(),R.id.list_groups,members, true);
 
 
         ids= getArguments().getStringArrayList("group");

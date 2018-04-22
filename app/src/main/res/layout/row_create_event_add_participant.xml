@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+    android:layout_height="wrap_content"
+    android:gravity="top|center">
 
         <com.sdm.trytomeet.components.CircularImageView
             android:id="@+id/user_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@drawable/common_full_open_on_phone" />
+            android:layout_width="@dimen/image_small"
+            android:layout_height="@dimen/image_small"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/common_full_open_on_phone"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="TextView" />
+            android:layout_marginEnd="8dp"
+            android:text="TextView"
+            android:textSize="@dimen/default_text_size_in_row"
+            app:layout_constraintEnd_toStartOf="@+id/checkBox_add" />
 
         <CheckBox
             android:id="@+id/checkBox_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/select" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/select"
+            android:textSize="@dimen/default_small_text_size_in_row"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

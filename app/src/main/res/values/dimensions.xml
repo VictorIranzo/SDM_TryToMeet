@@ -4,9 +4,21 @@
     <dimen name="drawer_header_padding">10dp</dimen>
     <dimen name="drawer_header_text">20sp</dimen>
 
+    <!-->Site <-->
     <dimen name="list_row_site_description_text_size">24sp</dimen>
     <dimen name="list_row_site_name_text_size">18sp</dimen>
 
+
+    <!-->User fragment <-->
+    <dimen name="user_name_size">32sp</dimen>
+    <dimen name="image_size">200dp</dimen>
+
+    <!-->Default <-->
+    <dimen name="default_padding_in_row">5dp</dimen>
+    <dimen name="default_text_size_in_row">24sp</dimen>
+    <dimen name="default_small_text_size_in_row">18sp</dimen>
     <dimen name="floating_button_marging">5dp</dimen>
+    <dimen name="image_small">40dp</dimen>
+    <dimen name="default_button_size">14sp</dimen>
 
 </resources>
