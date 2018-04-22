@@ -62,10 +62,6 @@ public class ConfirmDateListAdapter extends ArrayAdapter<Date> {
                         context.getResources().getString(R.string.event_confirmate_notification_title),
                         context.getResources().getString(R.string.event_confirmate_notification_text,event_name));
                 EventListFragment fragment = new EventListFragment();
-                // Insert the arguments
-                Bundle args = new Bundle();
-                args.putString("user_id", settings.getString("account_id",""));
-                fragment.setArguments(args);
                 fragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, fragment).commit();
                 confirmFragment.finish();

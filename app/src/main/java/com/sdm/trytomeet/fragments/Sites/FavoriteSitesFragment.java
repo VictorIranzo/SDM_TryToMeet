@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class FavoriteSitesFragment extends Fragment {
         progressBar.setIndeterminate(true);
 
         UserFirebaseService.getUserFavoriteSites(user_id,this);
+
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Favorite_sites_title));
 
         return parent;
     }

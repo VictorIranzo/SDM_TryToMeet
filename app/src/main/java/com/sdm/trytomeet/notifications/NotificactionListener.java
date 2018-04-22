@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.DismissNotification;
 import com.sdm.trytomeet.activities.LoginActivity;
 import com.sdm.trytomeet.activities.MainActivity;
 
@@ -64,13 +65,15 @@ public class NotificactionListener implements ValueEventListener{
 
                             intent.putExtra("id", notification.id);
                             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-                            mbuilder.setContentIntent(pendingIntent);
-                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                            notificationManager.notify(notification.id, 0, mbuilder.build());
 
-                            // Remove it
-                            //FirebaseDatabase.getInstance().getReference().child("notifications")
-                              //.child(dataSnapshot.getKey()).child(not.getKey()).removeValue();
+                            Intent dismiss_intent = new Intent(context, DismissNotification.class);
+                            dismiss_intent.putExtra("id", notification.id);
+                            PendingIntent pendingIntentDismiss = PendingIntent.getActivity(context, 0, dismiss_intent, 0);
+
+                            mbuilder.setContentIntent(pendingIntent);
+                            mbuilder.setDeleteIntent(pendingIntentDismiss);
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
                         }
 
                         @Override

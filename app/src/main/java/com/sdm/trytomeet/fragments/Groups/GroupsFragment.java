@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Group;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.GroupsListAdapter;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
@@ -80,6 +81,8 @@ public class GroupsFragment extends Fragment {
         progressBar.setIndeterminate(true);
 
         UserFirebaseService.getGroups(user_id,this);
+
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Groups_title));
 
         return parent;
     }

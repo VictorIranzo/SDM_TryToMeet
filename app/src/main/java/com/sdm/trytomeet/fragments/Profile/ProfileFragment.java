@@ -96,6 +96,8 @@ public class ProfileFragment extends Fragment {
 
         panelChangeName = parent.findViewById(R.id.editNamePanel);
 
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Profile_title));
+
         UserFirebaseService.getUserFromProfile(user_id,this);
 
         return parent;

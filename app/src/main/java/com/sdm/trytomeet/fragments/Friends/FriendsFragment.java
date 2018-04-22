@@ -68,10 +68,9 @@ public class FriendsFragment extends Fragment {
         progressBar = ((ProgressBar)parent.findViewById(R.id.progressBarMembers));
         progressBar.setIndeterminate(true);
 
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Friends_title));
+
         reloadFriends();
-
-
-
 
         return parent;
     }

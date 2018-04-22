@@ -135,4 +135,13 @@
     <string name="sure_Delete_History">Are you sure you want to delete this event from the history?</string>
     <string name="sure_Leave_Event">Are you sure you want to leave this event?</string>
 
+    <!--Titles-->
+    <string name="Events_title">Events</string>
+    <string name="Profile_title">Profile</string>
+    <string name="Friends_title">Friends</string>
+    <string name="Create_an_event_title">Create an event</string>
+    <string name="Favorite_sites_title">Favorite sites</string>
+    <string name="Groups_title">Groups</string>
+    <string name="Past_events_title">Past events</string>
+
 </resources>

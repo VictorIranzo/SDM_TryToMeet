@@ -127,6 +127,8 @@ public class CreateEventFragment extends Fragment {
         participant_adapter = new CreateEventParticipantListAdapter(getContext(), R.id.participant_list, participants);
         list_view_participant.setAdapter(participant_adapter);
 
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Create_an_event_title));
+
         return parent;
     }
 
@@ -200,8 +202,9 @@ public class CreateEventFragment extends Fragment {
 
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this)
                 .replace(R.id.frameLayout, fragment).commit();
+        site = null;
     }
 
     private void add_participant(View view) {

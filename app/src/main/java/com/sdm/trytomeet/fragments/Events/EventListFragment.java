@@ -19,6 +19,7 @@ import android.widget.Button;
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
+import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 
@@ -81,6 +82,8 @@ public class EventListFragment extends Fragment {
             }
         });*/
         initializeAdapter();
+
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Events_title));
 
         getUserEvents();
 
