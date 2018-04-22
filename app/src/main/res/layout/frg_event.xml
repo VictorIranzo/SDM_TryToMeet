@@ -82,6 +82,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:theme="@style/AppTheme.Button"
+                    android:textColor="@color/White"
                     android:visibility="gone"
                     android:text="@string/edit" />
             </LinearLayout>
@@ -111,6 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/event_showMap_button"
+                android:theme="@style/AppTheme.Button"
+                android:textColor="@color/White"
                 android:text="@string/event_show_map"/>
 
             <LinearLayout
@@ -183,12 +187,16 @@
                 android:id="@+id/add_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.Button"
+                android:textColor="@color/White"
                 android:text="@string/add_comment"/>
 
             <Button
                 android:id="@+id/show_images"
                 android:visibility="gone"
                 android:layout_width="match_parent"
+                android:theme="@style/AppTheme.Button"
+                android:textColor="@color/White"
                 android:layout_height="wrap_content"
                 android:text="@string/show_images"/>
 
@@ -208,6 +216,8 @@
 
             <Button
                 android:layout_width="match_parent"
+                android:theme="@style/AppTheme.Button"
+                android:textColor="@color/White"
                 android:layout_height="wrap_content"
                 android:id="@+id/delete_event" />
 
