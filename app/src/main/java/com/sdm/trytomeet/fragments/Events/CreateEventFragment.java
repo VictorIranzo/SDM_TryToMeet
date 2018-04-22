@@ -179,11 +179,13 @@ public class CreateEventFragment extends Fragment {
 
             // We link each participant (and the creator) with the new event
             List<String> to_invite = new ArrayList<>(participants_id);
-            to_invite.add(user_id);
-            InvitedTo inv = new InvitedTo("PENDING");
+            InvitedTo inv = new InvitedTo(InvitedTo.PENDING);
             for (String participant_id : to_invite) {
                 EventFirebaseService.addParticipantToEvent(inv, participant_id, event_id);
             }
+
+            // The creator is added with VOTED state.
+            EventFirebaseService.addParticipantToEvent(new InvitedTo(InvitedTo.VOTED), user_id, event_id);
 
             // We notify each user
             to_invite.remove(user_id); // Not me
