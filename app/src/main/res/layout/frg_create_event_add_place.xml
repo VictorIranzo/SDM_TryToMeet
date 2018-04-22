@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/map_linear_layout"
     tools:context="com.sdm.trytomeet.fragments.Sites.FindPlaceFragment"
+    android:isScrollContainer="true"
     android:orientation="vertical">
 
     <fragment
@@ -16,32 +17,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:isScrollContainer="true"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/near_button"
             android:layout_width="wrap_content"
+            android:layout_marginRight="@dimen/default_margin"
             android:layout_height="match_parent"
+            android:background="@drawable/my_button"
             android:text="@string/places_nearToMe"
-            />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/favorites_button"
             android:layout_width="wrap_content"
+            android:layout_marginRight="@dimen/default_margin"
             android:layout_height="match_parent"
-            android:text="@string/places_favorites"/>
+            android:background="@drawable/my_button"
+            android:text="@string/places_favorites"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/places_filter"/>
+            android:background="@drawable/my_button"
+            android:text="@string/places_filter"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="350dp">
+        android:layout_height="340dp"
+        android:isScrollContainer="true"
+        android:gravity="center">
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/map"
@@ -58,21 +71,29 @@
         android:hint="@string/places_placeHint"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:isScrollContainer="true"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:background="@drawable/my_button"
             android:text="@string/cancel"
-            />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/continue_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/continuee"/>
+            android:background="@drawable/my_button"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/continuee"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

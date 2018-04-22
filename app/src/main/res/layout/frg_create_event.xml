@@ -113,9 +113,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_height="5dp"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:layout_height="@dimen/default_margin"
                 android:background="@android:color/darker_gray" />
 
             <TextView
@@ -135,7 +135,7 @@
                 android:id="@+id/button_add_participant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_padding_in_row"
+                android:layout_marginBottom="@dimen/default_margin"
                 android:background="@drawable/my_button"
                 android:text="@string/create_event_add_a_participant_button"
                 android:textColor="@android:color/white"

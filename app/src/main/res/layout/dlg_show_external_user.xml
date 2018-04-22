@@ -11,6 +11,7 @@
 
     <com.sdm.trytomeet.components.CircularImageView
         android:id="@+id/user_image"
+        android:layout_marginTop="@dimen/default_margin"
         android:layout_width="@dimen/image_size"
         android:layout_height="@dimen/image_size"
         android:layout_weight="1"
@@ -27,15 +28,21 @@
     <Button
         android:id="@+id/add_as_a_friend"
         android:layout_width="match_parent"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
         android:text="@string/add_as_a_friend"
         android:textSize="@dimen/default_button_size"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/remove_friend"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
         android:text="@string/remove_friend"
         android:textSize="@dimen/default_button_size"
         android:visibility="gone" />

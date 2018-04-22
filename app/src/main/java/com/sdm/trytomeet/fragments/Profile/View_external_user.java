@@ -74,7 +74,7 @@ public class View_external_user extends DialogFragment {
             }
         });
 
-        view = getActivity().getLayoutInflater().inflate(R.layout.view_create_event_add_participant_external, null);
+        view = getActivity().getLayoutInflater().inflate(R.layout.dlg_show_external_user, null);
         builder.setView(view);
 
         if(user.image != null){

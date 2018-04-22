@@ -41,6 +41,8 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/button_cancel"
+                android:background="@drawable/my_button"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_button_size"
@@ -48,6 +50,8 @@
 
             <Button
                 android:id="@+id/button_ok"
+                android:background="@drawable/my_button"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_button_size"
@@ -57,6 +61,8 @@
 
     <Button
         android:id="@+id/button_edit_name"
+        android:background="@drawable/my_button"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/default_button_size"

@@ -65,7 +65,7 @@ public class FilterSitesFragmentDialog extends DialogFragment {
         parent = getActivity().getLayoutInflater().inflate(R.layout.dlg_create_event_add_place_filter_site, null);
 
         builder.setView(parent);
-        builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener(){
+        builder.setPositiveButton(R.string.find, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 onContinueClick();
