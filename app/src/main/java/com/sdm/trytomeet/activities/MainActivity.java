@@ -1,5 +1,6 @@
 package com.sdm.trytomeet.activities;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -7,16 +8,19 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.sdm.trytomeet.POJO.Event;
@@ -35,6 +39,7 @@ import com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment;
 import com.sdm.trytomeet.fragments.Groups.GroupsFragment;
 import com.sdm.trytomeet.fragments.Profile.ProfileFragment;
 import com.sdm.trytomeet.notifications.NotificationService;
+import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.List;
@@ -104,21 +109,37 @@ public class MainActivity
     }
 
     private void answer_to_notification(int action) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("event_list");
         switch (action){
             case Notification.ADDED_TO_AN_EVENT:
             case Notification.EVENT_CONFIRMATE:
             case Notification.COMMENT_ADDED:
-            case Notification.IMAGE_UPLOADED:
-                EventListFragment fragment = new EventListFragment();
+            case Notification.IMAGE_UPLOADED:{
+                if(fragment == null) fragment = new EventListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("goto", getIntent().getStringExtra("event_id"));
                 fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.frameLayout, fragment).commit();
                 break;
-            case 2: // ADDED TO A GROUP
-                break;
+            }
+            case Notification.ADDED_TO_A_GROUP:{
+                if(fragment == null){
+                    fragment = new EventListFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frameLayout, fragment, "event_list").commit();
+                    fragment = new EventListFragment();
+                }
+                GroupsFragment fragment2 = new GroupsFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameLayout, fragment2).addToBackStack(null).commit();
+            }
         }
+
+        // Remove the notification
+        String notification_id = getIntent().getStringExtra("id");
+        NotificationManagerCompat.from(this).cancel(notification_id, 0);
+        NotificationFirebaseService.removeNotification(id, notification_id);
     }
 
 
@@ -178,7 +199,7 @@ public class MainActivity
         else{ // Default fragment
             EventListFragment fragment = new EventListFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frameLayout, fragment).commit();
+                    .replace(R.id.frameLayout, fragment, "event_list").commit();
         }
     }
 
@@ -288,7 +309,7 @@ public class MainActivity
     private void goToEventList() {
         EventListFragment fragment = new EventListFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment, "event_list").addToBackStack(null).commit();
     }
 
     private void goToHistoric() {

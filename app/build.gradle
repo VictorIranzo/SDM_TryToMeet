@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.sdm.trytomeet"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 26
         multiDexEnabled true
         versionCode 1

@@ -124,6 +124,7 @@ public class FriendsFragment extends Fragment {
                             final Friends fri = dataSnapshot.getValue(Friends.class);
                             if (fri != null) {
                                 for (String friend : fri.friends) { // For each one of my friends
+                                    if(friend == null) continue;
                                     FirebaseDatabase.getInstance().getReference().child("users").child(friend)
                                             .addListenerForSingleValueEvent(new ValueEventListener() { // Get their name
                                                 @Override

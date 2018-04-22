@@ -96,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        int action = getIntent().getIntExtra("action", 0); // Used when coming from a notification
+
         //Checking if the user has already started session with our app
         MainActivity.accountGoogle = GoogleSignIn.getLastSignedInAccount(this);
         if(MainActivity.accountGoogle != null){//He/she did it
@@ -105,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("account_email",MainActivity.accountGoogle.getEmail());
             editor.putString("account_name", MainActivity.accountGoogle.getDisplayName());
             editor.apply();
-            go_to_main_screen();
+            if(action == 0) go_to_main_screen();
         }
         else if (  mAuth.getCurrentUser()!=null){
 
@@ -116,7 +118,21 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("account_name",  mAuth.getCurrentUser().getDisplayName());
             editor.apply();
             MainActivity.accountFacebook=mAuth.getCurrentUser();
-            go_to_main_screen();
+            if(action == 0) go_to_main_screen();
+        }
+        if(action != 0) { // Pass the intent with the arguments from the notification
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            if(action == 2){
+                intent.putExtra("action",  getIntent().getIntExtra("action",0));
+                intent.putExtra("group_id",  getIntent().getStringExtra("group_id"));
+            }
+            else{
+                intent.putExtra("action", getIntent().getIntExtra("action",0));
+                intent.putExtra("event_id", getIntent().getStringExtra("event_id"));
+            }
+            intent.putExtra("id", getIntent().getStringExtra("id"));
+            startActivity(intent);
         }
     }
 

@@ -195,7 +195,7 @@ public class UserFirebaseService extends FirebaseService {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                mainActivity.setHeaderDrawer(user);
+                if(!mainActivity.isDestroyed())  mainActivity.setHeaderDrawer(user);
             }
 
             @Override

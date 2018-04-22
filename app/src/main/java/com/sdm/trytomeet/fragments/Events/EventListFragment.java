@@ -84,6 +84,7 @@ public class EventListFragment extends Fragment {
 
         EventFirebaseService.getUserEvents(user_id,this);
 
+        // Used when coming from a notification
         if(getArguments() != null){
             goToEvent(getArguments().getString("goto"));
             setArguments(null);
