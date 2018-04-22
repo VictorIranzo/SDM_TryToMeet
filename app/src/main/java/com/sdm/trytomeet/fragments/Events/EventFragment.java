@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -72,6 +73,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<Date> dates;
     private ListView event_participants;
     private ListView event_comments;
+    private TextView no_comments;
     private EditText comment_write;
     private Button edit_description;
     private Button add_comment;
@@ -85,6 +87,8 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     private VoteDateListAdapter voteDateListAdapter;
     private CommentListAdapter commentListAdapter;
     public static final int GET_FROM_GALLERY = 1;
+
+    private TabHost host;
 
 
     public List<Comment> comments;
@@ -127,6 +131,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
 
         event_comments = parent.findViewById(R.id.event_comments);
         comment_write = parent.findViewById(R.id.comment_write);
+        no_comments = parent.findViewById(R.id.no_comments);
         add_comment = parent.findViewById(R.id.add_comment);
         confirm_event = parent.findViewById(R.id.confirm_event);
         cancel_event = parent.findViewById(R.id.cancel_event);
@@ -134,6 +139,25 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         edit_description = parent.findViewById(R.id.edit_description_button);
         image = parent.findViewById(R.id.image);
 
+        host = parent.findViewById(R.id.tabHost_Event);
+        host.setup();
+
+        TabHost.TabSpec spec1 = host.newTabSpec(getResources().getString(R.string.event_description));
+        spec1.setIndicator(getResources().getString(R.string.event_description));
+        spec1.setContent(R.id.tab1);
+        host.addTab(spec1);
+
+        TabHost.TabSpec spec2 = host.newTabSpec(getResources().getString(R.string.event_participants));
+        spec2.setIndicator(getResources().getString(R.string.event_participants));
+        spec2.setContent(R.id.tab2);
+        host.addTab(spec2);
+
+        TabHost.TabSpec spec3 = host.newTabSpec(getResources().getString(R.string.event_comments));
+        spec3.setIndicator(getResources().getString(R.string.event_comments));
+        spec3.setContent(R.id.tab3);
+        host.addTab(spec3);
+
+        host.setCurrentTab(0);
 
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.event_google_map);
@@ -385,6 +409,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void putEventComment(Comment c) {
+        no_comments.setVisibility(GONE);
         comments.add(c);
         commentListAdapter.notifyDataSetChanged();
     }
