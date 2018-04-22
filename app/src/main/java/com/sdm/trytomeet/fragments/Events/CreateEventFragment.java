@@ -1,8 +1,13 @@
 package com.sdm.trytomeet.fragments.Events;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -30,6 +35,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.CreateEventDateListAdapter;
 import com.sdm.trytomeet.adapters.CreateEventParticipantListAdapter;
+import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Sites.FindPlaceFragment;
 
 import java.util.ArrayList;
@@ -57,6 +63,11 @@ public class CreateEventFragment extends Fragment {
     private CreateEventDateListAdapter date_adapter;
 
     private Site site;
+
+    public static final int GET_FROM_GALLERY = 1;
+
+    Uri image_path;
+    CircularImageView image;
 
     public CreateEventFragment() {
         // Required empty public constructor
@@ -150,6 +161,15 @@ public class CreateEventFragment extends Fragment {
 
         host.setCurrentTab(0);
 
+        image_path = null;
+        image = parent.findViewById(R.id.image);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setImage();
+            }
+        });
+
         return parent;
     }
 
@@ -193,10 +213,13 @@ public class CreateEventFragment extends Fragment {
         else if (event.participants_id.isEmpty())
             Toast.makeText(getContext(), R.string.create_event_missing_participants, Toast.LENGTH_SHORT).show();
 
+        if(image_path == null){ //Set one by default
+            image_path = Uri.parse("android.resource://"+getContext().getPackageName()+"/drawable/pajaro");
+        }
         else { //Everything is fine
 
             // We store the event in the DB
-            String event_id = EventFirebaseService.addEvent(event);
+            String event_id = EventFirebaseService.addEvent(event, image_path);
 
             // We link each participant (and the creator) with the new event
             List<String> to_invite = new ArrayList<>(participants_id);
@@ -345,5 +368,27 @@ public class CreateEventFragment extends Fragment {
 
     public void showAddFavourite() {
         ((ImageButton) parent.findViewById(R.id.button_favorite_site)).setVisibility(View.VISIBLE);
+    }
+
+    public void setImage(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, GET_FROM_GALLERY);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Detects request codes
+        if (requestCode == GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            image_path = data.getData();
+            Bitmap bitmap = null;
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image_path);
+                image.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }

@@ -95,7 +95,38 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="AQUI IRA EL NOMBRE DEL SITIO" />
+
                             </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/textView6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/create_event_image"
+                                android:textSize="@dimen/default_small_text_size_in_row" />
+
+                            <com.sdm.trytomeet.components.CircularImageView
+                                android:id="@+id/image"
+                                android:layout_width="@dimen/event_photo"
+                                android:layout_height="@dimen/event_photo"
+                                android:src="@drawable/pajaro" />
                         </LinearLayout>
 
                     </LinearLayout>
