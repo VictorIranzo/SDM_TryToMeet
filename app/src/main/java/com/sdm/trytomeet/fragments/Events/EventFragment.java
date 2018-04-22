@@ -223,6 +223,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             EventFirebaseService.cancelEvent(event_id);
+            goToEventList();
             }
         });
 
