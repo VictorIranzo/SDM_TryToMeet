@@ -312,7 +312,6 @@ public class EventFirebaseService extends FirebaseService{
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             Event e = dataSnapshot.getValue(Event.class);
-
                                             // In this way, deleted events are added to the list.
                                             if (e != null)
                                                 eventListFragment.addEventToList(dataSnapshot.getKey(), e);
