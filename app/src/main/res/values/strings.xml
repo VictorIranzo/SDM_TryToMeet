@@ -147,6 +147,7 @@
 
     <!--Titles-->
     <string name="Events_title">Events</string>
+    <string name="Events_New_title">New events</string>
     <string name="Profile_title">Profile</string>
     <string name="Friends_title">Friends</string>
     <string name="Create_an_event_title">Create an event</string>

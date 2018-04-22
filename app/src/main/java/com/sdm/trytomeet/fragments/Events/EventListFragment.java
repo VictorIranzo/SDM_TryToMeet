@@ -75,7 +75,7 @@ public class EventListFragment extends Fragment {
 
         initializeAdapter();
 
-        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Events_title));
+        setActionBarTitle();
 
         getUserEvents();
 
@@ -86,6 +86,10 @@ public class EventListFragment extends Fragment {
         }
         return parent;
 
+    }
+
+    protected void setActionBarTitle() {
+        ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Events_title));
     }
 
     protected void getUserEvents() {
