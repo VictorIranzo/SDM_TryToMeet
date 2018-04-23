@@ -20,7 +20,6 @@ public class Date{
     public int hour;
     public int minute;
 
-    public int votes;
     public List<String> voted_users;
 
 

@@ -74,6 +74,7 @@ public class NotificactionListener implements ValueEventListener{
                             mbuilder.setDeleteIntent(pendingIntentDismiss);
                             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
+                            notificationManager.notify(notification.id,0, mbuilder.build());
                         }
 
                         @Override
