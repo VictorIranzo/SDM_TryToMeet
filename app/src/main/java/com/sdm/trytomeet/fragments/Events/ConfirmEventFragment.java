@@ -16,10 +16,6 @@ import com.sdm.trytomeet.adapters.ConfirmDateListAdapter;
 
 import java.util.ArrayList;
 
-/**
- * Created by Adrian on 09/04/2018.
- */
-
 public class ConfirmEventFragment extends DialogFragment {
 
     private View parent;

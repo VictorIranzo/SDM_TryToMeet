@@ -446,15 +446,6 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void confirmate_event() {
-        /*EventFirebaseService.confirmateEvent(event_id);
-        EventListFragment fragment = new EventListFragment();
-        Toast.makeText(getActivity(), getResources().getString(R.string.event_confimed), Toast.LENGTH_LONG).show();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();*/
         ConfirmEventFragment fragment =ConfirmEventFragment.newInstance(dates,event_id, user_id, (ArrayList<String>) shownEvent.participants_id, shownEvent.name);
         fragment.setCancelable(false);
         // In order that the Dialog is able to use methods from this class

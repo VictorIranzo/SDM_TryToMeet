@@ -21,10 +21,6 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.components.CircularImageView;
 import com.sdm.trytomeet.fragments.Profile.View_external_user;
 
-/**
- * Created by adrymc96 on 30/03/18.
- */
-
 public class AddParticipantListAdapter extends ArrayAdapter<User> implements Filterable{
 
     Context context;

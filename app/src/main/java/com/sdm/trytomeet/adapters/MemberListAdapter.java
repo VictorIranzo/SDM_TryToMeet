@@ -16,10 +16,6 @@ import com.sdm.trytomeet.fragments.Profile.View_external_user;
 
 import java.util.List;
 
-/**
- * Created by adrymc96 on 30/03/18.
- */
-
 public class MemberListAdapter extends ArrayAdapter<User>{
 
     Context context;

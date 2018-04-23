@@ -14,10 +14,6 @@ import com.sdm.trytomeet.fragments.Events.GalleyImageDialog;
 
 import java.util.ArrayList;
 
-/**
- * Created by adrymc96 on 30/03/18.
- */
-
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
     FragmentActivity activity;

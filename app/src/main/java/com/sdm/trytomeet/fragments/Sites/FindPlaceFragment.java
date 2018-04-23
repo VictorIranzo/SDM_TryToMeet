@@ -123,13 +123,6 @@ public class FindPlaceFragment extends Fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-/*
-        // As we're using a Toolbar, we should retrieve it and set it
-        // to be our ActionBar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        */
-
         // TODO: Use the SupportPlaceAutoCompleteFragment.
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);

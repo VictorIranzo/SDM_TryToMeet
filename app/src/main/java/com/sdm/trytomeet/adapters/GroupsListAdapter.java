@@ -12,10 +12,6 @@ import com.sdm.trytomeet.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by adrymc96 on 30/03/18.
- */
-
 public class GroupsListAdapter extends ArrayAdapter<Group>{
 
     Context context;

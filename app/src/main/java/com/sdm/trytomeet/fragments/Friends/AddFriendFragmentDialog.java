@@ -14,10 +14,6 @@ import android.widget.TextView;
 
 import com.sdm.trytomeet.R;
 
-/**
- * Created by Adrian on 09/04/2018.
- */
-
 public class AddFriendFragmentDialog  extends DialogFragment {
 
     private View parent;

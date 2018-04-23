@@ -49,7 +49,7 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
         Bitmap b = ( (BitmapDrawable) drawable ).getBitmap( );
         Bitmap bitmap = b.copy( Bitmap.Config.ARGB_8888, true );
 
-        int w = getWidth( )/*, h = getHeight( )*/;
+        int w = getWidth();
 
         Bitmap roundBitmap = getCroppedBitmap( bitmap, w );
         canvas.drawBitmap( roundBitmap, 0, 0, null );

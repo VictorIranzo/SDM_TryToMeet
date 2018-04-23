@@ -15,10 +15,6 @@ import java.util.ArrayList;
 
 import com.sdm.trytomeet.POJO.Date;
 
-/**
- * Created by adrymc96 on 30/03/18.
- */
-
 public class CreateEventDateListAdapter extends ArrayAdapter<Date>{
 
     Context context;

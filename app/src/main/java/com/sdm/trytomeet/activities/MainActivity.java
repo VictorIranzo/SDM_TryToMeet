@@ -71,19 +71,6 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.frameLayout, new EventListFragment());
-        transaction.commit();*/
-
-
-        /*rv = (RecyclerView)findViewById(R.id.rv);
-
-        llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);*/
-        //rv.setHasFixedSize(true);
-
-
         // As we're using a Toolbar, we should retrieve it and set it
         // to be our ActionBar
         Toolbar toolbar = findViewById(R.id.my_awesome_toolbar);
@@ -145,25 +132,6 @@ public class MainActivity
         NotificationManagerCompat.from(this).cancel(notification_id, 0);
         NotificationFirebaseService.removeNotification(id, notification_id);
     }
-
-
-
-
-        /*private void initializeData(){
-        events = new ArrayList<>();
-        evento = EventFirebaseService.nameEvent(account.getId());
-        Iterator<Event> iterator = evento.iterator();
-        while(iterator.hasNext()){
-            Event eve = iterator.next();
-            if (eve != null){
-                events.add(new Event(eve.name, eve.description));
-            }
-        }
-        //if (!iterator.hasNext()){initializeData();}
-        //events.add(new Event(EventFirebaseService.nameEvent(account.getId()), "23 years old"));
-        //events.add(new Event("Lavery Maiss", "25 years old"));
-        //events.add(new Event("Lillie Watts", "35 years old"));
-    }*/
 
     public void setHeaderDrawer(final User user) {
         actualUser = user;

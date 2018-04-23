@@ -96,27 +96,6 @@ public class EventFirebaseService extends FirebaseService{
             }
         });
         //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR
-        /*
-        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Event e = dataSnapshot.getValue(Event.class);
-                for (Date d: e.possible_dates) {
-                    if(d.equals(date)){
-                        if(d.voted_users == null) d.voted_users = new ArrayList<String>();
-                        d.voted_users.add(user_id);
-                        break;
-                    }
-                }
-                getDatabaseReference().child("events").child(event_id).setValue(e);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", "Something bad");
-            }
-        });
-        */
     }
 
     public static void SetTakingPart(String event_id, String user_id, final String state) {
@@ -157,26 +136,6 @@ public class EventFirebaseService extends FirebaseService{
             }
         });
         //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR                                                                      }
-        /*
-        getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Event e = dataSnapshot.getValue(Event.class);
-                for (Date d: e.possible_dates) {
-                    if(d.equals(date)){
-                        d.voted_users.remove(user_id);
-                        break;
-                    }
-                }
-                getDatabaseReference().child("events").child(event_id).setValue(e);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", "Something bad");
-            }
-        });
-        */
     }
 
     public static void AddComment(Comment c, String event_id, String user_id, List<String> participants, String title, String text){
@@ -334,9 +293,6 @@ public class EventFirebaseService extends FirebaseService{
                     }
                 });
     }
-
-
-
 
     public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment) {
         getDatabaseReference().child("taking_part").child(user_id)

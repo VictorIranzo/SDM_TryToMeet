@@ -19,8 +19,5 @@ public class CardView extends Activity {
         setContentView(R.layout.view_event_list_card);
         eventName = (TextView)findViewById(R.id.name);
         eventDescription = (TextView)findViewById(R.id.description);
-
-        /*eventName.setText("Prueba");
-        eventDescription.setText("¿Funciona?");*/
     }
 }
