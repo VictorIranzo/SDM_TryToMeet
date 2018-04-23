@@ -95,6 +95,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:src="@android:drawable/btn_star_big_on"
+                                            android:background="@color/colorAccent"
+                                            android:paddingRight="@dimen/default_margin"
                                             android:visibility="gone" />
 
                                         <TextView

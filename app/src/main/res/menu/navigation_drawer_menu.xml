@@ -9,30 +9,32 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/drawer_menu_create_event"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/drawer_menu_create_event"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/drawer_menu_profile"
         android:icon="@drawable/ic_action_name"
         android:title="@string/profile"
         app:showAsAction="always" />
     <item
         android:id="@+id/drawer_menu_friends"
-        android:icon="@drawable/ic_mr_button_grey"
+        android:icon="@drawable/ic_friend"
         android:title="@string/friends"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/drawer_menu_create_event"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/drawer_menu_create_event"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/drawer_menu_favorite_sites"
-        android:icon="@android:drawable/btn_star_big_on"
-        android:title="@string/favorite_sites"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/drawer_menu_groups"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@drawable/ic_group_black_24dp"
         android:title="@string/groups_title"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/drawer_menu_favorite_sites"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="@string/favorite_sites"
         app:showAsAction="always" />
 
     <item
