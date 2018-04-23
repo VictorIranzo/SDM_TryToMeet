@@ -155,9 +155,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-
-                System.out.println(error.getStackTrace());
-
             }
         });
     }

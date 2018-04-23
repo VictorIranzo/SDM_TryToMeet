@@ -287,7 +287,6 @@ public class EventFirebaseService extends FirebaseService{
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
                     }
                 });
     }
@@ -321,7 +320,6 @@ public class EventFirebaseService extends FirebaseService{
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
                     }
                 });
     }
@@ -357,7 +355,6 @@ public class EventFirebaseService extends FirebaseService{
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
                     }
                 });
     }
