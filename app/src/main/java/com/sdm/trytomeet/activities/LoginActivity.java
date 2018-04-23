@@ -221,7 +221,6 @@ public class LoginActivity extends AppCompatActivity {
                 go_to_main_screen();
             } catch (ApiException e) {
                 e.printStackTrace();
-                //TODO: VER CUANDO PUEDE FALLAR y GESTIONAR ERRORES
             }
         }
         else{

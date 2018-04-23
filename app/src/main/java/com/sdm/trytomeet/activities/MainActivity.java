@@ -189,7 +189,6 @@ public class MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
-            // TODO: Review if here must be added more code, for example, the notifications.
             return true;
         }
         return super.onOptionsItemSelected(item);

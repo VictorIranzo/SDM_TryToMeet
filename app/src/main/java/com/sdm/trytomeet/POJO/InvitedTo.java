@@ -10,7 +10,6 @@ public class InvitedTo {
 
 
     public String state;
-    // TODO: RELLENAR CON LOS ATRIBUTOS QUE HAGAN FALTA
 
     public InvitedTo() {}
 

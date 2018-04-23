@@ -15,7 +15,6 @@ import com.sdm.trytomeet.activities.MainActivity;
 
 public class NotificationService extends Service {
 
-    // TODO: AHORA SE QUEDA EN EJECUCION UNA VEZ SE ABRE LA APP, LO SUYO SERIA QUE LO HICIESE CUANDO SE ENCIENDA EL TLF
     NotificactionListener listener;
     String account_id;
 

@@ -85,9 +85,6 @@ public class RemoveFriendFragmentDialog extends DialogFragment {
         final AddParticipantListAdapter adapter = new AddParticipantListAdapter(getContext(), R.id.list_view, my_friends);
         list_view.setAdapter(adapter);
 
-        // TODO: FILTER BY FRIENDS NAME
-        // TODO: Move to persistence folder.
-
         // We populate the friends list
         FirebaseDatabase.getInstance().getReference().child("friends").child(user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() { // Get my friends

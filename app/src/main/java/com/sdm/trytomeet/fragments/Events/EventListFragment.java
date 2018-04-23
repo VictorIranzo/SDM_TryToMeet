@@ -28,8 +28,6 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Hacer visible botón de añadir evento.
-// TODO: Redireccionar a evento en el click.
 public class EventListFragment extends Fragment {
 
     private View parent;

@@ -24,7 +24,6 @@ import com.sdm.trytomeet.R;
 public class FilterPlacesService {
         public FindPlaceFragment context;
 
-        // TODO: Move to proper location.
         private String GOOGLE_BROWSER_API_KEY = "AIzaSyCbYRpQk8PQUwx4bgCdCEXmvKsfhN-9O-U";
 
 

@@ -52,8 +52,6 @@ import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.List;
 
-// TODO: Añadir búsqueda por tipo de sitios empleando un servicio Volley. Ver: https://developers.google.com/places/web-service/search?hl=es-419
-
 public class FindPlaceFragment extends Fragment
         implements OnMapReadyCallback {
 
@@ -123,14 +121,12 @@ public class FindPlaceFragment extends Fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // TODO: Use the SupportPlaceAutoCompleteFragment.
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName());
 
                 mMap.clear();
@@ -149,7 +145,6 @@ public class FindPlaceFragment extends Fragment
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i(TAG, "An error occurred: " + status);
             }
         });

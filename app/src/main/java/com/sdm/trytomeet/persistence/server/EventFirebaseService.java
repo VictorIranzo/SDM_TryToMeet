@@ -95,7 +95,6 @@ public class EventFirebaseService extends FirebaseService{
 
             }
         });
-        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR
     }
 
     public static void SetTakingPart(String event_id, String user_id, final String state) {
@@ -135,7 +134,6 @@ public class EventFirebaseService extends FirebaseService{
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
             }
         });
-        //TODO: ELIMINAR CUANDO SE ASEGURE QUE EL FUNCIONAMIENTO ES SIMILAR                                                                      }
     }
 
     public static void AddComment(Comment c, String event_id, String user_id, List<String> participants, String title, String text){

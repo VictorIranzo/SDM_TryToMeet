@@ -47,7 +47,6 @@ public class CreateEventDateListAdapter extends ArrayAdapter<Date>{
     }
 
     private String getDateText(Date date){
-        // TODO: POSIBLE INTERNACIOLIZACION DE LA FECHA
         String res = "";
         res += date.year + "-" + date.month + "-" + date.day;
         res += ", ";

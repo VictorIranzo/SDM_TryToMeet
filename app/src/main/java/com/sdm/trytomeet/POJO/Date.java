@@ -52,7 +52,6 @@ public class Date{
         return (this.minute - date.minute);
     }
 
-    // TODO: Internacionalización de toString.
     @Override
     public String toString(){
         int votes = 0;

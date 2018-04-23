@@ -43,9 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UserFirebaseService extends FirebaseService {
-    // TODO: Revisar si esto se puede hacer con un push y guardando la key.
     public static void addUser(final String account_id, final String account_name, final MainActivity mainActivity) {
-        /* TODO: PONERLO EN LA VENTANA DE LOGIN
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
         * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
         */
@@ -65,7 +63,6 @@ public class UserFirebaseService extends FirebaseService {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                // TODO: Revisar esto con Adrián.
                 UserFirebaseService.getUserFromDrawerHeader(account_id, mainActivity);
             }
         });

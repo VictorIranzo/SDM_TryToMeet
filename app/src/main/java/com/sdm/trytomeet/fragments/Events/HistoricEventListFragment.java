@@ -23,8 +23,6 @@ import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Redireccionar a evento en el click.
-
 public class HistoricEventListFragment extends EventListFragment{
     @Override
     public void addEventToList(String event_id, Event e){
