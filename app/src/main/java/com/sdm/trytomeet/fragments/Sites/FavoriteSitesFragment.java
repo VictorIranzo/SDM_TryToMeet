@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
+import com.sdm.trytomeet.persistence.server.SitesFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class FavoriteSitesFragment extends Fragment {
         progressBar = ((ProgressBar)parent.findViewById(R.id.progressBar));
         progressBar.setIndeterminate(true);
 
-        UserFirebaseService.getUserFavoriteSites(user_id,this);
+        SitesFirebaseService.getUserFavoriteSites(user_id,this);
 
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Favorite_sites_title));
 
@@ -112,7 +113,7 @@ public class FavoriteSitesFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // Deletes the site.
-                    UserFirebaseService.removeFavoriteSite(user_id, selectedSite);
+                    SitesFirebaseService.removeFavoriteSite(user_id, selectedSite);
 
                     // Hides the selector, so after removing an element looks like no one is selected.
                     listViewSites.setSelector(android.R.color.transparent);

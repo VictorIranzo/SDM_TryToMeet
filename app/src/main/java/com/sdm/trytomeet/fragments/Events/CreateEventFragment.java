@@ -50,6 +50,7 @@ import com.sdm.trytomeet.POJO.User;
 import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
+import com.sdm.trytomeet.persistence.server.SitesFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 public class CreateEventFragment extends Fragment {
@@ -356,7 +357,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void addFavoriteSite() {
-        UserFirebaseService.addUserFavoriteSite(user_id, site);
+        SitesFirebaseService.addUserFavoriteSite(user_id, site);
 
         ((ImageButton) parent.findViewById(R.id.button_favorite_site)).setVisibility(View.GONE);
         Toast.makeText(getActivity(), getString(R.string.added_favorite), Toast.LENGTH_LONG).show();
@@ -372,7 +373,7 @@ public class CreateEventFragment extends Fragment {
             Button findPlaceButton = (Button) parent.findViewById(R.id.button_find_place);
             findPlaceButton.setText(getString(R.string.create_event_change_place_button));
 
-            UserFirebaseService.checkIfFavouriteSite(this.site, user_id, this);
+            SitesFirebaseService.checkIfFavouriteSite(this.site, user_id, this);
         }
     }
 

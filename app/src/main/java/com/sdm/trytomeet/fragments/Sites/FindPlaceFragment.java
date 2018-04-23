@@ -47,6 +47,7 @@ import com.sdm.trytomeet.R;
 
 import com.sdm.trytomeet.POJO.Site;
 import com.sdm.trytomeet.fragments.Events.CreateEventFragment;
+import com.sdm.trytomeet.persistence.server.SitesFirebaseService;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
 
 import java.util.List;
@@ -208,7 +209,7 @@ public class FindPlaceFragment extends Fragment
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         String user_id = prefs.getString("account_id", "");
-        UserFirebaseService.getUserFavoriteSites(user_id,this);
+        SitesFirebaseService.getUserFavoriteSites(user_id,this);
 
         return parent;
     }
