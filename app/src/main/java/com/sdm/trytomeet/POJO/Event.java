@@ -91,46 +91,6 @@ public class Event {
         return result;
     }
 
-    public Date getPreviousPossibleDate() {
-        Date minDate = null;
-        if (possible_dates == null) return minDate;
-        for (Date date : possible_dates) {
-            if (minDate == null) {
-                minDate = date;
-            } else if (date.year <= minDate.year) {
-                if (date.year == minDate.year) {
-
-                    if (date.month <= minDate.month) {
-                        minDate = date;
-                    }
-                    else if (date.month == minDate.month) {
-
-                        if (date.day <= minDate.day) {
-                            minDate = date;
-                        }
-                        else if (date.day == minDate.day) {
-
-                            if (date.hour < minDate.hour) {
-                                minDate = date;
-                            }
-                            else if (date.hour == minDate.hour) {
-
-                                if (date.minute <= minDate.minute) {
-                                    minDate = date;
-                                }
-                            }
-                        }
-                    }
-                } else if (date.year < minDate.year) {
-                    minDate = date;
-                }
-
-
-            }
-        }
-        return  minDate;
-    }
-
     public int posPastDate(Date d){
         int size = 0;
         for (Date date: possible_dates){

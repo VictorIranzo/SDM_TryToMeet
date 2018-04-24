@@ -383,7 +383,8 @@ public class EventFirebaseService extends FirebaseService{
 
                 event.participants_id.remove(user_id);
                 for (Date date: event.possible_dates) {
-                    date.voted_users.remove(user_id);
+                    if(date == null) continue;
+                    if(date.voted_users != null) date.voted_users.remove(user_id);
                 }
 
                 mutableData.setValue(event);
