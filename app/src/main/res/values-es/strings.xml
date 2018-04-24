@@ -106,6 +106,9 @@
     <string name="site_type">Tipo de lugar:</string>
     <string name="park">Parque</string>
     <string name="bar">Bar</string>
+    <string name="group_added">Grupo añadido</string>
+    <string name="group_missing_name">Debes poner un nombre</string>
+    <string name="group_missing_participants">El grupo debe tener al menos un miembro</string>
     <string name="error_network">No se ha podido conectar a Internet...¡Por favor revisa tu conexión!</string>
     <string name="error_server">No se ha podido encontrar el servidor. ¡¡Por favor vuelve a intentarlo en otro momento!!</string>
     <string name="error_authorization">No se ha podido conectar a Internet...¡Por favor comprueba tu autorización de permisos!</string>

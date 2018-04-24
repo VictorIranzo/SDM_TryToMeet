@@ -92,24 +92,24 @@ public class CreateGroupFragment extends Fragment {
         List<String> participants_id = new ArrayList<>();
         participants_id.add(user_id);
         for(User user : participants) participants_id.add(user.id);
-        Group group = new Group(participants_id, name);
 
-        // We store the event in the DB
-        UserFirebaseService.createGroup(group, user_id,
-                getResources().getString(R.string.added_to_a_group_notification_title),
-                getResources().getString(R.string.added_to_a_group_notification_text, username, name));
+        if(name.equals("")) Toast.makeText(getContext(), R.string.group_missing_name, Toast.LENGTH_SHORT).show();
+        else if(participants_id.size() == 1) Toast.makeText(getContext(), R.string.group_missing_participants, Toast.LENGTH_SHORT).show();
+        else{
+            Group group = new Group(participants_id, name);
 
-        Toast.makeText(getActivity(),"Group added", Toast.LENGTH_SHORT).show();
+            // We store the event in the DB
+            UserFirebaseService.createGroup(group, user_id,
+                    getResources().getString(R.string.added_to_a_group_notification_title),
+                    getResources().getString(R.string.added_to_a_group_notification_text, username, name));
 
-        GroupsFragment fragment = new GroupsFragment();
-        // Insert the arguments
-        Bundle args = new Bundle();
-        args.putString("user_id", user_id);
-        fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).commit();
+            Toast.makeText(getActivity(),R.string.group_added, Toast.LENGTH_SHORT).show();
 
-
+            Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("groups");
+            if(fragment == null) fragment = new GroupsFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout, fragment, "groups").commit();
+        }
 
     }
 

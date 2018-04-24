@@ -143,6 +143,10 @@
     <string name="event_comments">Comments</string>
     <string name="event_no_comments">There are no comments.</string>
 
+    <!--Group-->
+    <string name="group_added">Group added</string>
+    <string name="group_missing_name">You should name this group</string>
+    <string name="group_missing_participants">The group should have at least one member</string>
 
     <!--Titles-->
     <string name="Events_title">Events</string>

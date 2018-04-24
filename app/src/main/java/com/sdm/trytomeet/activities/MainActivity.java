@@ -252,34 +252,34 @@ public class MainActivity
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("groups");
         if(fragment == null) fragment = new GroupsFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("groups").commit();
+                .replace(R.id.frameLayout, fragment, "groups").addToBackStack(null).commit();
     }
     private void goToFriends() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("friends");
         if(fragment == null) fragment = new FriendsFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("friends").commit();
+                .replace(R.id.frameLayout, fragment, "friends").addToBackStack(null).commit();
     }
 
     private void goToCreateEvent() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("create_events");
         if(fragment == null) fragment = new CreateEventFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("create_events").commit();
+                .replace(R.id.frameLayout, fragment, "create_events").addToBackStack(null).commit();
     }
 
     private void goToFavoriteSites() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("favorite");
         if(fragment == null) fragment = new FavoriteSitesFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("favorite").commit();
+                .replace(R.id.frameLayout, fragment, "favorite").addToBackStack(null).commit();
     }
 
     private void goToProfile() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("profile");
         if(fragment == null) fragment = new ProfileFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("profile").commit();
+                .replace(R.id.frameLayout, fragment, "profile").addToBackStack(null).commit();
     }
 
     private void goToEventList() {
@@ -294,7 +294,7 @@ public class MainActivity
         if(fragment == null) fragment = new HistoricEventListFragment();
         // Insert the arguments
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack("historic").commit();
+                .replace(R.id.frameLayout, fragment, "historic").addToBackStack(null).commit();
     }
 
     public static String cleanEmail(String string) {
