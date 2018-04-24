@@ -10,6 +10,8 @@ import com.sdm.trytomeet.persistence.server.NotificationFirebaseService;
 
 public class DismissNotification extends AppCompatActivity {
 
+    // Launched when the user swipe away a notification
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

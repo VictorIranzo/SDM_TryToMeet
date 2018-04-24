@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Configuration of how to log with Google
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         MainActivity.mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -202,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // The result is from the google sign in activity
+        // The result is from the "google sign in" activity
         if (requestCode == GOOGLE_SIGN_IN_RESULT_CODE) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
