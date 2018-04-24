@@ -1,5 +1,8 @@
 package com.sdm.trytomeet.fragments.Events;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
@@ -31,4 +34,11 @@ public class PendingVoteEventListFragment extends EventListFragment {
     protected void getUserEvents(){
         EventFirebaseService.getUserEventsPendingVote(user_id,this);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // To delete the menu from its parent
+    }
+
+
 }

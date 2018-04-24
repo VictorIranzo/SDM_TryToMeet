@@ -297,7 +297,7 @@ public class EventFirebaseService extends FirebaseService{
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        if(takingPart.invitedTo == null) return;
+                        if(takingPart == null || takingPart.invitedTo == null) return;
                         for (String event_id : takingPart.invitedTo.keySet()) {
                             // We check that the event state is PENDING, the user has to vote there.
                             getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -330,7 +330,7 @@ public class EventFirebaseService extends FirebaseService{
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        if(takingPart.invitedTo == null) return;
+                        if(takingPart == null || takingPart.invitedTo == null) return;
                         for (String event_id : takingPart.invitedTo.keySet()) {
                             // We check that the event state is PENDING, the user has to vote there.
                             if(takingPart.invitedTo.get(event_id).state.equals(InvitedTo.PENDING)) {

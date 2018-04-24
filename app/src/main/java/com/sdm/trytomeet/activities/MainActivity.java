@@ -95,7 +95,10 @@ public class MainActivity
         action = getIntent().getIntExtra("action", 0); // Used to behave properly to the notifications
 
         if(action == 0 && getSupportFragmentManager().getBackStackEntryCount() == 0){
-            goToEventList();
+            // Default fragment
+            Fragment fragment = new EventListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frameLayout, fragment, "event_list").commit();
         }
     }
 

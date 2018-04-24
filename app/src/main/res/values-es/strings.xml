@@ -8,7 +8,6 @@
     <string name="log_out">Cerrar sesión</string>
     <string name="navigation_drawer_open">Abrir</string>
     <string name="navigation_drawer_close">Cerrar</string>
-    <string name="fake_user">Manolo Papote</string>
     <string name="drawer_menu_event">Eventos</string>
     <string name="drawer_menu_historic">Histórico</string>
     <string name="new_group_title">Nuevo grupo</string>

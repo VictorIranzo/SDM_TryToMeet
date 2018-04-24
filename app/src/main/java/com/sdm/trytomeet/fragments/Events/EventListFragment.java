@@ -95,9 +95,10 @@ public class EventListFragment extends Fragment {
     }
 
     public void goToPendingEvents() {
-        PendingVoteEventListFragment fragment = new PendingVoteEventListFragment();
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("peding_votes");
+        if(fragment == null) fragment = new PendingVoteEventListFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, fragment).commit();
+                        .replace(R.id.frameLayout, fragment, "peding_votes").addToBackStack(null).commit();
     }
     
     @Override

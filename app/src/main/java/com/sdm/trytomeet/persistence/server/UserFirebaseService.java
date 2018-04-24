@@ -44,6 +44,7 @@ import java.util.List;
 
 public class UserFirebaseService extends FirebaseService {
     public static void addUser(final String account_id, final String account_name, final MainActivity mainActivity) {
+        /*
         * Esto se deberá hacer solo cuando alguien se loguee por primera vez en la aplicacion, no siempre
         * Ahora va aqui ya que algunos de nosotros ya nos hemos logueado con la cuenta
         */

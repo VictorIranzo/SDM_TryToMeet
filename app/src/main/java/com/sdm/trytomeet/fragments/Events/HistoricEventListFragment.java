@@ -37,4 +37,9 @@ public class HistoricEventListFragment extends EventListFragment{
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Past_events_title));
         EventFirebaseService.getUserEventsHistoric(user_id,this);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // To delete the menu from its parent
+    }
 }
