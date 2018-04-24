@@ -10,6 +10,7 @@ import java.util.Calendar;
 public class EventTransactionPendingToCanceled {
 
     // True if a transaction is done. If true, the event is not added to the list of events.
+    // Transactions means change the state of the event, in this case from pending -> cancel
     public static boolean checkIfPassedDate(EventWithKey e){
         // If has no dates, the event is sent to cancelled events.
         if(e.possible_dates == null){
@@ -26,6 +27,7 @@ public class EventTransactionPendingToCanceled {
 
         for (Date date: e.possible_dates) {
             // The current date is bigger than one of the pending dates
+            // So the event is supposed to be canceled
             if(currentDate.compareTo(date)>0){
                 if(e.possible_dates.size() - 1 == 0){
                     EventFirebaseService.passEventPendingToCancel(e.event_id);

@@ -141,7 +141,6 @@ public class MainActivity
         TextView userName =  findViewById(R.id.drawer_user_name);
         userName.setText(user.username);
 
-
         if(user.image != null) {
             CircularImageView userImage = findViewById(R.id.drawer_user_image);
             Glide.with(this).load(user.image).into(userImage);
@@ -151,6 +150,7 @@ public class MainActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Menu created on the different fragments
         return true;
     }
 

@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.sdm.trytomeet.POJO.Event;
@@ -22,7 +21,7 @@ import com.sdm.trytomeet.POJO.EventWithKey;
 import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.EventListAdapter;
-import com.sdm.trytomeet.helpers.EventTransactionConfirmedDone;
+import com.sdm.trytomeet.helpers.EventTransactionConfirmedToDone;
 import com.sdm.trytomeet.helpers.EventTransactionPendingToCanceled;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
 import com.sdm.trytomeet.services.CheckInternet;
@@ -158,7 +157,7 @@ public class EventListFragment extends Fragment {
         if(e.state.equals(Event.CONFIRMED) || e.state.equals(Event.VOTED) || e.state.equals(Event.PENDING)) {
             EventWithKey eventWithKey = new EventWithKey(event_id,e);
 
-            boolean notAdd = EventTransactionConfirmedDone.checkConfirmedDate(eventWithKey);
+            boolean notAdd = EventTransactionConfirmedToDone.checkConfirmedDate(eventWithKey);
             notAdd = notAdd || EventTransactionPendingToCanceled.checkIfPassedDate(eventWithKey);
 
             if(notAdd) return;
