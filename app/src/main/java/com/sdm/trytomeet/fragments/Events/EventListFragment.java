@@ -131,7 +131,7 @@ public class EventListFragment extends Fragment {
         args.putString("user_id", user_id);
         fragment.setArguments(args);
         getFragmentManager().beginTransaction()
-                .replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
+                .replace(R.id.frameLayout, fragment, "create_events").addToBackStack(null).commit();
     }
 
     public void goToEvent(String event_id){

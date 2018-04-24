@@ -302,7 +302,7 @@ public class CreateEventFragment extends Fragment {
 
         fragment = new FindPlaceFragment();
         fragment.setTargetFragment(this, 0);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack("Find_Place").commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
     // Method to be called from the AddParticipantFragmentDialog

@@ -542,7 +542,7 @@ public class FindPlaceFragment extends Fragment
         }
         CreateEventFragment fragment = (CreateEventFragment)getTargetFragment();
         fragment.add_site(site);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment, "create_events").commit();
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
