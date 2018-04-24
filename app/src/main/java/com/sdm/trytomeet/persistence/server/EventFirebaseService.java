@@ -2,6 +2,7 @@ package com.sdm.trytomeet.persistence.server;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +29,9 @@ import com.sdm.trytomeet.fragments.Events.PendingVoteEventListFragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.view.View.GONE;
+import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
 public class EventFirebaseService extends FirebaseService{
 
@@ -255,7 +259,7 @@ public class EventFirebaseService extends FirebaseService{
 
     }
 
-    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment) {
+    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment, final ProgressBar progressBar) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
 
@@ -284,6 +288,12 @@ public class EventFirebaseService extends FirebaseService{
                                 }
                             }
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(GONE);
+                            }
+                        });
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -291,7 +301,7 @@ public class EventFirebaseService extends FirebaseService{
                 });
     }
 
-    public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment) {
+    public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment, final ProgressBar progressBar) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -316,6 +326,12 @@ public class EventFirebaseService extends FirebaseService{
                                 }
                             });
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(GONE);
+                            }
+                        });
                     }
 
                     @Override
@@ -324,7 +340,7 @@ public class EventFirebaseService extends FirebaseService{
                 });
     }
 
-    public static void getUserEventsPendingVote(final String user_id, final PendingVoteEventListFragment eventListFragment) {
+    public static void getUserEventsPendingVote(final String user_id, final PendingVoteEventListFragment eventListFragment, final ProgressBar progressBar) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -351,6 +367,12 @@ public class EventFirebaseService extends FirebaseService{
                                 });
                             }
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(GONE);
+                            }
+                        });
                     }
 
                     @Override

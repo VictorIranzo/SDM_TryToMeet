@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
@@ -24,6 +25,7 @@ import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.helpers.EventTransactionConfirmedDone;
 import com.sdm.trytomeet.helpers.EventTransactionPendingToCanceled;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
+import com.sdm.trytomeet.services.CheckInternet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class EventListFragment extends Fragment {
 
     private RecyclerView rv;
     protected EventListAdapter adapter;
+    protected ProgressBar progressBar;
     private RecyclerView.LayoutManager llm;
 
     public EventListFragment() {
@@ -69,6 +72,9 @@ public class EventListFragment extends Fragment {
         llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
+        progressBar = ((ProgressBar)parent.findViewById(R.id.progressBarMembers));
+        progressBar.setIndeterminate(true);
+
         events = new ArrayList<EventWithKey>();
 
         initializeAdapter();
@@ -91,7 +97,8 @@ public class EventListFragment extends Fragment {
     }
 
     protected void getUserEvents() {
-        EventFirebaseService.getUserEvents(user_id,this);
+        CheckInternet.isNetworkConnected(getContext());
+        EventFirebaseService.getUserEvents(user_id,this, progressBar);
     }
 
     public void goToPendingEvents() {

@@ -26,6 +26,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.MemberListAdapter;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+import com.sdm.trytomeet.services.CheckInternet;
 
 import java.util.ArrayList;
 
@@ -70,6 +71,7 @@ public class FriendsFragment extends Fragment {
 
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Friends_title));
 
+        CheckInternet.isNetworkConnected(getContext());
         reloadFriends();
 
         return parent;

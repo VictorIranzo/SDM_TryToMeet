@@ -9,6 +9,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.helpers.EventTransactionPendingToCanceled;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
+import com.sdm.trytomeet.services.CheckInternet;
 
 public class PendingVoteEventListFragment extends EventListFragment {
     @Override
@@ -32,7 +33,8 @@ public class PendingVoteEventListFragment extends EventListFragment {
 
     @Override
     protected void getUserEvents(){
-        EventFirebaseService.getUserEventsPendingVote(user_id,this);
+        CheckInternet.isNetworkConnected(getContext());
+        EventFirebaseService.getUserEventsPendingVote(user_id,this, progressBar);
     }
 
     @Override

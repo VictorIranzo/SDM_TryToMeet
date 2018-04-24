@@ -21,6 +21,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.GroupsListAdapter;
 import com.sdm.trytomeet.persistence.server.UserFirebaseService;
+import com.sdm.trytomeet.services.CheckInternet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class GroupsFragment extends Fragment {
         progressBar = ((ProgressBar)parent.findViewById(R.id.progressBarGroups));
         progressBar.setIndeterminate(true);
 
+        CheckInternet.isNetworkConnected(getContext());
         UserFirebaseService.getGroups(user_id,this);
 
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Groups_title));

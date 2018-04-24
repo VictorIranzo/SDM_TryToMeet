@@ -19,6 +19,7 @@ import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.activities.MainActivity;
 import com.sdm.trytomeet.adapters.EventListAdapter;
 import com.sdm.trytomeet.persistence.server.EventFirebaseService;
+import com.sdm.trytomeet.services.CheckInternet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,8 @@ public class HistoricEventListFragment extends EventListFragment{
     @Override
     protected void getUserEvents(){
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Past_events_title));
-        EventFirebaseService.getUserEventsHistoric(user_id,this);
+        CheckInternet.isNetworkConnected(getContext());
+        EventFirebaseService.getUserEventsHistoric(user_id,this, progressBar);
     }
 
     @Override

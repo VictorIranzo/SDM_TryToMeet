@@ -17,7 +17,6 @@ public class DismissNotification extends AppCompatActivity {
         String user_id = prefs.getString("account_id","");
         NotificationFirebaseService.removeNotification(user_id,
                 getIntent().getStringExtra("id"));
-        Log.e("sdf", getIntent().getStringExtra("id"));
         finish();
     }
 }
