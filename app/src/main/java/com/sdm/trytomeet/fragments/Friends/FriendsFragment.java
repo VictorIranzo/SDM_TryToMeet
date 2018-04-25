@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +45,7 @@ public class FriendsFragment extends Fragment {
     public static MemberListAdapter adapter;
 
     public static ProgressBar progressBar;
+    public static TextView no_friends_text;
 
     public FriendsFragment() {
     }
@@ -65,6 +67,8 @@ public class FriendsFragment extends Fragment {
         listViewFriends = parent.findViewById(R.id.list_Members);
         adapter = new MemberListAdapter(getActivity(),R.id.list_groups,friends, true);
         listViewFriends.setAdapter(adapter);
+
+        no_friends_text = parent.findViewById(R.id.no_friends_text);
 
         progressBar = ((ProgressBar)parent.findViewById(R.id.progressBarMembers));
         progressBar.setIndeterminate(true);
@@ -147,10 +151,10 @@ public class FriendsFragment extends Fragment {
                                 }
                             }
 
-
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if(fri == null || fri.friends.isEmpty()) no_friends_text.setVisibility(View.VISIBLE);
                                     progressBar.setVisibility(GONE);
                                 }
                             });

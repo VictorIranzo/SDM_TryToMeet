@@ -122,5 +122,7 @@
     <string name="image_uploaded_notification_text">El usuario %1$s ha subido una imágen al evento %2$s</string>
     <string name="enable_notifications">Activar notificaciones</string>
     <string name="Events_New_title">Eventos nuevos</string>
+    <string name="no_event_list">No tienes eventos</string>
+    <string name="no_friends">No tienes amigos</string>
 
 </resources>

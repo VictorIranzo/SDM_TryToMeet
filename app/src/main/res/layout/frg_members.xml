@@ -9,6 +9,15 @@
     android:orientation="horizontal"
     tools:context="com.sdm.trytomeet.fragments.Sites.FavoriteSitesFragment">
 
+    <TextView
+        android:id="@+id/no_friends_text"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="@string/no_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/default_text_size_in_row" />
+
     <ProgressBar
         android:id="@+id/progressBarMembers"
         style="?android:attr/progressBarStyle"

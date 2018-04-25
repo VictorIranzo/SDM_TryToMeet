@@ -115,13 +115,9 @@ public class MembersFragment extends Fragment {
                         group.uniqueIdentifier=group_identifier;
                         UserFirebaseService.exitFromGroup(user_id,group);
 
-                        GroupsFragment fragment = new GroupsFragment();
-                        // Insert the arguments
-                        Bundle args = new Bundle();
-                        args.putString("user_id", user_id);
-                        fragment.setArguments(args);
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frameLayout, fragment).commit();
+                        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("groups");
+                        getActivity().getSupportFragmentManager().beginTransaction().show(fragment)
+                                .remove(MembersFragment.this).commit();
                     }
                 });
                 ad.setButton(Dialog.BUTTON_NEGATIVE,getString(R.string.cancel),new DialogInterface.OnClickListener(){

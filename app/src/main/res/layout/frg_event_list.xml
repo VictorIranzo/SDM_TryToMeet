@@ -8,6 +8,15 @@
     android:padding="5dp"
     tools:context="com.sdm.trytomeet.fragments.Events.EventListFragment">
 
+    <TextView
+        android:id="@+id/no_events_text"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:text="@string/no_event_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/default_text_size_in_row" />
+
     <ProgressBar
         android:id="@+id/progressBarMembers"
         style="?android:attr/progressBarStyle"

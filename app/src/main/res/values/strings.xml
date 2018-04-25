@@ -68,6 +68,7 @@
 
     <string name="add_as_a_friend">Add as a friend</string>
     <string name="remove_friend">Remove friend</string>
+    <string name="no_friends">Yo don\'t have any friend</string>
 
 
     <!-->Common<-->
@@ -142,6 +143,7 @@
     <string name="event_dates">Dates</string>
     <string name="event_comments">Comments</string>
     <string name="event_no_comments">There are no comments.</string>
+    <string name="no_event_list">Yo don\'t have any event</string>
 
     <!--Group-->
     <string name="group_added">Group added</string>

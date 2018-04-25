@@ -2,7 +2,10 @@ package com.sdm.trytomeet.persistence.server;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +24,7 @@ import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.InvitedTo;
 import com.sdm.trytomeet.POJO.Notification;
 import com.sdm.trytomeet.POJO.TakingPart;
+import com.sdm.trytomeet.R;
 import com.sdm.trytomeet.fragments.Events.EventFragment;
 import com.sdm.trytomeet.fragments.Events.EventListFragment;
 import com.sdm.trytomeet.fragments.Events.HistoricEventListFragment;
@@ -259,13 +263,16 @@ public class EventFirebaseService extends FirebaseService{
 
     }
 
-    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment, final ProgressBar progressBar) {
+    public static void getUserEvents(final String user_id, final EventListFragment eventListFragment, final ProgressBar progressBar, final TextView no_events_text) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                        if(takingPart == null || takingPart.invitedTo == null || takingPart.invitedTo.isEmpty()){
+                            return;
+                        }
                         if (takingPart != null && takingPart.invitedTo != null) {
                             for (String event_id : takingPart.invitedTo.keySet()) {
                                 // We check that the event state is PENDING, the user has to vote there.
@@ -291,6 +298,7 @@ public class EventFirebaseService extends FirebaseService{
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                no_events_text.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(GONE);
                             }
                         });
@@ -301,55 +309,18 @@ public class EventFirebaseService extends FirebaseService{
                 });
     }
 
-    public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment, final ProgressBar progressBar) {
+    public static void getUserEventsHistoric(final String user_id, final HistoricEventListFragment eventListFragment, final ProgressBar progressBar, final TextView no_events_text) {
         getDatabaseReference().child("taking_part").child(user_id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        if(takingPart == null || takingPart.invitedTo == null) return;
-                        for (String event_id : takingPart.invitedTo.keySet()) {
-                            // We check that the event state is PENDING, the user has to vote there.
-                            getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Event e = dataSnapshot.getValue(Event.class);
-
-                                    // In this way, deleted events are added to the list.
-                                    if (e != null)
-                                        eventListFragment.addEventToList(dataSnapshot.getKey(), e);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e("Error", "Something bad");
-                                }
-                            });
+                        if(takingPart == null || takingPart.invitedTo == null){
+                            return;
                         }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setVisibility(GONE);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-    }
-
-    public static void getUserEventsPendingVote(final String user_id, final PendingVoteEventListFragment eventListFragment, final ProgressBar progressBar) {
-        getDatabaseReference().child("taking_part").child(user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
-                        if(takingPart == null || takingPart.invitedTo == null) return;
-                        for (String event_id : takingPart.invitedTo.keySet()) {
-                            // We check that the event state is PENDING, the user has to vote there.
-                            if(takingPart.invitedTo.get(event_id).state.equals(InvitedTo.PENDING)) {
+                        else {
+                            for (String event_id : takingPart.invitedTo.keySet()) {
+                                // We check that the event state is PENDING, the user has to vote there.
                                 getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -370,6 +341,53 @@ public class EventFirebaseService extends FirebaseService{
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                no_events_text.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(GONE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    public static void getUserEventsPendingVote(final String user_id, final PendingVoteEventListFragment eventListFragment, final ProgressBar progressBar, final TextView no_events_text) {
+        getDatabaseReference().child("taking_part").child(user_id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        TakingPart takingPart = dataSnapshot.getValue(TakingPart.class);
+                        if(takingPart == null || takingPart.invitedTo == null || takingPart.invitedTo.isEmpty()){
+                            return;
+                        }
+                        else {
+                            for (String event_id : takingPart.invitedTo.keySet()) {
+                                // We check that the event state is PENDING, the user has to vote there.
+                                if (takingPart.invitedTo.get(event_id).state.equals(InvitedTo.PENDING)) {
+                                    getDatabaseReference().child("events").child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Event e = dataSnapshot.getValue(Event.class);
+
+                                            // In this way, deleted events are added to the list.
+                                            if (e != null)
+                                                eventListFragment.addEventToList(dataSnapshot.getKey(), e);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.e("Error", "Something bad");
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                no_events_text.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(GONE);
                             }
                         });

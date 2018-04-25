@@ -2,6 +2,7 @@ package com.sdm.trytomeet.fragments.Events;
 
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
@@ -26,6 +27,7 @@ public class PendingVoteEventListFragment extends EventListFragment {
 
             if(notAdd) return;
 
+            no_events_text.setVisibility(View.GONE);
             events.add(eventWithKey);
             adapter.notifyDataSetChanged();
         }
@@ -34,7 +36,7 @@ public class PendingVoteEventListFragment extends EventListFragment {
     @Override
     protected void getUserEvents(){
         CheckInternet.isNetworkConnected(getContext());
-        EventFirebaseService.getUserEventsPendingVote(user_id,this, progressBar);
+        EventFirebaseService.getUserEventsPendingVote(user_id,this, progressBar, no_events_text);
     }
 
     @Override

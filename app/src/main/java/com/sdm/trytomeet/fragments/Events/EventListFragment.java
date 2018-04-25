@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.sdm.trytomeet.POJO.Event;
 import com.sdm.trytomeet.POJO.EventWithKey;
@@ -39,6 +40,7 @@ public class EventListFragment extends Fragment {
     private RecyclerView rv;
     protected EventListAdapter adapter;
     protected ProgressBar progressBar;
+    protected TextView no_events_text;
     private RecyclerView.LayoutManager llm;
 
     public EventListFragment() {
@@ -67,6 +69,7 @@ public class EventListFragment extends Fragment {
             }
         });
         rv = parent.findViewById(R.id.rv);
+        no_events_text = parent.findViewById(R.id.no_events_text);
 
         llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
@@ -97,7 +100,7 @@ public class EventListFragment extends Fragment {
 
     protected void getUserEvents() {
         CheckInternet.isNetworkConnected(getContext());
-        EventFirebaseService.getUserEvents(user_id,this, progressBar);
+        EventFirebaseService.getUserEvents(user_id,this, progressBar, no_events_text);
     }
 
     public void goToPendingEvents() {
@@ -156,9 +159,20 @@ public class EventListFragment extends Fragment {
     public void addEventToList(String event_id, Event e){
         if(e.state.equals(Event.CONFIRMED) || e.state.equals(Event.VOTED) || e.state.equals(Event.PENDING)) {
             EventWithKey eventWithKey = new EventWithKey(event_id,e);
+            no_events_text.setVisibility(View.GONE);
 
             boolean notAdd = EventTransactionConfirmedToDone.checkConfirmedDate(eventWithKey);
             notAdd = notAdd || EventTransactionPendingToCanceled.checkIfPassedDate(eventWithKey);
+
+            // Check if not added
+            if(!notAdd){
+                for(EventWithKey current_e : events){
+                    if(current_e.event_id.equals(event_id)){
+                        notAdd = true;
+                        break;
+                    }
+                }
+            }
 
             if(notAdd) return;
 

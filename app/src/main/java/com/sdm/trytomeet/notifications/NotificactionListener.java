@@ -42,7 +42,7 @@ public class NotificactionListener implements ValueEventListener{
                             NotificationCompat.Builder mbuilder = new NotificationCompat.Builder(context);
                             mbuilder.setContentTitle(notification.title);
                             mbuilder.setContentText(notification.text);
-                            mbuilder.setSmallIcon(R.mipmap.pajaro);
+                            mbuilder.setSmallIcon(R.drawable.pajaro);
 
                             Intent intent = null;
 

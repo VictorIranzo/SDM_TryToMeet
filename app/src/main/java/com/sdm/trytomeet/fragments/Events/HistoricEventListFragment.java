@@ -37,7 +37,7 @@ public class HistoricEventListFragment extends EventListFragment{
     protected void getUserEvents(){
         ((MainActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.Past_events_title));
         CheckInternet.isNetworkConnected(getContext());
-        EventFirebaseService.getUserEventsHistoric(user_id,this, progressBar);
+        EventFirebaseService.getUserEventsHistoric(user_id,this, progressBar, no_events_text);
     }
 
     @Override

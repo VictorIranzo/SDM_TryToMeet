@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -75,7 +76,7 @@ public class UserFirebaseService extends FirebaseService {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             User u = dataSnapshot.getValue(User.class);
-            eventFragment.addUser(u);
+            if(u != null) eventFragment.addUser(u);
         }
 
         @Override
@@ -234,7 +235,7 @@ public class UserFirebaseService extends FirebaseService {
     }
 
     public static void getGroups(final String user_id, final GroupsFragment groupFragment) {
-        getDatabaseReference().child("groups").child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        getDatabaseReference().child("groups").child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();

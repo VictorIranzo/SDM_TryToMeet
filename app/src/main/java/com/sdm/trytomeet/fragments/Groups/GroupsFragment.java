@@ -114,6 +114,7 @@ public class GroupsFragment extends Fragment {
     public void addGroupsToList(List<Group> groups) {
         progressBar.setVisibility(View.GONE);
 
+        groupList.clear();
         for (Group group: groups) {
             groupList.add(group);
         }
