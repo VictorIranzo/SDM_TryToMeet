@@ -133,7 +133,7 @@ public class UserFirebaseService extends FirebaseService {
 
     public static void getUsersFromMembersOfGroup(List <String> ids, final MembersFragment fragment) {
         for (String s : ids) {
-            getDatabaseReference().child("users").child(s).addListenerForSingleValueEvent(new ValueEventListener() {
+            getDatabaseReference().child("users").child(s).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
